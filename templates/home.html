@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="container container-header">
+            <div class="page-header">
+                <h1>Predmeti</h1>
+            </div>
+            <ul class="years">
+                <li>
+                    2019/2020
+                    <ul class="courses">
+                        {% for course in courses %}
+                            <li>
+                                <a href="/course/{{ course.id }}/">{{ course.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    {% else %}
+        <div class="container container-header">
+            <div class="page-header">
+                <h1>Uvod u objektno orijntirano programiranje</h1>
+            </div>
+        </div>
+    {% endif %}
+{% endblock content %}

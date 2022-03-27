@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <link rel="stylesheet"
+              type="text/css"
+              media="screen"
+              href="{% static 'newstyle.css' %}"/>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet"
+              href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+              crossorigin="anonymous">
+        <!-- Optional theme
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="container ">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="">UOOP</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="child descendant">
+                            <a class="dropdown-toggle"
+                               data-toggle="dropdown"
+                               role="button"
+                               aria-expanded="true"
+                               href="">Pomoć<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li class="child descendant">
+                                    <a href="">O sustavu</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="navbar-right">
+                        {% if user.is_authenticated %}
+                            {{ user.username }}
+                            <a href="/logout_user">
+                                <button type="button" class="btn btn-primary navbar-btn">Odjava</button>
+                            </a>
+                        {% else %}
+                            <a href="/login_user">
+                                <button type="button" class="btn btn-success navbar-btn">Prijava</button>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+        {% block content %}{% endblock %}
+        <div class="footer">
+            <div class="container">
+                <p>
+                    Luka Škrlj
+                </p>
+            </div>
+        </div>
+        <script>
+      /* When the user clicks on the button, 
+      toggle between hiding and showing the dropdown content */
+      function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+        document.getElementsByClassName("dropbtn")[0].classList.toggle("open");
+      }
+      
+      // Close the dropdown if the user clicks outside of it
+      window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+          var dropdowns = document.getElementsByClassName("dropdown-content");
+          var i;
+          for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+              openDropdown.classList.remove('show');
+            }
+          }
+          var dropdowns = document.getElementsByClassName("dropbtn");
+          for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('open')) {
+              openDropdown.classList.remove('open');
+            }
+          }
+        }
+      }
+        </script>
+    </body>
+</html>
