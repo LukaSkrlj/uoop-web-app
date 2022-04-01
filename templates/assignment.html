@@ -1,36 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
     <script>
-    function change(b, card)  {
-        //let prvi = document.getElementById('card1')
-        //prvi.classList.remove('active')
-        let prvi =  document.getElementById('card2')
-        prvi.classList.remove('active')
-        prvi =  document.getElementById('card3')
-        prvi.classList.remove('active')
-        prvi =  document.getElementById('card4')
-        prvi.classList.remove('active')
-        prvi =  document.getElementById('problem')
-        prvi.classList.remove('active')
-        //prvi =  document.getElementById('report')
-        //prvi.classList.remove('active') 
-        prvi =  document.getElementById('submission')
-        prvi.classList.remove('active')
-        prvi =  document.getElementById('subpub')
-        prvi.classList.remove('active')
-        let c = document.getElementById(card);
-        let a = document.getElementById(b);
-        a.classList.add('active');
-        a.classList.add('in')
-                c.classList.add('active');
+        function change(b, card)  {
+            //let prvi = document.getElementById('card1')
+            //prvi.classList.remove('active')
+            let prvi =  document.getElementById('card2')
+            prvi.classList.remove('active')
+            prvi =  document.getElementById('card3')
+            prvi.classList.remove('active')
+            prvi =  document.getElementById('card4')
+            prvi.classList.remove('active')
+            prvi =  document.getElementById('problem')
+            prvi.classList.remove('active')
+            //prvi =  document.getElementById('report')
+            //prvi.classList.remove('active') 
+            prvi =  document.getElementById('submission')
+            prvi.classList.remove('active')
+            prvi =  document.getElementById('subpub')
+            prvi.classList.remove('active')
+            let c = document.getElementById(card);
+            let a = document.getElementById(b);
+            a.classList.add('active');
+            a.classList.add('in')
+                    c.classList.add('active');
+        }
+
+        const redirect = (testId) => {
+            console.log("rdr path: ", testId)
+            // redirect(`http://127.0.0.1:8000/test/${path}`) //ovo je za django ne js
+            window.location.href = `http://127.0.0.1:8000/test/${testId}`
         }
     </script>
     <div class="container ">
         <p>
             <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
-            <a href="">P1 2019 Zadaci za vježbu</a>
+            <!-- <a href="{{ assignment.test }}">P1 2019 Zadaci za vježbu</a> -->
+            <a href="#" onclick="redirect('{{ assignment.test.id }}')">{{ assignment.test.title }}</a>
         </p>
-        <h2>{{ assignment.title }}</h2>
+        <h2><b>{{ assignment.title }}</b></h2>
         <ul class="nav nav-tabs" role="tablist">
             {% comment %} <li role="presentation" class="active" id="card1" onclick="change('report', 'card1')">
                 <a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Izvještaj</a>
@@ -160,23 +167,23 @@
                             {{ assignment.description }}
                         </p>
                         <h2 id="ulazni-podaci">
-                            Ulazni podaci
+                            <b>Ulazni podaci</b>
                         </h2>
                         <p>
                             {{ assignment.inputDescription }}
                         </p>
                         <h2 id="izlazni-podaci">
-                            Izlazni podaci
+                            <b>Izlazni podaci</b>
                         </h2>
                         <p>
                             {{ assignment.outputDescription }}
                         </p>
                         {% for visibleTest in visibleTests %}
                             <h2>
-                                Ispitni uzorak #{{ forloop.counter }}
+                                <b>Ispitni uzorak #{{ forloop.counter }}</b>
                             </h2>
                             <h3>
-                                <span>Ulaz</span><span>Izlaz</span>
+                                <span><b>Ulaz</b></span><span><b>Izlaz</b></span>
                             </h3>
                             <div class="sample">
                                 <pre class="input"><code id="tc-in-3022">{{visibleTest.input}}</code></pre><pre class="output"><code id="tc-out-3022">{{visibleTest.output}}</code></pre>

@@ -1,6 +1,3 @@
-Required packages:
-
-djangosaml2==1.3.5
-mockdjangosaml2==0.16.1
-xmlschema==1.9.2
-django_ace
+After creating virtual environment and cloning the project:
+    type in command line: 'pip install -r requirements.txt' to install all the required packages (for now)
+    after that -> https://github.com/LukaSkrlj/uoop-web-app/issues/3 to setup database

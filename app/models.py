@@ -59,7 +59,7 @@ class Test(models.Model):
     title = models.CharField(max_length=50)
     course = models.ForeignKey("Course", on_delete=models.CASCADE)
     startDate = models.DateTimeField()
-    endtDate = models.DateTimeField()
+    endDate = models.DateTimeField()
 
     def __str__(self):
         return self.title
