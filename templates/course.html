@@ -1,23 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+    ul {
+        list-style-type: none;
+        font-size: 1.3em;
+    }
+
+    .page-header {
+        border-bottom: 1px solid rgba(133, 133, 133, 0.5);
+        margin-bottom: 30px;
+    }
+   
+</style>
     <div class="container container-header">
         <div class="page-header">
             <h1>
                 <b>{{ course.title }}</b>
-                <small>2019/2020</small>
+                <small style="color: grey;">2019/2020</small>
             </h1>
         </div>
-        <small>
-            {% comment %} <div class="contest-title">
+        
+            {% comment %} 
+            <div class="contest-title">
             <span class="glyphicon_clock glyphicon glyphicon-time"></span>
             <a href="/course/{{ course.id }}/">{{ course.title }} {{ course.startDate }}/{{ course.endDate }}</a>
-            </div> {% endcomment %}
+            </div>
+            {% endcomment %}
+            <ul>
             {% for test in tests %}
-                <div class="contest-title">
+                <!-- <div class="contest-title">
                     <span class="glyphicon_clock glyphicon glyphicon-time"></span>
                     <a href="{% url 'uoop:test' test.id %}">{{ test.title }}</a>
-                </div>
+                </div> -->
+                <li>
+                    <i class="fa-solid fa-clock" style="/*color: black; background-color: white;*/"></i>
+                    <!-- <i class="fa-regular fa-clock-three"></i> -->
+                    <!-- <i class="fa-solid fa-xmark" style="color: red;"></i> -->
+                    <a href="{% url 'uoop:test' test.id %}">{{ test.title }}</a>
+                </li>
             {% endfor %}
-        </small>
+            </ul>
+        
     </div>
 {% endblock content %}
