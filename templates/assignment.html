@@ -1,61 +1,120 @@
 {% extends "base.html" %}
 {% block content %}
-    <script>
-    function change(b, card)  {
-        //let prvi = document.getElementById('card1')
-        //prvi.classList.remove('active')
-        let prvi =  document.getElementById('card2')
-        prvi.classList.remove('active')
-        prvi =  document.getElementById('card3')
-        prvi.classList.remove('active')
-        prvi =  document.getElementById('card4')
-        prvi.classList.remove('active')
-        prvi =  document.getElementById('problem')
-        prvi.classList.remove('active')
-        //prvi =  document.getElementById('report')
-        //prvi.classList.remove('active') 
-        prvi =  document.getElementById('submission')
-        prvi.classList.remove('active')
-        prvi =  document.getElementById('subpub')
-        prvi.classList.remove('active')
-        let c = document.getElementById(card);
-        let a = document.getElementById(b);
-        a.classList.add('active');
-        a.classList.add('in')
-                c.classList.add('active');
-        }
-    </script>
     <div class="container ">
         <p>
-            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
-            <a href="">P1 2019 Zadaci za vježbu</a>
+            <i class="fa-solid fa-arrow-left"></i>
+            <!-- <a href="{{ assignment.test }}">P1 2019 Zadaci za vježbu</a> -->
+            <!-- <a href="#" onclick="redirect('{{ assignment.test.id }}')">{{ assignment.test.title }}</a> -->
+            <a href="http://127.0.0.1:8000/test/{{ assignment.test.id }}">{{ assignment.test.title }}</a>
         </p>
-        <h2>{{ assignment.title }}</h2>
-        <ul class="nav nav-tabs" role="tablist">
-            {% comment %} <li role="presentation" class="active" id="card1" onclick="change('report', 'card1')">
-                <a href="#problem" aria-controls="problem" role="tab" data-toggle="tab">Izvještaj</a>
-            </li> {% endcomment %}
-            <li role="presentation"
-                class="active"
-                id="card2"
-                onclick="change('problem', 'card2')">
-                <a href="#report" aria-controls="report" role="tab" data-toggle="tab">Zadatak</a>
+        <h2><b>{{ assignment.title }}</b></h2>
+        
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="zadatak-tab" data-toggle="tab" href="#zadatak" role="tab" aria-controls="zadatak" aria-selected="true">Zadatak</a>
             </li>
-            <li role="presentation" id="card3">
-                <a href="#submission"
-                   aria-controls="submission"
-                   role="tab"
-                   data-toggle="tab"
-                   onclick="change('submission', 'card3')">Odgovor</a>
+            <li class="nav-item">
+              <a class="nav-link" id="odgovor-tab" data-toggle="tab" href="#odgovor" role="tab" aria-controls="odgovor" aria-selected="false">Odgovor</a>
             </li>
-            <li role="presentation" id="card4">
-                <a href="#subpub"
-                   aria-controls="subpub"
-                   role="tab"
-                   data-toggle="tab"
-                   onclick="change('subpub', 'card4')">Rješenja</a>
+            <li class="nav-item">
+              <a class="nav-link" id="rjesenja-tab" data-toggle="tab" href="#rjesenja" role="tab" aria-controls="rjesenja" aria-selected="false">Rješenja</a>
             </li>
         </ul>
+        <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="zadatak" role="tabpanel" aria-labelledby="zadatak-tab">
+            <div class="row">
+                <div class="content">
+                    <p>
+                        {{ assignment.description }}
+                    </p>
+                    <h2 id="ulazni-podaci">
+                        <b>Ulazni podaci</b>
+                    </h2>
+                    <p>
+                        {{ assignment.inputDescription }}
+                    </p>
+                    <h2 id="izlazni-podaci">
+                        <b>Izlazni podaci</b>
+                    </h2>
+                    <p>
+                        {{ assignment.outputDescription }}
+                    </p>
+                    {% for visibleTest in visibleTests %}
+                        <h2>
+                            <b>Ispitni uzorak #{{ forloop.counter }}</b>
+                        </h2>
+                        <h3>
+                            <span><b>Ulaz</b></span><span><b>Izlaz</b></span>
+                        </h3>
+                        <div class="sample">
+                            <pre class="input"><code id="tc-in-3022">{{visibleTest.input}}</code></pre><pre class="output"><code id="tc-out-3022">{{visibleTest.output}}</code></pre>
+                        </div>
+                        {% comment %} <div class="copy-btns">
+                            <div>
+                                <span class="btn-copy" data-toggle="tooltip" data-placement="bottom" data-trigger="manual" data-original-title="Kopirano!" data-target="tc-in-3022">Kopiraj</span>
+                            </div>
+                            <div>
+                                <span class="btn-copy" data-toggle="tooltip" data-placement="bottom" data-trigger="manual" data-original-title="Kopirano!" data-target="tc-out-3022">Kopiraj</span>
+                            </div>
+                        </div> {% endcomment %}
+                        {% if visibleTest.hint %}
+                            <blockquote class="hint">
+                                <p>
+                                    {{ visibleTest.hint }}
+                                </p>
+                            </blockquote>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="aside">
+                    <h3 class="tags">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="16"
+                             height="16"
+                             fill="currentColor"
+                             class="bi bi-tags-fill"
+                             viewBox="0 0 16 16">
+                            <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                            <path d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043-7.457-7.457z"/>
+                        </svg>
+                        Tagovi
+                    </h3>
+                    {% for tag in tags %}
+                        <!-- <button type="button" class="btn btn-default">
+                            {{ tag.name }}
+                        </button> -->
+                        <button type="button" class="btn btn-light btn-outline-dark">{{ tag.name }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="odgovor" role="tabpanel" aria-labelledby="odgovor-tab">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">
+                    Predaj
+                </button>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="rjesenja" role="tabpanel" aria-labelledby="rjesenja-tab">
+            <div id="subpub">
+                <h2>
+                    JAVA
+                </h2>
+                <div class="highlight">
+                    <pre>{{ assignment.solution }}</pre>
+                </div>
+            </div>
+    </div>
+        <!-- </div>
+        </div>
+
         <div class="tab-content">
             {% comment %} <div role="tabpanel" class="tab-pane fade" id="report">
                 <div id="code">
@@ -160,23 +219,23 @@
                             {{ assignment.description }}
                         </p>
                         <h2 id="ulazni-podaci">
-                            Ulazni podaci
+                            <b>Ulazni podaci</b>
                         </h2>
                         <p>
                             {{ assignment.inputDescription }}
                         </p>
                         <h2 id="izlazni-podaci">
-                            Izlazni podaci
+                            <b>Izlazni podaci</b>
                         </h2>
                         <p>
                             {{ assignment.outputDescription }}
                         </p>
                         {% for visibleTest in visibleTests %}
                             <h2>
-                                Ispitni uzorak #{{ forloop.counter }}
+                                <b>Ispitni uzorak #{{ forloop.counter }}</b>
                             </h2>
                             <h3>
-                                <span>Ulaz</span><span>Izlaz</span>
+                                <span><b>Ulaz</b></span><span><b>Izlaz</b></span>
                             </h3>
                             <div class="sample">
                                 <pre class="input"><code id="tc-in-3022">{{visibleTest.input}}</code></pre><pre class="output"><code id="tc-out-3022">{{visibleTest.output}}</code></pre>
@@ -198,7 +257,7 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <div class="aside">
+                    <!-- <div class="aside">
                         <h3 class="tags">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  width="16"
@@ -216,7 +275,7 @@
                                 {{ tag.name }}
                             </button>
                         {% endfor %}
-                    </div>
+                    </div> 
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="submission">
@@ -256,7 +315,7 @@
                                         </div>
                                     </ul>
                                 </div>
-                                <!-- <div class="showoutput">
+                                <div class="showoutput">
                                         <div class="result-output">
                                             <p>Izlaz</p>
                                             <pre>40.000000</pre>
@@ -272,7 +331,7 @@
                                                                                                                                                                                                                                                         <a class="downloadout" target="_blank" href="">
 
                                                                                                                                                                                                     </a>
-                                                                                                                                            </div> -->
+                                                                                                                                            </div> 
     {% endfor %}
     {% for testCase in failedTests %}
         <div class="testresult fal">
@@ -337,4 +396,9 @@
 </div>
 </div>
 </div>
+<!-- <script>
+    $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+    </script>  -->
 {% endblock content %}
