@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
 # Create your models here.
 
 
@@ -111,7 +112,7 @@ class StudentAssignment(models.Model):
         User,
         on_delete=models.CASCADE, null=True
     )
-    jar = models.FileField()
+    jar = models.FileField(validators=[FileExtensionValidator(['jar'])])
 
 
 class Snippet(models.Model):
