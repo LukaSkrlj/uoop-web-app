@@ -1,24 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
 <style>
-ul {
-  list-style-type: none;
-  font-size: 1.3em;
-}
-ul div {
-    border-top: 1px solid rgba(133, 133, 133, 0.2);
-    border-bottom: 1px solid rgba(133, 133, 133, 0.2);
-    font-size: 1.5em;
-    width: 100%;
-}
+    ul {
+        list-style-type: none;
+        font-size: 1.3em;
+    }
+    ul div {
+        border-top: 1px solid rgba(133, 133, 133, 0.2);
+        border-bottom: 1px solid rgba(133, 133, 133, 0.2);
+        font-size: 1.5em;
+        width: 100%;
+    }
 </style>
     {% if user.is_authenticated %}
-        <div class="container container-header">
+        <div class="container container-header page-top-offset" style="margin: 0px" id="ajde"> <!-- jedino ovako override-a margin inace nece-->
             <div class="page-header">
                 <h1><b>Predmeti</b></h1>
             </div>
-            <br>
-            <br>
             <br>
             <ul class="years">
                 <div>2019/2020</div>
@@ -34,7 +32,7 @@ ul div {
             </ul>
         </div>
     {% else %}
-        <div class="container container-header">
+        <div class="container container-header" style="margin: 0px">
             <div class="page-header">
                 <h1>Uvod u objektno orijentirano programiranje</h1>
             </div>
