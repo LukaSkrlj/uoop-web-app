@@ -15,10 +15,15 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <link rel="stylesheet"
               href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
         <link rel="stylesheet"
-              href="{% static 'my_css.css' %}">
+            type="text/css"
+            media="screen"
+            href="{% static 'my_css.css' %}">
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
         <!-- <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script> -->
@@ -30,28 +35,29 @@
               href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
               integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
               crossorigin="anonymous"> -->
-        <link rel="stylesheet"
-              href="{% static 'bootstrap-4.6.1-dist/css/bootstrap.min.css' %}"
-        >
-
-        <!-- Optional theme
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
-        <!-- Latest compiled and minified JavaScript -->
-        <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+              
+              <!-- Optional theme
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+                <!-- Latest compiled and minified JavaScript -->
+                <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         
         <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css"></link>
         <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+        <link rel="stylesheet"
+                href="{% static 'bootstrap-4.6.1-dist/css/bootstrap.min.css' %}"
+        >
         <script src="{% static 'bootstrap-4.6.1-dist/js/bootstrap.min.js' %}" ></script>
         <!-- <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" ></script> -->
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             {% if user.is_authenticated %}
-                <a class="navbar-brand" style="margin-left: 500px" href="http://127.0.0.1:8000/home">UOOP</a>
+                <a class="navbar-brand" style="margin-left: 450px" href="http://127.0.0.1:8000/home">UOOP</a>
             {% else %}    
-                <a class="navbar-brand" style="margin-left: 500px" href="">UOOP</a>
+                <a class="navbar-brand" style="margin-left: 450px" href="">UOOP</a>
             {% endif %}
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
@@ -59,7 +65,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" style="font-size: 0.8em;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <a class="nav-link dropdown-toggle" style="font-size: 16px;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Pomoć
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -82,8 +88,9 @@
               </ul>
             </div>
         </nav>
-        
-        {% block content %}{% endblock %}
+        <div style="margin-left: 450px;">
+            {% block content %}{% endblock %}
+        </div>
         <div class="footer">
             <div class="container">
                 <p>
