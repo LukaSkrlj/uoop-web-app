@@ -1,10 +1,71 @@
-* {
+/* * {
     margin: 0;
-}
+    margin: -200px;
+} */
+/* div {
+    /* margin: -200px !important; 
+    margin: 0px !important;
+} */
+/* div li a {
+    color: #428bca !important;
+} */
+/* .aa {
+    margin: -200px !important;
+} */
+
+/* #ajde {
+    color: #428bca !important;
+} */
 
 /* body {
     background-color: red;
 } */
+@font-face {
+    font-family: 'NotoSerifMoj' !important;
+    src: /*url('/static/Noto_Serif_font/NotoSerif-Bold.ttf') format('truetype'),
+          url('/static/Noto_Serif_font/NotoSerif-BoldItalic.ttf') format('truetype'),
+          url('/static/Noto_Serif_font/NotoSerif-Italic.ttf') format('truetype'),*/
+          url('/static/Noto_Serif_font/NotoSerif-Reagularaa.ttf') format('truetype') !important;
+          font-weight: normal;
+          font-style: normal;
+    }
+
+a {
+    color: #428bca !important; /* !important da overwrite-a sta god da je zadano */
+}
+.btn-primary {
+    color: #fff !important;
+    background-color: #428bca !important;
+    border-color: #357ebd !important;
+}
+
+.navbar a {
+    color: #777 !important;
+}
+
+.navbar {
+    color: #333 !important; /* zapravo background color */
+}
+.page-top-offset {
+    margin-top: 30px !important;
+}
+/* div {
+    margin: 0px !important;
+} */
+
+.hint {
+    display: flex !important;
+    align-items: center !important;
+    border-left: 5px solid rgb(231, 227, 227) !important;
+    margin-top: 15px;
+    min-height: 40px;
+    align-items: center;
+    /* margin-left: 5px; */
+}
+
+.hint div {
+    margin-left: 20px;
+}
 .input-sm {
     height: 30px;
     padding: 5px 10px;
@@ -17,8 +78,8 @@
     background-image: none;
     border: 1px solid #ccc;
     display: inline-block;
-    width: auto;
-    float: right;
+    /* width: auto; */
+    /* float: right; */
     position: relative;
   }
   .sample {
@@ -40,7 +101,7 @@
     margin-bottom: 0;
     color: #c7254e;
     background-color: lightyellow;
-    width: 50%;
+    /* width: 50%; */
     overflow: hidden;
     vertical-align: top;
     line-height: 1.28;
@@ -52,13 +113,14 @@
     margin-bottom: 0;
     color: #c7254e;
     background-color: lightyellow;
-    width: 50%;
+    /* width: 50%; */
+    /* width: 275px; trebalo bi da ima width kao i parent container, ovo to radi ali bilo bi bolje bez zadavanja pixela --rjeseno */
     overflow: hidden;
     vertical-align: top;
     line-height: 1.28;
   }
 
-  pre {
+ pre {
     font-size: 14px;
     display: block;
     padding: 9.5px;
@@ -68,19 +130,34 @@
     word-break: break-all;
     word-wrap: break-word;
     color: #333;
-    width: 100px;
+    /* width: 100px;  */
     background-color: #f5f5f5;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }
+  } 
+  /* .input div {
+    font-size: 14px;
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    word-break: break-all;
+    word-wrap: break-word;
+    color: #333;
+    /* width: 100px; 
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }  */
 
-  pre {
+   pre {
     display: table-cell;
     height: 100%;
     margin-bottom: 0;
     color: #c7254e;
     background-color: lightyellow;
-    width: 50%;
+    /* width: 50%; */
     overflow: hidden;
     vertical-align: top;
     line-height: 1.28;
@@ -89,7 +166,23 @@
     white-space: pre-wrap;
     background-color: transparent;
     border-radius: 0;   
-  }
+  } 
+  /* .input div {
+    display: table-cell;
+    height: 100%;
+    margin-bottom: 0;
+    color: #c7254e;
+    background-color: lightyellow;
+    /* width: 50%; 
+    overflow: hidden;
+    vertical-align: top;
+    line-height: 1.28;
+    font-size: inherit;
+    color: inherit;
+    white-space: pre-wrap;
+    background-color: transparent;
+    border-radius: 0;   
+  }  */
 
   code {
     padding: 0;
@@ -98,6 +191,28 @@
     white-space: pre-wrap;
     background-color: transparent;
     border-radius: 0;
+  }
+
+  .test-case {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 9.5px;
+    background-color: lightyellow;
+    min-height: 20px;
+    /* position: relative; */
+    /* height: 100% !important; */
+    /* height: 200px !important; */
+    /* position: relative !important; ovo ne radi cak ni kad je !important, jedino preko instyle css*/
+  }
+
+  /* .copy-btn {
+    position: absolute !important;
+    right: 0 !important; 
+    bottom: 0 !important;
+  }  mora biti instyle inace ne radi ??*/
+
+  .input-output-header {
+      margin-left: 10px;
   }
 
   .btn-copy {
