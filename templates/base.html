@@ -43,7 +43,7 @@
                     </ul>
                     <div class="navbar-right">
                         {% if user.is_authenticated %}
-                            {{ user.username }}
+                            {{ user.email }}
                             <a href="/logout_user">
                                 <button type="button" class="btn btn-primary navbar-btn">Odjava</button>
                             </a>
