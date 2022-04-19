@@ -101,9 +101,8 @@
                 <span class="glyphicon_green glyphicon glyphicon-ok"></span>
             </td>
             <td>
-                <a href="">Kviz</a>
-                <!-- Button koji otvara modal s informacijama o pisanju ispita -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Otvori ispit</button>
+                <!-- Button which opens modal with informations about the quiz -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id = "openInfoModal" >Otvori ispit</button>
             </td>
             <td class="testresults">
                <!----> <div class="progress">
@@ -128,19 +127,19 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"><span id = "span_ispitIme" >1. kontrolna zadaća</h5> <!-- Dinamičan span s imenom ispita -->
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id = "button_closeModal1"> <!-- Križić kojim se zatvara modal -->
+        <h5 class="modal-title" id="exampleModalLabel"><span id = "quizName" >1. kontrolna zadaća</span></h5> <!-- Dynanic span with quiz name -->
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id = "closeModal1"> <!-- Cross button that closes the quiz info modal -->
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" id = "span_uputeKviz"> <!-- Dinamičan span s uputama o ispitu -->
+      <div class="modal-body" id = "quizInfo"> <!-- Dynamic span with quiz details -->
         1. kontrolna zadaća prikazuje način polaganja kolegija putem uoop-riteh.hr sustava. Broj pokušaja je neograničen a ostvareni rezultati se ne evidentiraju.<br>
 
-        Vremensko ograničenje: <span id = "span_ukupnoVrijeme">2</span> min
+        Vremensko ograničenje: <span id = "maxTime">2</span> min
       </div>
       <div class="modal-footer">
         <!-- Button koji otvara kviz i započinje odbrojavanje timera-->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop" id = "button_pokreniKviz"> Pokreni ispit </button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop" id = "quizStart"> Pokreni ispit </button>
       </div>
     </div>
   </div>
@@ -152,24 +151,24 @@
   <div class="modal-dialog" style="max-width: 80%;" >
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="staticBackdropLabel">Zadatak <span id = "span_brojZadatka">1</span></h4> <!-- Dinamičan broj zadatka -->
-        <tab><button type="button" id = "timer" class="btn btn-primary" disabled><span id = "span_preostaloVrijeme"></span></button> <!-- Button u kojem se nalazi preostalo vrijeme, u zadnjoj minuti mijenja boju -->
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id = "button_closeModal2"> <!-- Križić kojim se aktivira alert box -->
+        <h4 class="modal-title" id="staticBackdropLabel">Zadatak <span id = "questionNumber">1</span></h4> <!-- Dynamic question number -->
+        <tab><button type="button" id = "timer" class="btn btn-primary" disabled><span id = "timeLeft"></span></button> <!--Button with time left, changes color in the last minute -->
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id = "closeModal2"> <!-- Cross button which activates alert box -->
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" id = "div_slika"> <!--Mjesto gdje se prikazuje slika -->
+      <div class="modal-body" id = "questionPic"> <!--Place where the picture is displayed-->
       </div>
-      <div class="modal-body" id = "div_pitanje"> <!--Mjesto gdje se prikazuje pitanje -->
+      <div class="modal-body" id = "question"> <!--Place where the question is displayed-->
         ...
       </div>
-      <div class="modal-body" id = "div_opcijeOdgovora"> <!-- Mjesto gdje se prikazuju radio buttoni -->
+      <div class="modal-body" id = "answers"> <!-- Place where the buttons are displayed -->
         ...
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger
-        " data-dismiss="modal" id = "button_zavrsiKviz" >Završi kviz</button> <!--Button  kojim se aktivira alert box-->
-         <button type="button" class="btn btn-primary" id = "button_iducePitanje">Iduće pitanje</button> <!-- button za odlazak na iduće pitanje i pohranu odgovora -->
+        " data-dismiss="modal" id = "quizFinish" >Završi kviz</button> <!--Buttton finish quiz which activates alert box-->
+         <button type="button" class="btn btn-primary" id = "nextQuestion">Iduće pitanje</button> <!-- button to go to the next question -->
       </div>
     </div>
   </div>
