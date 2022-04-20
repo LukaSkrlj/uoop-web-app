@@ -1,3 +1,16 @@
-After creating virtual environment and cloning the project:
-1. type in command line: ```pip install -r requirements.txt``` (to install all the required packages (for now)) 
-2. after that -> https://github.com/LukaSkrlj/uoop-web-app/issues/3 (to setup database)
+# Project setup:
+```
+git clone https://github.com/LukaSkrlj/uoop-web-app.git
+py -3 -m venv .venv
+.venv\scripts\activate
+pip install django
+pip install -r requirements.txt
+```
+
+After installation add .env file inside uoop directory (use env-example for reference) and run commands:
+
+```
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+```
