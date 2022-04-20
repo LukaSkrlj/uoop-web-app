@@ -3,37 +3,56 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import gettext_lazy
 # Create your models here.
 
 
-# class CustomAccountManager(BaseUserManager):
+class CustomUserManager(BaseUserManager):
+    """
+    Custom user model manager where email is the unique identifiers
+    for authentication instead of usernames.
+    """
 
-#     def create_superuser(self, email, password, **other_fields):
+    def create_user(self, email, password, **extra_fields):
+        """
+        Create and save a User with the given email and password.
+        """
+        if not email:
+            raise ValueError('The Email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save()
+        return user
 
-#         return self.create_user(email, password, **other_fields)
+    def create_superuser(self, email, password, **extra_fields):
+        """
+        Create and save a SuperUser with the given email and password.
+        """
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
 
-#     def create_user(self, email, password, **other_fields):
-
-#         if not email:
-#             raise ValueError('You must provide an email address')
-
-#         email = self.normalize_email(email)
-#         user = self.model(email=email, **other_fields)
-#         user.set_password(password)
-#         user.save()
-#         return user
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+        return self.create_user(email, password, **extra_fields)
 
 
-# class NewUser(AbstractBaseUser, PermissionsMixin):
+class NewUser(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField('email address', unique=True)
+    first_name = models.CharField(max_length=150)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
-#     email = models.EmailField('email address', unique=True)
-#     user_name = models.CharField(max_length=150, unique=True)
-#     courses = models.ManyToManyField("Course")
+    objects = CustomUserManager()
 
-#     USERNAME_FIELD = 'email'
-
-#     def __str__(self):
-#         return self.user_name
+    def __str__(self):
+        return self.email
 
 
 class Student(models.Model):
@@ -50,7 +69,7 @@ class Course(models.Model):
     shortTitle = models.CharField(max_length=5, unique=True)
     startDate = models.DateTimeField()
     endDate = models.DateTimeField()
-    students = models.ManyToManyField(User, blank=True)
+    students = models.ManyToManyField(NewUser, blank=True)
 
     def __str__(self):
         return self.title
@@ -109,7 +128,7 @@ class StudentAssignment(models.Model):
     assignment = models.ForeignKey(
         "Assignment", on_delete=models.CASCADE, null=True)
     student = models.ForeignKey(
-        User,
+        NewUser,
         on_delete=models.CASCADE, null=True
     )
     jar = models.FileField(validators=[FileExtensionValidator(['jar'])])

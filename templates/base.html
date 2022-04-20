@@ -76,7 +76,7 @@
                 <li class="nav-item" style="margin-left: 700px">
                     {% if user.is_authenticated %}
                         <a href="/logout_user">
-                            <button type="button" class="btn btn-primary">{{ user.username }} Odjava</button>
+                            <button type="button" class="btn btn-primary">{{ user.email }} Odjava</button>
                         </a>
                     {% else %}
                         <a href="/login_user">
