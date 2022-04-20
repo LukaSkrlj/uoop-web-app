@@ -1,47 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<style>
-    .dataTables_filter { /* tako da hide-a njihov default search button*/
-        /* display: none; */
-    }
-    td {
-        padding: 8px !important;
-        height: 10px !important; /*ne promjeni na manje nez zas, na vece oce*/
-        /* overflow: hidden !important; */
-        padding: 58px 0;
-        vertical-align: middle !important;
-        /* text-align: center !important; */
-    }
-    tr {
-        height: 39px !important;
-        overflow: hidden;
-        /* line-height: 39px !important;  */
-    }
-    td a {
-        font-size: 14px !important;
-    }
-    td button {
-        height: 22px !important;
-        min-width: 36px !important;
-        font-size: 12px !important;
-        padding: 1px 5px !important;
-    }
-    .progress {
-        width: 100px !important;
-    }
-    .testresults {
-        width: 100px !important;
-    }
-
-    .tags {
-        width: 200px !important;
-    }
-    .result {
-        width: 30px !important;
-    }
-</style>
-<div class="page-top-offset" style="width: 70%; margin: 0px; position: relative;">
+<div class="page-top-offset test-page" style="width: 70%; margin: 0px; position: relative;">
     <h2><b>{{test.title}}</b></h2>
     <div>
         <div style="position: absolute; right: 0px"> <!-- ne radi input ako styleam?????-->
@@ -94,71 +54,16 @@
                         </td>
                     </tr>
                 {% endfor %}
-                <tr role="row" class="odd">
-                    <td class="result">
-                        <span class="glyphicon_green glyphicon glyphicon-ok"></span>
-                    </td>
-                    <td>
-                        <a href="">Zadatak 2</a>
-                    </td>
-                    <td class="testresults">
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                                60%
-                            </div>
-                        </div>
-                    </td>
-                    <td class="tags ellipsis" title="izlaz, ulaz">
-                        <button class="btn btn-primary btn-xs" type="button">izlaz</button>
-                        <button type="button" class="btn btn-primary btn-xs">ulaz</button>
-                    </td>
-                </tr>
-                <tr role="row" class="odd">
-                    <td class="result">
-                        <span class="glyphicon_green glyphicon glyphicon-ok"></span>
-                    </td>
-                    <td>
-                        <a href="">Zadatak 3</a>
-                    </td>
-                    <td class="testresults">
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%">
-                                30%
-                            </div>
-                        </div>
-                    </td>
-                    <td class="tags ellipsis" title="izlaz, ulaz">
-                        <button class="btn btn-primary btn-xs" type="button">izlaz</button>
-                        <button type="button" class="btn btn-primary btn-xs">ulaz</button>
-                    </td>
-                </tr>
             </tbody>
         </table>
     </div>
 </div>
 
 <script>
-  // $(document).ready(function() {
-  //     $('#example').DataTable({
-  //         "ordering": false,
-  //     });
-  // } );
-  oTable = $('#example').DataTable({
-      "ordering": false,
-      // "searching": false,
-      // "bFilter": false,
-      // "dom": "lrt",
-  });
-//   $('#input').keyup(function(){ //za custom search button
-//       oTable.search($(this).val()).draw() ;
-//   })
-//   $('#example_filter').remove() #za removeat onaj njihov search
 
+    oTable = $('#example').DataTable({
+        "ordering": false,
+    });
 
-  // $("example_filter").css("display", "none")
-  // $("example_filter").addClass("hidden")
-  // document.getElementById("example_length").innerHTML = "ej"
-  // document.getElementById("example_length").innerHTML = document.getElementsByClassName("custom-select custom-select-sm form-control form-control-sm")[0]
-//   document.write(document.getElementsByClassName("custom-select custom-select-sm form-control form-control-sm")[0])
 </script>
 {% endblock content %}

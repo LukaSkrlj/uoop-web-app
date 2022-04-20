@@ -1,25 +1,4 @@
-/* * {
-    margin: 0;
-    margin: -200px;
-} */
-/* div {
-    /* margin: -200px !important; 
-    margin: 0px !important;
-} */
-/* div li a {
-    color: #428bca !important;
-} */
-/* .aa {
-    margin: -200px !important;
-} */
 
-/* #ajde {
-    color: #428bca !important;
-} */
-
-/* body {
-    background-color: red;
-} */
 @font-face {
     font-family: 'NotoSerifMoj' !important;
     src: /*url('/static/Noto_Serif_font/NotoSerif-Bold.ttf') format('truetype'),
@@ -47,7 +26,7 @@ a {
     color: #333 !important; /* zapravo background color */
 }
 .page-top-offset {
-    margin-top: 30px !important;
+    margin-top: 2% !important;
 }
 /* div {
     margin: 0px !important;
@@ -57,68 +36,22 @@ a {
     display: flex !important;
     align-items: center !important;
     border-left: 5px solid rgb(231, 227, 227) !important;
-    margin-top: 15px;
+    margin-top: 2.2%;
     min-height: 40px;
     align-items: center;
     /* margin-left: 5px; */
 }
 
 .hint div {
-    margin-left: 20px;
+    margin-left: 3%;
 }
-.input-sm {
-    height: 30px;
-    padding: 5px 10px;
-    font-size: 12px;
-    line-height: 1.5;
-    border-radius: 3px;
-    margin-left: 30em;
-    color: #555;
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-    display: inline-block;
-    /* width: auto; */
-    /* float: right; */
-    position: relative;
-  }
-  .sample {
+
+.sample {
     display: table;
     border-collapse: separate;
     border-spacing: 2px 0;
     width: 100%;
-  }
-  .input-sm:focus{
-    border-color: #66afe9;
-    outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%);
-    box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%);
-  }
-
-  .input{
-    display: table-cell;
-    height: 100%;
-    margin-bottom: 0;
-    color: #c7254e;
-    background-color: lightyellow;
-    /* width: 50%; */
-    overflow: hidden;
-    vertical-align: top;
-    line-height: 1.28;
-  }
-
-.output{
-    display: table-cell;
-    height: 100%;
-    margin-bottom: 0;
-    color: #c7254e;
-    background-color: lightyellow;
-    /* width: 50%; */
-    /* width: 275px; trebalo bi da ima width kao i parent container, ovo to radi ali bilo bi bolje bez zadavanja pixela --rjeseno */
-    overflow: hidden;
-    vertical-align: top;
-    line-height: 1.28;
-  }
+}
 
  pre {
     font-size: 14px;
@@ -135,21 +68,6 @@ a {
     border: 1px solid #ccc;
     border-radius: 4px;
   } 
-  /* .input div {
-    font-size: 14px;
-    display: block;
-    padding: 9.5px;
-    margin: 0 0 10px;
-    font-size: 13px;
-    line-height: 1.42857143;
-    word-break: break-all;
-    word-wrap: break-word;
-    color: #333;
-    /* width: 100px; 
-    background-color: #f5f5f5;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }  */
 
    pre {
     display: table-cell;
@@ -167,22 +85,6 @@ a {
     background-color: transparent;
     border-radius: 0;   
   } 
-  /* .input div {
-    display: table-cell;
-    height: 100%;
-    margin-bottom: 0;
-    color: #c7254e;
-    background-color: lightyellow;
-    /* width: 50%; 
-    overflow: hidden;
-    vertical-align: top;
-    line-height: 1.28;
-    font-size: inherit;
-    color: inherit;
-    white-space: pre-wrap;
-    background-color: transparent;
-    border-radius: 0;   
-  }  */
 
   code {
     padding: 0;
@@ -205,49 +107,87 @@ a {
     /* position: relative !important; ovo ne radi cak ni kad je !important, jedino preko instyle css*/
   }
 
-  /* .copy-btn {
-    position: absolute !important;
-    right: 0 !important; 
-    bottom: 0 !important;
-  }  mora biti instyle inace ne radi ??*/
-
   .input-output-header {
-      margin-left: 10px;
+      margin-left: 3%;
   }
 
-  .btn-copy {
-    display: inline-block;
-    margin-bottom: 0;
-    font-weight: normal;
-    text-align: center;
-    vertical-align: middle;
-    touch-action: manipulation;
-    cursor: pointer;
-    background-image: none;
-    border: 1px solid transparent;
-    white-space: nowrap;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.42857143;
-    border-radius: 4px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    color: #333;
-    background-color: #fff;
-    border-color: #ccc;
-    padding: 5px 10px;
-    font-size: 12px;
-    line-height: 1.5;
-    border-radius: 3px;
-    color: #fff;
-    background-color: #428bca;
-    border-color: #357ebd;
-    padding: 1px 6px;
-    width: auto;
-    position: relative;
-    right: -120px;
-    top: 130px;
-    font-family: "source_sans_proregular","Helvetica Neue",Helvetica,Arial,sans-serif;
-  }
+  /* .offset {
+      margin-left: 22% !important;
+  } ne radi ako je unutar css filea?? ali hoce ako je unutar htmla*/
+
+.home-page ul {
+    list-style-type: none !important;
+    font-size: 1.3em !important;
+}
+.home-page ul div {
+    border-top: 1px solid rgba(133, 133, 133, 0.2) !important;
+    border-bottom: 1px solid rgba(133, 133, 133, 0.2) !important;
+    font-size: 1.5em !important;
+    width: 100% !important;
+}
+
+.course-page ul {
+    list-style-type: none !important;
+    font-size: 1.3em !important;
+}
+
+.course-page-header {
+    border-bottom: 1px solid rgba(133, 133, 133, 0.5);
+    margin-bottom: 2.5%;
+}
+
+
+
+/* test.html */
+.dataTables_filter { /* tako da hide-a njihov default search button*/
+    /* display: none; */
+}
+.test-page td {
+    padding: 8px !important;
+    height: 10px !important; /*ne promjeni na manje nez zas, na vece oce*/
+    /* overflow: hidden !important; */
+    padding: 58px 0;
+    vertical-align: middle !important;
+    /* text-align: center !important; */
+}
+.test-page tr {
+    height: 39px !important;
+    overflow: hidden;
+    /* line-height: 39px !important;  */
+}
+.test-page td a {
+    font-size: 14px !important;
+}
+.test-page td button {
+    height: 22px !important;
+    min-width: 36px !important;
+    font-size: 12px !important;
+    padding: 1px 5px !important;
+}
+.progress {
+    width: 100px !important;
+}
+.testresults {
+    width: 100px !important;
+}
+
+.tags {
+    width: 200px !important;
+}
+.result {
+    width: 30px !important;
+}
+
+
+.copy-btn {
+    position: absolute !important;
+    margin: 0px !important;
+    right: 0px !important;
+    bottom: 0px !important;
+    height: 20px !important;
+    width: 70px;
+    text-align: center !important;
+    display: inline-block !important;
+    font-size: 12px !important;
+    border-radius: 4px !important;
+}
