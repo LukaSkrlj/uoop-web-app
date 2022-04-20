@@ -1,12 +1,7 @@
 from django.db import models
-from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
 from django.db import models
-from django.utils import timezone
-from django.utils.translation import gettext_lazy
-# Create your models here.
 
 
 class CustomUserManager(BaseUserManager):
@@ -95,8 +90,11 @@ class Assignment(models.Model):
     outputDescription = models.TextField(max_length=10000, default='')
     isSolutionVisible = models.BooleanField(default=False)
     answer = models.TextField(max_length=10000, null=True, blank=True)
-    solution = models.TextField(max_length=10000)
     tags = models.ManyToManyField("Tag")
+    assignmentTemplate = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to='assignment_templates', null=True)
+    #TODO try to read Java code from files and then solution atribute can be removed
+    solutionFile = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to='assignment_solutions', null=True)
+    solution = models.TextField(max_length=10000)
 
     def __str__(self):
         return self.title
@@ -140,3 +138,11 @@ class Snippet(models.Model):
 
     class Meta:
         ordering = ('-created_at', )
+
+#TODO improve student file management after user-assignment relation is added
+# def user_directory_path(instance, filename):
+#     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+#     return 'user_{0}/{1}'.format(instance.user.id, filename)
+
+# class MyModel(models.Model):
+#     upload = models.FileField(upload_to=user_directory_path)
