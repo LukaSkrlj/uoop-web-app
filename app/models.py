@@ -42,7 +42,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class NewUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(gettext_lazy('email address'), unique=True)
+    email = models.EmailField('email address', unique=True)
     first_name = models.CharField(max_length=150)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

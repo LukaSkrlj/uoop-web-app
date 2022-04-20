@@ -121,7 +121,6 @@ def upload(request):
 
 def login_user(request):
     if request.method == 'POST':
-        print(request.POST)
         email = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, email=email, password=password)
