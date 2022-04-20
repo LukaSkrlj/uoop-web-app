@@ -103,9 +103,19 @@ def assignment(request, id):
     context['failedTests'] = failedTests
     return render(request, 'assignment.html', context)
 
+def getStartDateYear(course):
+    return str(course['startDate']).split("-")[0]
 
 def home(request):
-    courses = Course.objects.all()
+    tmp = Course.objects.values() #.values() -> QuerySet to dict
+    courses = {}
+    
+    for course in tmp: #stavlja courseve koji su zapoceli iste godine u zajednicki array, tj array koji je value od key-a koji je startDate
+        if courses.get(str(course['startDate']).split("-")[0]) == None: #radi sub dictionary gdje je key startDate courseva i value od tog key-a su svi coursevi koji su startali te godine
+            courses[getStartDateYear(course)] = [course]
+        else:
+            courses[getStartDateYear(course)].append(course)
+
     return render(request, 'home.html', {'courses': courses})
 
 
