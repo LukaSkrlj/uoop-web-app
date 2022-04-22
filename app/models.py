@@ -1,12 +1,7 @@
 from django.db import models
-from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
 from django.db import models
-from django.utils import timezone
-from django.utils.translation import gettext_lazy
-# Create your models here.
 
 
 class CustomUserManager(BaseUserManager):
@@ -43,7 +38,9 @@ class CustomUserManager(BaseUserManager):
 
 class NewUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField('email address', unique=True)
-    first_name = models.CharField(max_length=150)
+    first_name = models.CharField(max_length=100)
+    lastName = models.CharField(max_length=100)
+    courses = models.ManyToManyField("Course")
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     USERNAME_FIELD = 'email'
@@ -55,21 +52,12 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class Student(models.Model):
-    firstName = models.CharField(max_length=20)
-    lastName = models.CharField(max_length=20)
-    courses = models.ManyToManyField("Course")
-
-    def __str__(self):
-        return self.firstName + self.lastName
-
-
 class Course(models.Model):
     title = models.CharField(max_length=50)
     shortTitle = models.CharField(max_length=5, unique=True)
     startDate = models.DateTimeField()
     endDate = models.DateTimeField()
-    students = models.ManyToManyField(NewUser, blank=True)
+    newusers = models.ManyToManyField(NewUser, blank=True)
 
     def __str__(self):
         return self.title
@@ -95,8 +83,11 @@ class Assignment(models.Model):
     outputDescription = models.TextField(max_length=10000, default='')
     isSolutionVisible = models.BooleanField(default=False)
     answer = models.TextField(max_length=10000, null=True, blank=True)
-    solution = models.TextField(max_length=10000)
     tags = models.ManyToManyField("Tag")
+    assignmentTemplate = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to='assignment_templates', null=True)
+    #TODO try to read Java code from files and then solution atribute can be removed
+    solutionFile = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to='assignment_solutions', null=True)
+    solution = models.TextField(max_length=10000)
 
     def __str__(self):
         return self.title
@@ -124,14 +115,22 @@ class Tag(models.Model):
         return self.name
 
 
-class StudentAssignment(models.Model):
+class UserAssignment(models.Model):
     assignment = models.ForeignKey(
         "Assignment", on_delete=models.CASCADE, null=True)
-    student = models.ForeignKey(
-        NewUser,
-        on_delete=models.CASCADE, null=True
+    newuser = models.ForeignKey(
+        "NewUser", on_delete=models.CASCADE, null=True
     )
+    # Jar file that user uploads/downloads for each assignment
     jar = models.FileField(validators=[FileExtensionValidator(['jar'])])
+    # Percantage of completed assignment
+    percentage = models.PositiveSmallIntegerField(default=0)
+    # Automatically set the field to now when the object is first created.
+    # Note that the current date is always used; it’s not just a default value that you can override.
+    created_at = models.DateTimeField(auto_now_add=True)
+    # Automatically set the field to now every time the object is saved.
+    # Note that the current date is always used; it’s not just a default value that you can override.
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Snippet(models.Model):
@@ -140,3 +139,11 @@ class Snippet(models.Model):
 
     class Meta:
         ordering = ('-created_at', )
+
+#TODO improve student file management after user-assignment relation is added
+# def user_directory_path(instance, filename):
+#     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+#     return 'user_{0}/{1}'.format(instance.user.id, filename)
+
+# class MyModel(models.Model):
+#     upload = models.FileField(upload_to=user_directory_path)
