@@ -1,5 +1,3 @@
-from turtle import isvisible
-from django.http import HttpResponseRedirect
 from django.views import generic
 from django.shortcuts import render
 from .forms import SnippetForm, AssignmentForm
@@ -7,7 +5,6 @@ from .models import Assignment, Course, Snippet, Test, TestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
-from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
