@@ -131,3 +131,10 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return redirect('home/')
+
+
+def osustavu(request):
+    return render(request, 'osustavu.html')
+
+def automatiziranaprovjera(request):
+    return render(request, 'automatiziranaprovjera.html')

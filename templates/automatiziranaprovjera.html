@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div style = "width:50%; font-size:large; text-align:justify;margin: auto;">
+<br>
+<h1>Automatizirana provjera</h1>
+<p>Rješenja se provjeravaju po principu ispitnih uzoraka. Svaki ispitni uzorak sastoji se od ulazne i izlazne ispitne datoteke. Svakom zadatku pridružen je određeni broj ispitnih uzoraka, uobičajeno je nekoliko uzoraka javno dostupno te su dodatno objašnjeni u tekstu zadatka dok su ostali skriveni.</p>
+<br>
+<h3>Ocjena ispravnosti</h3>
+<p>Nakon što program uspješno završi s izvođenjem dobivena izlazna datoteka se uspoređuje s ispitnom izlaznom datotekom i ukoliko se podaci podudaraju odgovor se ocjenjuje kao ispravan, odnosno ako se ne podudaraju kao neispravan. Isti postupak se ponavlja za svaki od definiranih ispitnih uzoraka za taj zadatak.</p>
+<br>
+<h3>Rezultati</h3>
+<p>Čim završi ispitivanje pojedinog uzorka na ekranu se prikazuje okvir s rezultatima.</p>
+<p>Za javno dostupne ispitne uzorke moguće je klikom na ikone u donjem desnom uglu preuzeti ulaznu i izlaznu ispitnu datoteku dok se kod pojedinih skrivenih uzoraka klikom na ikonu u donjem lijevom uglu se može vidjeti kratak opis što taj uzorak ispituje.</p>
+<br>
+<ul><h3>Postupak postavljanja rješenja zadatka na server</h3>
+<li>Desni klik na projekt</li>
+<li>U padajućem izborniku odabrati <b><i>Export</i></b></li>
+<img src = "{%static 'images/automatiziranaprovjera1.png' %}" style = "width:40%;display: block;margin-left: auto;margin-right: auto;" />
+<br>
+<li>U novootvorenom izborniku izabrati <b><i>JAR file</i></b></li>
+<li>Stisnuti <b><i>Next></i></b></li>
+
+<img src = "{%static '/images/automatiziranaprovjera2.png' %}" style = "width:40%;display: block;margin-left: auto;margin-right: auto;" />
+<br>
+<li>U select <b><i>Export destination</i></b> dodati mjesto gdje želimo pohraniti projekt</li>
+
+<img src = "{%static '/images/automatiziranaprovjera3.png' %}" style = "width:40%;display: block;margin-left: auto;margin-right: auto;" />
+<br>
+<li>U rubrici Odgovor stisnuti  <b><i>Odaberi datoteku</i></b> i odabrati JAR file iz lokalnih datoteka računala</li>
+<img src = "{%static '/images/automatiziranaprovjera4.png' %}" style = "width:40%;display: block;margin-left: auto;margin-right: auto;" />
+<br>
+<li>Stisnuti  <b><i>Predaj</i></b></li></ul>
+
+{% endblock content %}
