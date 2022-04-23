@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.views import generic
 from django.shortcuts import render
 from .forms import SnippetForm, AssignmentForm
-from .models import Assignment, Course, Snippet, Test, TestCase, Quiz, Question, Answer
+from .models import Assignment, Course, Snippet, Test, TestCase, Quiz, Question, Answer, StudentAnswer
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
@@ -61,7 +61,8 @@ def main(request):
 def course(request, id):
     course = Course.objects.get(id=id)
     tests = Test.objects.filter(course=id)
-    print(tests)
+    quizs = Quiz.objects.filter(course=id)
+    print(tests, quizs)
     return render(request, 'course.html', {'course': course, 'tests': tests})
 
 
@@ -136,9 +137,7 @@ def logout_user(request):
     return redirect('home/')
 
 def quiz(request, id):
-    quiz = Quiz.objects.get(id=id)
-    questions = Question.objects.filter(quiz=id)
-    print(test, questions)
-    return render(request, 'quiz.html') #, {'quiz': quiz, 'questions': questions})
-
-
+    quizs = Quiz.objects.get(id=id)
+    studentAnswers = StudentAnswer.objects.filter(quiz=id)
+    print(quizs, studentAnswers)
+    return render(request, 'quiz.html', {'quizs': quizs, 'studentAnswers': studentAnswers})

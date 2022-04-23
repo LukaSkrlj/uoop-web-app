@@ -120,11 +120,12 @@ class Snippet(models.Model):
 
 class Quiz(models.Model):
     title = models.CharField(max_length=50)
-    course = models.ForeignKey("Course", on_delete=models.CASCADE)
-    description = models.CharField(max_length=300)
+    course = models.ForeignKey("Course", on_delete=models.CASCADE, null=True)
+    description = models.CharField(max_length=300, null=True)
     startDate = models.DateTimeField()
     endDate = models.DateTimeField()
     questionNum = models.IntegerField(default=0)
+    students = models.ManyToManyField(User, blank=True)
 
     def __str__(self):
         return self.title
@@ -141,8 +142,16 @@ class Question(models.Model):
 
 class Answer(models.Model):
     text = models.CharField(max_length=50)
-    question = models.ForeignKey("Question", on_delete=models.SET_NULL, null=True, blank=True)
+    question = models.ForeignKey("Question", on_delete=models.CASCADE, null=True)
     true = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text
+
+class StudentAnswer(models.Model):
+    question = models.ManyToManyField("Question")
+    answer = models.ManyToManyField("Answer")
+    students = models.ManyToManyField(User, blank=True)
 
     def __str__(self):
         return self.text
