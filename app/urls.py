@@ -12,7 +12,7 @@ urlpatterns = [
     path("logout_user", views.logout_user, name="logout_user"),
     path("simple", views.simple, name="simple"),
     path("upload", views.upload, name="upload"),
-    path('download/', views.download_file),
+    path('download/<int:id>', views.download, name="download"),
     # path("course/<int:id>", views.course, name="course"),
     # path("ispit/<name>", views.test, name="test"),
     # path("zadatak/<int:id>", views.assignment, name="assignment"),

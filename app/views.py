@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.views import generic
 from django.shortcuts import render
 from .forms import SnippetForm, AssignmentForm
@@ -138,23 +139,35 @@ def logout_user(request):
     logout(request)
     return redirect('home/')
 
-# Define function to download jar file using template
-def download_file(request, assignmentId=''):
-    if assignmentId != '':
-        # Define Django project base directory
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        # Define the full file path
-        filepath = BASE_DIR + '/media/' + 'abl.jar'
-        # Open the file for reading content
-        path = open(filepath, 'rb')
-        # Set the mime type
-        mime_type, _ = mimetypes.guess_type(filepath)
-        # Set the return value of the HttpResponse
-        response = HttpResponse(path, content_type=mime_type)
-        # Set the HTTP header for sending to browser
-        response['Content-Disposition'] = "attachment; filename=%s" % 'abl.jar'
-        # Return the response value
-        return response
-    
-    # Load the template
-    return render(request, 'file.html')
+# Function used to download jar file
+def download(request, id):
+    # find the current assignment in database
+    assignment = Assignment.objects.get(id=id)
+
+    # get fileName from current assignment
+    fileName = os.path.basename(assignment.assignmentTemplate.name)
+
+    #fileName should not be None
+    if fileName == None:
+        return Http404()
+
+    # Define Django project base directory
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    # Define the full file path
+    filepath = BASE_DIR + '/media/assignment_templates/' + fileName
+
+    # Open the file for reading content
+    path = open(filepath, 'rb')
+
+    # Set the mime type
+    mime_type, _ = mimetypes.guess_type(filepath)
+
+    # Set the return value of the HttpResponse
+    response = HttpResponse(path, content_type=mime_type)
+
+    # Set the HTTP header for sending to browser
+    response['Content-Disposition'] = "attachment; filename=%s" % fileName
+
+    # Return the response value
+    return response
