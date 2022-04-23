@@ -8,6 +8,12 @@ import subprocess
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+# Import mimetypes module
+import mimetypes
+# import os module
+import os
+# Import HttpResponse module
+from django.http.response import HttpResponse
 
 mediaPath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt\\uoop\\media\\'
 filePath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt'
@@ -131,3 +137,24 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return redirect('home/')
+
+# Define function to download jar file using template
+def download_file(request, assignmentId=''):
+    if assignmentId != '':
+        # Define Django project base directory
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        # Define the full file path
+        filepath = BASE_DIR + '/media/' + 'abl.jar'
+        # Open the file for reading content
+        path = open(filepath, 'rb')
+        # Set the mime type
+        mime_type, _ = mimetypes.guess_type(filepath)
+        # Set the return value of the HttpResponse
+        response = HttpResponse(path, content_type=mime_type)
+        # Set the HTTP header for sending to browser
+        response['Content-Disposition'] = "attachment; filename=%s" % 'abl.jar'
+        # Return the response value
+        return response
+    
+    # Load the template
+    return render(request, 'file.html')
