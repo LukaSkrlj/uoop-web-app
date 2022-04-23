@@ -78,9 +78,6 @@ class Assignment(models.Model):
     solution = models.TextField(max_length=10000)
     tags = models.ManyToManyField("Tag")
 
-    def __str__(self):
-        return self.title
-
 
 class TestCase(models.Model):
     assignment = models.ForeignKey(
@@ -120,3 +117,32 @@ class Snippet(models.Model):
 
     class Meta:
         ordering = ('-created_at', )
+
+class Quiz(models.Model):
+    title = models.CharField(max_length=50)
+    course = models.ForeignKey("Course", on_delete=models.CASCADE)
+    description = models.CharField(max_length=300)
+    startDate = models.DateTimeField()
+    endDate = models.DateTimeField()
+    questionNum = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.title
+
+
+class Question(models.Model):
+    text = models.CharField(max_length=50)
+    quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True)
+    points = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.text
+
+
+class Answer(models.Model):
+    text = models.CharField(max_length=50)
+    question = models.ForeignKey("Question", on_delete=models.SET_NULL, null=True, blank=True)
+    true = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text

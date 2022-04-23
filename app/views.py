@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.views import generic
 from django.shortcuts import render
 from .forms import SnippetForm, AssignmentForm
-from .models import Assignment, Course, Snippet, Test, TestCase
+from .models import Assignment, Course, Snippet, Test, TestCase, Quiz, Question, Answer
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
@@ -134,3 +134,11 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return redirect('home/')
+
+def quiz(request, id):
+    quiz = Quiz.objects.get(id=id)
+    questions = Question.objects.filter(quiz=id)
+    print(test, questions)
+    return render(request, 'quiz.html') #, {'quiz': quiz, 'questions': questions})
+
+
