@@ -2,7 +2,7 @@
 
 {% block content %}
 <style>
-  .dataTables_filter { /* tako da hide-a njihov default search button*/
+  .dataTables_filter { /* hides default search button*/
       display: none;
   }
 </style>
@@ -10,7 +10,7 @@
             
 
 <span id = "score"></span>
-<!-- Informativni modal -->
+<!-- Info modal -->
 <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -27,7 +27,7 @@
         Vremensko ograničenje: <span id = "maxTime">2</span> min
       </div>
       <div class="modal-footer">
-        <!-- Button koji otvara kviz i započinje odbrojavanje timera-->
+        <!-- Button which opens the quiz and starts the timer-->
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop" id = "quizStart"> Pokreni ispit </button>
       </div>
     </div>
@@ -35,7 +35,7 @@
 </div>
 
  
-<!-- Modal s kvizom, static data-backdrop kako se kviz klikom izvan modala ne bi zatvorio-->
+<!--Quiz modal, static data-backdrop so it doesnt't close by clicking background-->
 <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog" style="max-width: 80%;" >
     <div class="modal-content">
@@ -57,7 +57,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-danger
         " data-dismiss="modal" id = "quizFinish" >Završi kviz</button> <!--Buttton finish quiz which activates alert box-->
-         <button type="button" class="btn btn-primary" id = "nextQuestion">Iduće pitanje</button> <!-- button to go to the next question -->
+         <button type="button" class="btn btn-primary" id = "nextQuestion">Iduće pitanje</button> <!-- Button to go to the next question -->
       </div>
     </div>
   </div>

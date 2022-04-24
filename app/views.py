@@ -62,8 +62,8 @@ def course(request, id):
     course = Course.objects.get(id=id)
     tests = Test.objects.filter(course=id)
     quizs = Quiz.objects.filter(course=id)
-    print(tests, quizs)
-    return render(request, 'course.html', {'course': course, 'tests': tests})
+    print(course, tests, quizs)
+    return render(request, 'course.html', {'course': course, 'tests': tests,  'quizs': quizs})
 
 
 def test(request, id):
@@ -139,5 +139,5 @@ def logout_user(request):
 def quiz(request, id):
     quizs = Quiz.objects.get(id=id)
     studentAnswers = StudentAnswer.objects.filter(quiz=id)
-    print(quizs, studentAnswers)
+    print(studentAnswers, quizs)
     return render(request, 'quiz.html', {'quizs': quizs, 'studentAnswers': studentAnswers})

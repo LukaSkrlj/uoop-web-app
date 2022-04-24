@@ -135,6 +135,7 @@ class Question(models.Model):
     text = models.CharField(max_length=50)
     quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True)
     points = models.IntegerField(default=0)
+    picture = models.FileField()
 
     def __str__(self):
         return self.text
