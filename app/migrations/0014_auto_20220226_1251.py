@@ -10,14 +10,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='assignment',
-            name='inputDescription',
-            field=models.TextField(default='', max_length=10000),
-        ),
-        migrations.AlterField(
-            model_name='assignment',
-            name='outputDescription',
-            field=models.TextField(default='', max_length=10000),
-        ),
+        # migrations.AlterField(
+        #     model_name='assignment',
+        #     name='inputDescription',
+        #     field=models.TextField(default='', max_length=10000),
+        # ),
+        # migrations.AlterField(
+        #     model_name='assignment',
+        #     name='outputDescription',
+        #     field=models.TextField(default='', max_length=10000),
+        # ),
     ]

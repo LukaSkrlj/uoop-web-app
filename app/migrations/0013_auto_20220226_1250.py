@@ -13,12 +13,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='assignment',
             name='inputDescription',
-            field=models.TextField(max_length=10000, null=True),
+            field=models.TextField(max_length=10000),
         ),
         migrations.AddField(
             model_name='assignment',
             name='outputDescription',
-            field=models.TextField(max_length=10000, null=True),
+            field=models.TextField(max_length=10000),
         ),
         migrations.AlterField(
             model_name='testcase',

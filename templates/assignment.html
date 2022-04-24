@@ -99,11 +99,71 @@
             </div>
         </div>
         <div class="tab-pane fade" id="odgovor" role="tabpanel" aria-labelledby="odgovor-tab">
-            <form method="post" enctype="multipart/form-data">
+            <!-- TODO: 1 array di ce bit i passed i failed testovi i onda ovisno dal je prosao ili ne da ga prikaze zelenim/crvenim, isto da ako svi testovi nisu passed da pise Neispravno umjesto Ispravno-->
+            {% if passedTests|length > 0 %}
+            <div class="test-cases-container">
+                <div class="valid-invalid-title" >
+                    <div><i class="fa-solid fa-check" style="color: green;"></i> Ispravno</div> 
+                </div>
+                
+                {% for testCase in passedTests %}
+                <div class="test-case-wrapper valid-border">
+                    <div class="test-case-elements-wrapper valid-color">
+                        <div class="test-case-title-wrapper">
+                            <div class="test-case-title">
+                                <div><b>Ispravno</b></div>
+                                <div><i class="fa-solid fa-check"></i></div>
+                            </div>
+                            <div class="test-case-element"><i class="fa-solid fa-floppy-disk"></i> <b>Memorija:</b> 996kB</div>
+                            <div class="test-case-element"><i class="fa-solid fa-clock"></i> <b>Vrijeme:</b> 1ms</div>
+                            <div class="test-case-element"><i class="fa-solid fa-share"></i> <b>Izlaz:</b> U redu</div>
+                            <div style="display: flex; justify-content: space-between;">
+                                {% if testCase.hint %}
+                                    <div><i type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ testCase.hint }}</p>" class="fa-solid fa-circle-info"></i></div>
+                                {% endif %}
+
+                                {% if testCase.isVisible %}
+                                    <div><i class="fa-solid fa-square-check"></i></div>
+                                    <div><i class="fa-solid fa-right-to-bracket"></i></div>
+                                    <div><i class="fa-solid fa-right-from-bracket"></i></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% for testCase in passedTests %}
+                <div class="test-case-wrapper invalid-border">
+                    <div class="test-case-elements-wrapper invalid-color">
+                        <div class="test-case-title-wrapper">
+                            <div class="test-case-title">
+                                <div><b>Neispravno</b></div>
+                                <div><i class="fa-solid fa-xmark"></i></div>
+                            </div>
+                            <div class="test-case-element"><i class="fa-solid fa-floppy-disk"></i> <b>Memorija:</b> 996kB</div>
+                            <div class="test-case-element"><i class="fa-solid fa-clock"></i> <b>Vrijeme:</b> 1ms</div>
+                            <div class="test-case-element"><i class="fa-solid fa-share"></i> <b>Izlaz:</b> U redu</div>
+                            <div style="display: flex; justify-content: space-between;">
+                                {% if testCase.hint %}
+                                    <div><i type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ testCase.hint }}</p>" class="fa-solid fa-circle-info"></i></div>
+                                {% endif %}
+
+                                {% if testCase.isVisible%}
+                                    <div><i class="fa-solid fa-square-check"></i></div>
+                                    <div><i class="fa-solid fa-right-to-bracket"></i></div>
+                                    <div><i class="fa-solid fa-right-from-bracket"></i></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form id="form-uploadJar" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <br></br>
-                <br></br>
-                <br></br>
                 <br></br>
                 <br></br>
                 {{ form.as_p }}
@@ -139,5 +199,20 @@
             document.getElementById(e.id).style.width = "70px"
         }, 500)
     }
+    // initialize all popovers on a page
+    $(function () {
+        $('[data-toggle="popover"]').popover({
+            'html': true
+        })
+    })
+    
+    // $('i').on("inserted.bs.popover", function() {
+
+    //     console.log("unutra");
+    //     var popover = $(this).data("bs.popover");
+
+    //     if (popover)
+    //         MathJax.Hub.Queue(["Typeset", MathJax.Hub], popover)
+    // });
 </script>
 {% endblock content %}
