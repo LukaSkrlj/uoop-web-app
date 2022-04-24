@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('app.urls'), name='app'),
     path('', include('django.contrib.auth.urls'), name='auth'),
-    # path('saml2/', include('mockdjangosaml2.urls'), name='login')
+    # path('saml2/', include('mockdjangosaml2.urls'), name='login'),
 ]
 
 if settings.DEBUG:

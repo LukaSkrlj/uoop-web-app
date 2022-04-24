@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+    {% if assignment.assignmentTemplate %}
+        <a href="{% url 'uoop:download' assignment.id %}">Download PDF</a>
+    {% endif %}
     <div class="container page-top-offset" style="margin: 0px; /*font-family: 'NotoSerif';*/"> <!-- nije isto ko na prog.riteh.hr s ovim fontom -->
         <p>
             <i class="fa-solid fa-arrow-left"></i>

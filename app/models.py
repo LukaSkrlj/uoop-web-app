@@ -95,7 +95,7 @@ class Assignment(models.Model):
 
 class TestCase(models.Model):
     assignment = models.ForeignKey(
-        "Assignment", on_delete=models.CASCADE, null=True, blank=True)
+        "Assignment", on_delete=models.CASCADE)
     hint = models.CharField(max_length=255, null=True, blank=True)
     input = models.TextField(max_length=10000)
     output = models.TextField(max_length=10000)

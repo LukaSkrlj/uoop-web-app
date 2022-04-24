@@ -14,6 +14,7 @@ urlpatterns = [
     path("upload", views.upload, name="upload"),
     path("automatiziranaprovjera/", views.automatiziranaprovjera, name="automatiziranaprovjera"), 
     path("osustavu/", views.osustavu, name="osustavu")
+    path('download/<int:id>', views.download, name="download"),
     # path("course/<int:id>", views.course, name="course"),
     # path("ispit/<name>", views.test, name="test"),
     # path("zadatak/<int:id>", views.assignment, name="assignment"),
