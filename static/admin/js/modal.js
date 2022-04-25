@@ -1,5 +1,4 @@
 //Inicijalizacija varijabli
-<<<<<<< HEAD
 const closeModal2 = document.getElementById('closeModal2')
 const startQuiz = document.getElementById('quizStart')
 const quizFinish = document.getElementById('quizFinish')
@@ -23,36 +22,6 @@ startQuiz.addEventListener('click', startQuizFunction)
 startQuiz.addEventListener('click', closeDialog)
 quizFinish.addEventListener('click', alertPopUp)
 closeModal2.addEventListener('click', alertPopUp)
-=======
-const closeModal2Button = document.getElementById('button_closeModal2')
-const pokreniKvizButton = document.getElementById('button_pokreniKviz')
-const zavrsiKvizButton = document.getElementById('button_zavrsiKviz')
-const iducePitanjeButton = document.getElementById('button_iducePitanje')
-const timerButton = document.getElementById('timer')
-const preostaloVrijemeSpan = document.getElementById('span_preostaloVrijeme')
-const ispitImeSpan = document.getElementById('span_ispitIme')
-const brojPitanjaSpan = document.getElementById('span_brojZadatka')
-const pitanjeDiv = document.getElementById('div_pitanje')
-const opcijeOdgovoraDiv = document.getElementById('div_opcijeOdgovora')
-
-
-const questionContainerElement = document.getElementById('div_pitanje')
-const questionElement = document.getElementById('question')
-const answerButtonsElement = document.getElementById('answer-buttons')
-
-let vrijeme = 2
-let timerVrijeme = vrijeme*60*1000
-
-let shuffledQuestions, currentQuestionIndex, maxQuestions
-let time = 0;
-
-//Dodavanje akcija koje se pokreću dodirom gumba
-
-pokreniKvizButton.addEventListener('click', startGame)
-pokreniKvizButton.addEventListener('click', closeDialog)
-zavrsiKvizButton.addEventListener('click', alertPopUp)
-closeModal2Button.addEventListener('click', alertPopUp)
->>>>>>> 6c517cb (File sa javascript kodom za teorijski kviz)
 
 
 //Alert box 
@@ -64,7 +33,6 @@ function alertPopUp() {
     //
   }
 }
-<<<<<<< HEAD
 //Showing left time in timer
 //TO DO:display timer with 2 digits
 function timeLeftFunction(){
@@ -83,26 +51,6 @@ nextQuestion.addEventListener('click', () => {
   setNextQuestion()
 })
 //Co
-=======
-//prikaz preostalog vremena u timeru
-//TO DO:prikaz s 2 brojke
-function timeLeft(){
-	if(timerVrijeme == 0){closeQuiz()}
-	if(timerVrijeme == 60*1000){timer.style.background = 'red'}
-	let minute = Math.floor(timerVrijeme/60/1000)
-	let sekunde = Math.floor(timerVrijeme - (minute*60*1000)) / 1000 
-	preostaloVrijemeSpan.innerText = String(minute) + ':' + String(sekunde)
-	timerVrijeme -= 1000
-	
-}
-
-//funkcija koja se pokreće klikom na button iduće pitanje
-iducePitanjeButton.addEventListener('click', () => {
-  currentQuestionIndex++
-  setNextQuestion()
-})
-//zatvaranje informativnog modala
->>>>>>> 6c517cb (File sa javascript kodom za teorijski kviz)
 function closeDialog() {
 		$("#exampleModal").modal('hide');
 		$('body').removeClass('modal-open');
@@ -114,7 +62,6 @@ function closeQuiz() {
 		$("#staticBackdrop").modal('hide');
 		$('body').removeClass('modal-open');
 		$('.modal-backdrop').remove(); 
-<<<<<<< HEAD
     $("#openInfoModal").hide();
    }
 
@@ -127,24 +74,11 @@ function checkCorrect(){
   })
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextQuestion.classList.remove('hide')
-=======
-    }
-	
-//funkcija koja provjerava je li unesen odgovor točan
-//TO DO: uncheck radio buttona
-function checkCorrect(){
-	Array.from(opcijeOdgovoraDiv.children).forEach(button => {
-    
-  })
-  if (shuffledQuestions.length > currentQuestionIndex + 1) {
-    iducePitanjeButton.classList.remove('hide')
->>>>>>> 6c517cb (File sa javascript kodom za teorijski kviz)
   } 
 	
 }
 
 //početna funkcija prilikom pokretanja kviza
-<<<<<<< HEAD
 function startQuizFunction() {
   setInterval(timeLeftFunction, 1000); //periodično dekrementiranje timera
   startQuiz.classList.add('hide') //skrivanje buttona
@@ -152,15 +86,6 @@ function startQuizFunction() {
   currentQuestionIndex = 0
   maxQuestions = 4;
  // question.classList.remove('hide')
-=======
-function startGame() {
-  setInterval(timeLeft, 1000); //periodično dekrementiranje timera
-  pokreniKvizButton.classList.add('hide') //skrivanje buttona
-  shuffledQuestions = questions.sort(() => Math.random() - .5) 
-  currentQuestionIndex = 0
-  maxQuestions = 4;
-  questionContainerElement.classList.remove('hide')
->>>>>>> 6c517cb (File sa javascript kodom za teorijski kviz)
   setNextQuestion()
 }
 
@@ -169,11 +94,7 @@ function setNextQuestion() {
   checkCorrect()
   resetState()
   if(currentQuestionIndex == maxQuestions -1){
-<<<<<<< HEAD
 	  nextQuestion.style.visibility = 'hidden'
-=======
-	  iducePitanjeButton.style.visibility = 'hidden'
->>>>>>> 6c517cb (File sa javascript kodom za teorijski kviz)
   }
   
 	showQuestion(shuffledQuestions[currentQuestionIndex]);
@@ -181,7 +102,6 @@ function setNextQuestion() {
 }
 
 //prikaz pitanja i radio buttona i njihovih tekstova
-<<<<<<< HEAD
 function showQuestion(questionvariable) {
 	question.innerText = questionvariable.question
 	questionNumber.innerText = currentQuestionIndex +1
@@ -197,16 +117,6 @@ function showQuestion(questionvariable) {
   button.setAttribute("name",nameOfGroup)
   button.setAttribute("id", answer.text);
   
-=======
-function showQuestion(question) {
-	pitanjeDiv.innerText = question.question
-	brojPitanjaSpan.innerText = currentQuestionIndex +1
-	question.answers.forEach(answer => {
-    const button = document.createElement('INPUT')
-	button.setAttribute("type", "radio")
-    button.classList.add('btn')
-	button.setAttribute("label", answer.text)
->>>>>>> 6c517cb (File sa javascript kodom za teorijski kviz)
 	
 	const y = document.createElement("LABEL")
 	const t = document.createTextNode(' ' + answer.text)
@@ -221,32 +131,19 @@ function showQuestion(question) {
     }
 	
 	//dodavanje novih elemenata u div->dinamično mijenjanje broja radio buttona
-<<<<<<< HEAD
   button.addEventListener('click', selectAnswer)
   answers.appendChild(button)
 	answers.appendChild(t)
 	answers.appendChild(linebreak)
-=======
-    button.addEventListener('click', selectAnswer)
-    opcijeOdgovoraDiv.appendChild(button)
-	opcijeOdgovoraDiv.appendChild(t)
-	opcijeOdgovoraDiv.appendChild(linebreak)
->>>>>>> 6c517cb (File sa javascript kodom za teorijski kviz)
   })
 }
 
 //reset modala kako bi se u modalu izbrisalo staro pitanje i radio buttoni
 function resetState() {
   clearStatusClass(document.body)
-<<<<<<< HEAD
   nextQuestion.classList.add('hide')
   while (answers.firstChild) {
     answers.removeChild(answers.firstChild)
-=======
-  iducePitanjeButton.classList.add('hide')
-  while (opcijeOdgovoraDiv.firstChild) {
-    opcijeOdgovoraDiv.removeChild(opcijeOdgovoraDiv.firstChild)
->>>>>>> 6c517cb (File sa javascript kodom za teorijski kviz)
   }
 }
 
@@ -255,19 +152,11 @@ function selectAnswer(e) {
   const selectedButton = e.target
   const correct = selectedButton.dataset.correct
   setStatusClass(document.body, correct)
-<<<<<<< HEAD
   Array.from(answers.children).forEach(button => {
     setStatusClass(button, button.dataset.correct)
   })
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextQuestion.classList.remove('hide')
-=======
-  Array.from(opcijeOdgovoraDiv.children).forEach(button => {
-    setStatusClass(button, button.dataset.correct)
-  })
-  if (shuffledQuestions.length > currentQuestionIndex + 1) {
-    iducePitanjeButton.classList.remove('hide')
->>>>>>> 6c517cb (File sa javascript kodom za teorijski kviz)
   } 
 }
 
