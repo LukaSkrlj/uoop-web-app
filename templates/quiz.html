@@ -1,13 +1,14 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 <style>
   .dataTables_filter { /* hides default search button*/
       display: none;
   }
 </style>
+
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id = "openInfoModal" >Otvori ispit</button>
-            
+       
 
 <span id = "score"></span>
 <!-- Info modal -->
@@ -15,16 +16,17 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"><span id = "quizName" >{{quiz.title}}</span></h5> <!-- Dynanic span with quiz name -->
+        <h5 class="modal-title" id="exampleModalLabel"><span id = "quizName" >{{ quizs.title }} </span></h5> <!-- Dynanic span with quiz name -->
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id = "closeModal1"> <!-- Cross button that closes the quiz info modal -->
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body" id = "quizInfo"> <!-- Dynamic span with quiz details -->
-        {{quiz.description}}
-        1. kontrolna zadaća prikazuje način polaganja kolegija putem uoop-riteh.hr sustava. Broj pokušaja je neograničen a ostvareni rezultati se ne evidentiraju.<br>
-
-        Vremensko ograničenje: <span id = "maxTime">2</span> min
+        {{ quizs.description }}
+        <!--1. kontrolna zadaća prikazuje način polaganja kolegija putem uoop-riteh.hr sustava. Broj pokušaja je neograničen a ostvareni rezultati se ne evidentiraju.<br>
+        -->
+        <br>
+        <b>Vrijeme završetka ispita:</b> <span id = "maxTime">{{ quizs.endDate }}</span>
       </div>
       <div class="modal-footer">
         <!-- Button which opens the quiz and starts the timer-->
@@ -50,6 +52,7 @@
       </div>
       <div class="modal-body" id = "question"> <!--Place where the question is displayed-->
         ...
+
       </div>
       <div class="modal-body" id = "answers"> <!-- Place where the buttons are displayed -->
         ...
@@ -63,7 +66,13 @@
   </div>
 </div>
 
-
+<!--</script>-->
+<script>
+    var maxMinutes = '{{ quizs.endDate.minute }}';
+    var maxSeconds = '{{ quizs.endDate.second }}'; 
+    var minMinutes = '{{ quizs.startDate.minute }}';
+    var minSeconds = '{{ quizs.startDate.second }}';
 </script>
-{% load static %}
-<script src="{% static 'admin/js/modal.js' %}" ></script>
+
+<script src="{% static 'components/js/modal.js' %}" ></script>
+{% endblock content %}

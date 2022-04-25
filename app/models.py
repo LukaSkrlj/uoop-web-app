@@ -129,13 +129,16 @@ class Quiz(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def __getDate__(self):
+        return self.endDate
+
 
 
 class Question(models.Model):
     text = models.CharField(max_length=50)
     quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True)
     points = models.IntegerField(default=0)
-    picture = models.FileField()
 
     def __str__(self):
         return self.text
@@ -153,6 +156,3 @@ class StudentAnswer(models.Model):
     question = models.ManyToManyField("Question")
     answer = models.ManyToManyField("Answer")
     students = models.ManyToManyField(User, blank=True)
-
-    def __str__(self):
-        return self.text

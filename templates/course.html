@@ -28,28 +28,17 @@
             {% endcomment %}
             <ul>
             {% for test in tests %} 
-                <!-- <div class="contest-title">
-                    <span class="glyphicon_clock glyphicon glyphicon-time"></span>
-                    <a href="{% url 'uoop:test' test.id %}">{{ test.title }}</a>
-                </div> -->
                 <li>
-                    <i class="fa-solid fa-clock" style="/*color: black; background-color: white;*/"></i>
-                    <!-- <i class="fa-regular fa-clock-three"></i> -->
-                    <!-- <i class="fa-solid fa-xmark" style="color: red;"></i> -->
+                    <i class="fa-solid fa-clock"></i>
                    <a href="{% url 'uoop:test' test.id %}">{{ test.title }}</a> 
                 </li>
            {% endfor %}
             </ul>
             <ul>
             {% for quiz in quizs %}
-                <!-- <div class="contest-title">
-                    <span class="glyphicon_clock glyphicon glyphicon-time"></span>
-                    <a href="{% url 'uoop:test' test.id %}">{{ test.title }}</a>
-                </div> -->
+                
                 <li>
-                    <i class="fa-solid fa-clock" style="/*color: black; background-color: white;*/"></i>
-                    <!-- <i class="fa-regular fa-clock-three"></i> -->
-                    <!-- <i class="fa-solid fa-xmark" style="color: red;"></i> -->
+                    <i class="fa-solid fa-clock" ></i>
                     <a href="{% url 'uoop:quiz' quiz.id %}">{{ quiz.title }}</a>
                 </li>
             {% endfor %}
