@@ -1,6 +1,7 @@
-from django.http import Http404
 from django.views import generic
 from django.shortcuts import render
+from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
+from app.helpers import download_file
 from .forms import SnippetForm, AssignmentForm
 from .models import Assignment, Course, Snippet, Test, TestCase
 from django.shortcuts import render, redirect
@@ -9,12 +10,6 @@ import subprocess
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-# Import mimetypes module
-import mimetypes
-# import os module
-import os
-# Import HttpResponse module
-from django.http.response import HttpResponse
 
 mediaPath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt\\uoop\\media\\'
 filePath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt'
@@ -139,35 +134,13 @@ def logout_user(request):
     logout(request)
     return redirect('home/')
 
-# Function used to download jar file
-def download(request, id):
-    # find the current assignment in database
-    assignment = Assignment.objects.get(id=id)
+# Function used to download jar solution file for specific assignment
+def download_solution(request, id):
+    return download_file(id, SOLUTIONS_FOLDER)
 
-    # get fileName from current assignment
-    fileName = os.path.basename(assignment.assignmentTemplate.name)
+# Function used to download jar template file for specific assignment
+def download_template(request, id):
+    return download_file(id, TEMPLATES_FOLDER)
 
-    #fileName should not be None
-    if fileName == None:
-        return Http404()
 
-    # Define Django project base directory
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    # Define the full file path
-    filepath = BASE_DIR + '/media/assignment_templates/' + fileName
-
-    # Open the file for reading content
-    path = open(filepath, 'rb')
-
-    # Set the mime type
-    mime_type, _ = mimetypes.guess_type(filepath)
-
-    # Set the return value of the HttpResponse
-    response = HttpResponse(path, content_type=mime_type)
-
-    # Set the HTTP header for sending to browser
-    response['Content-Disposition'] = "attachment; filename=%s" % fileName
-
-    # Return the response value
-    return response
