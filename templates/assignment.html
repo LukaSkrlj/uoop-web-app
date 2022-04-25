@@ -119,7 +119,7 @@
                             <div class="test-case-element"><i class="fa-solid fa-share"></i> <b>Izlaz:</b> U redu</div>
                             <div style="display: flex; justify-content: space-between;">
                                 {% if testCase.hint %}
-                                    <div><i type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ testCase.hint }}</p>" class="fa-solid fa-circle-info"></i></div>
+                                    <div><i onClick="parseMathJax()" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ testCase.hint }}</p>" class="fa-solid fa-circle-info"></i></div>
                                 {% endif %}
 
                                 {% if testCase.isVisible %}
@@ -133,7 +133,7 @@
                 </div>
                 {% endfor %}
 
-                {% for testCase in passedTests %}
+                {% for testCase in failedTests %}
                 <div class="test-case-wrapper invalid-border">
                     <div class="test-case-elements-wrapper invalid-color">
                         <div class="test-case-title-wrapper">
@@ -146,7 +146,7 @@
                             <div class="test-case-element"><i class="fa-solid fa-share"></i> <b>Izlaz:</b> U redu</div>
                             <div style="display: flex; justify-content: space-between;">
                                 {% if testCase.hint %}
-                                    <div><i type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ testCase.hint }}</p>" class="fa-solid fa-circle-info"></i></div>
+                                    <div><i onClick="parseMathJax()" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ testCase.hint }}</p>" class="fa-solid fa-circle-info"></i></div>
                                 {% endif %}
 
                                 {% if testCase.isVisible%}
@@ -206,13 +206,10 @@
         })
     })
     
-    // $('i').on("inserted.bs.popover", function() {
-
-    //     console.log("unutra");
-    //     var popover = $(this).data("bs.popover");
-
-    //     if (popover)
-    //         MathJax.Hub.Queue(["Typeset", MathJax.Hub], popover)
-    // });
+    const parseMathJax = () => {
+        setTimeout(() => {
+            MathJax.typeset() //searches for unparsed elements and parses them 
+        }, 0)
+    }
 </script>
 {% endblock content %}
