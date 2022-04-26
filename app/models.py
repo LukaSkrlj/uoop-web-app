@@ -133,20 +133,23 @@ class Quiz(models.Model):
     def __getDate__(self):
         return self.endDate
 
+    
 
 
 class Question(models.Model):
     text = models.CharField(max_length=50)
-    quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True)
+    quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True,  related_name='question')
     points = models.IntegerField(default=0)
 
     def __str__(self):
         return self.text
+    
+    
 
 
 class Answer(models.Model):
     text = models.CharField(max_length=50)
-    question = models.ForeignKey("Question", on_delete=models.CASCADE, null=True)
+    question = models.ForeignKey("Question", on_delete=models.CASCADE, null=True,  related_name='answer')
     true = models.BooleanField(default=False)
 
     def __str__(self):

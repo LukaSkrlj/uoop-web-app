@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+<title>Teorijski ispit</title>
 <style>
   .dataTables_filter { /* hides default search button*/
       display: none;
   }
 </style>
-
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id = "openInfoModal" >Otvori ispit</button>
-       
+{%for answer in answers%}
+{{ answer.text }}
+{% endfor %}
 
 <span id = "score"></span>
 <!-- Info modal -->
@@ -39,30 +41,42 @@
  
 <!--Quiz modal, static data-backdrop so it doesnt't close by clicking background-->
 <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog" style="max-width: 80%;" >
+  <div class="modal-dialog .modal-dialog-scrollable" style="max-width: 80%;" >
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="staticBackdropLabel">Zadatak <span id = "questionNumber">1</span></h4> <!-- Dynamic question number -->
+        <h4 class="modal-title" id="staticBackdropLabel">{{ quiz.title }}</h4> <!-- Dynamic question number -->
         <tab><button type="button" id = "timer" class="btn btn-primary" disabled><span id = "timeLeft"></span></button> <!--Button with time left, changes color in the last minute -->
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id = "closeModal2"> <!-- Cross button which activates alert box -->
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      
+      {%for question in questions%}
       <div class="modal-body" id = "questionPic"> <!--Place where the picture is displayed-->
       </div>
       <div class="modal-body" id = "question"> <!--Place where the question is displayed-->
-        ...
-
+      <b>  {{ question.text }} </b>
       </div>
       <div class="modal-body" id = "answers"> <!-- Place where the buttons are displayed -->
-        ...
+        <form action="" method = "post">
+          {% csrf_token %}
+        {%for answerOpt in question.answer.all%}
+        <input type="radio" name = '{{ question.text }}' value = '{{ answerOpt.text }}' > <label>{{ answerOpt.text }}</label><br>
+        {% endfor %}
+        
       </div>
+      <hr>
+      {% endfor %}
+     </form>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger
+        <button type="submit" class="btn btn-danger
         " data-dismiss="modal" id = "quizFinish" >Završi kviz</button> <!--Buttton finish quiz which activates alert box-->
-         <button type="button" class="btn btn-primary" id = "nextQuestion">Iduće pitanje</button> <!-- Button to go to the next question -->
+        <!-- <button type="button" class="btn btn-primary" id = "nextQuestion">Iduće pitanje</button> Button to go to the next question -->
       </div>
+      
     </div>
+    
   </div>
 </div>
 
@@ -72,7 +86,9 @@
     var maxSeconds = '{{ quizs.endDate.second }}'; 
     var minMinutes = '{{ quizs.startDate.minute }}';
     var minSeconds = '{{ quizs.startDate.second }}';
+    $("input[type=radio]").attr('disabled', true);
+    $("input[type=radio]").attr('disabled', false);
 </script>
 
-<script src="{% static 'components/js/modal.js' %}" ></script>
+<script src="{% static 'components/js/onePageQuiz.js' %}" ></script> 
 {% endblock content %}

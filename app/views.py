@@ -2,7 +2,7 @@ from turtle import isvisible
 from django.http import HttpResponseRedirect
 from django.views import generic
 from django.shortcuts import render
-from .forms import SnippetForm, AssignmentForm
+from .forms import SnippetForm, AssignmentForm, QuizForm
 from .models import Assignment, Course, Snippet, Test, TestCase, Quiz, Question, Answer, StudentAnswer
 from django.shortcuts import render, redirect
 from django.core.files import File
@@ -138,6 +138,17 @@ def logout_user(request):
 
 def quiz(request, id):
     quizs = Quiz.objects.get(id=id)
-    studentAnswers = StudentAnswer.objects.filter(answer__question__quiz=id)
-    print(studentAnswers, quizs, request.user)
-    return render(request, 'quiz.html', {'quizs': quizs})
+    questions = list(Question.objects.filter(quiz_id = id))
+    #answers = list(Answer.objects.filter(quiz__id = id).)
+    studentAnswers= StudentAnswer.objects.filter(answer__question__quiz=id)
+    if request.method == 'POST':
+        form = QuizForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home/')
+        else:
+            return redirect('home/') 
+            #return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+    else:
+        form = QuizForm()     
+    return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
