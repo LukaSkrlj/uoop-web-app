@@ -1,19 +1,21 @@
-from turtle import isvisible
-from django.http import HttpResponseRedirect
+import os
 from django.views import generic
 from django.shortcuts import render
+from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
+from app.helpers import download_file
+from uoop.settings import BASE_DIR
 from .forms import SnippetForm, AssignmentForm
 from .models import Assignment, Course, Snippet, Test, TestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
-from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 
 # mediaPath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt\\uoop\\media\\'
-mediaPath = 'C:\\Users\\Borna\\Documents\\DJANGO\\uoop-web-app\\media\\' #svatko svoje treba stavit ili preko env file-a
+# mediaPath = 'C:\\Users\\Borna\\Documents\\DJANGO\\uoop-web-app\\media\\' #svatko svoje treba stavit ili preko env file-a
+mediaPath = os.path.join(BASE_DIR, 'media')
 filePath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt'
 
 
@@ -88,7 +90,7 @@ def assignment(request, id):
             form.save()
             for testCase in testCases:
                 ans = subprocess.check_output(
-                    ['java', '-jar', mediaPath + request.FILES['jar'].name], input=testCase.input.encode(), timeout=testCase.time)
+                    ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.time)
                 if(ans == testCase.output.encode()):
                     passedTests.append(testCase)
                 else:
@@ -108,11 +110,11 @@ def getStartDateYear(course):
     return str(course['startDate']).split("-")[0]
 
 def home(request):
-    tmp = Course.objects.values() #.values() -> QuerySet to dict
+    tmp = Course.objects.values()
     courses = {}
     
-    for course in tmp: #stavlja courseve koji su zapoceli iste godine u zajednicki array, tj array koji je value od key-a koji je startDate
-        if courses.get(str(course['startDate']).split("-")[0]) == None: #radi sub dictionary gdje je key startDate courseva i value od tog key-a su svi coursevi koji su startali te godine
+    for course in tmp:
+        if courses.get(str(course['startDate']).split("-")[0]) == None:
             courses[getStartDateYear(course)] = [course]
         else:
             courses[getStartDateYear(course)].append(course)
@@ -132,9 +134,9 @@ def upload(request):
 
 def login_user(request):
     if request.method == 'POST':
-        username = request.POST['username']
+        email = request.POST['username']
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             return redirect('home/')
@@ -144,4 +146,15 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('home/')
+    return redirect('/')
+
+# Function used to download jar solution file for specific assignment
+def download_solution(request, id):
+    return download_file(id, SOLUTIONS_FOLDER)
+
+# Function used to download jar template file for specific assignment
+def download_template(request, id):
+    return download_file(id, TEMPLATES_FOLDER)
+
+
+

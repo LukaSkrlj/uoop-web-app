@@ -113,6 +113,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'app.NewUser'
+
 # AUTHENTICATION_BACKENDS = (
 #     'djangosaml2.backends.Saml2Backend',
 # )

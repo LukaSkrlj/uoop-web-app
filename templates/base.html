@@ -51,7 +51,7 @@
                 <li class="nav-item" style="position: absolute; right: 20%;">
                     {% if user.is_authenticated %}
                         <a href="/logout_user">
-                            <button type="button" class="btn btn-primary">{{ user.username }} Odjava</button>
+                            <button type="button" class="btn btn-primary">{{ user.email }} Odjava</button>
                         </a>
                     {% else %}
                         <a href="/login_user">
@@ -65,12 +65,12 @@
         <div style="margin-left: 23%;">
             {% block content %}{% endblock %}
         </div>
-        <div class="footer">
+        <!-- <div class="footer">
             <div class="container">
                 <p>
                     Luka Škrlj
                 </p>
             </div>
-        </div>
+        </div> -->
     </body>
 </html>

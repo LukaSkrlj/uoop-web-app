@@ -162,16 +162,19 @@
             </div>
             {% endif %}
 
-            <form id="form-uploadJar" method="post" enctype="multipart/form-data">
+            <form id="form-uploadJar" method="post" enctype="multipart/form-data" style="margin-top: 2%">
                 {% csrf_token %}
-                <br></br>
-                <br></br>
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-primary">
                     Predaj
                 </button>
+                {% if assignment.assignmentTemplate %}
+                    <a class="btn btn-light" href="{% url 'uoop:download_template' assignment.id %}">Download template</a>
+                {% endif %}
             </form>
         </div>
+
+        {% if assignment.isSolutionVisible %}
         <div class="tab-pane fade" id="rjesenja" role="tabpanel" aria-labelledby="rjesenja-tab">
             <div id="subpub">
                 <h2>
@@ -180,8 +183,12 @@
                 <div class="highlight">
                     <pre>{{ assignment.solution }}</pre>
                 </div>
+                <a class="btn btn-primary" href="{% url 'uoop:download_solution' assignment.id %}">Download solution</a>
             </div>
-    </div> 
+        </div>
+        {% endif %}
+    </div>
+    
 <script>
     let intervalId
     const copyClick = (e) => {
