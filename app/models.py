@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.core.validators import FileExtensionValidator
 from django.db import models
 
+from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
+
 
 class CustomUserManager(BaseUserManager):
     """
@@ -84,9 +86,9 @@ class Assignment(models.Model):
     isSolutionVisible = models.BooleanField(default=False)
     answer = models.TextField(max_length=10000, null=True, blank=True)
     tags = models.ManyToManyField("Tag")
-    assignmentTemplate = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to='assignment_templates', null=True)
+    assignmentTemplate = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to=TEMPLATES_FOLDER, null=True)
     #TODO try to read Java code from files and then solution atribute can be removed
-    solutionFile = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to='assignment_solutions', null=True)
+    solutionFile = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to=SOLUTIONS_FOLDER)
     solution = models.TextField(max_length=10000)
 
     def __str__(self):
