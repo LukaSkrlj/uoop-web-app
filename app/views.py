@@ -1,13 +1,12 @@
-from turtle import isvisible
-from django.http import HttpResponseRedirect
 from django.views import generic
 from django.shortcuts import render
+from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
+from app.helpers import download_file
 from .forms import SnippetForm, AssignmentForm
 from .models import Assignment, Course, Snippet, Test, TestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
-from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -121,9 +120,9 @@ def upload(request):
 
 def login_user(request):
     if request.method == 'POST':
-        username = request.POST['username']
+        email = request.POST['username']
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             return redirect('home/')
@@ -134,3 +133,14 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return redirect('home/')
+
+# Function used to download jar solution file for specific assignment
+def download_solution(request, id):
+    return download_file(id, SOLUTIONS_FOLDER)
+
+# Function used to download jar template file for specific assignment
+def download_template(request, id):
+    return download_file(id, TEMPLATES_FOLDER)
+
+
+
