@@ -1,7 +1,9 @@
+import os
 from django.views import generic
 from django.shortcuts import render
 from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
 from app.helpers import download_file
+from uoop.settings import BASE_DIR
 from .forms import SnippetForm, AssignmentForm
 from .models import Assignment, Course, Snippet, Test, TestCase
 from django.shortcuts import render, redirect
@@ -11,7 +13,9 @@ from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 
-mediaPath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt\\uoop\\media\\'
+# mediaPath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt\\uoop\\media\\'
+# mediaPath = 'C:\\Users\\Borna\\Documents\\DJANGO\\uoop-web-app\\media\\' #svatko svoje treba stavit ili preko env file-a
+mediaPath = os.path.join(BASE_DIR, 'media')
 filePath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt'
 
 
@@ -86,7 +90,7 @@ def assignment(request, id):
             form.save()
             for testCase in testCases:
                 ans = subprocess.check_output(
-                    ['java', '-jar', mediaPath + request.FILES['jar'].name], input=testCase.input.encode(), timeout=testCase.time)
+                    ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.time)
                 if(ans == testCase.output.encode()):
                     passedTests.append(testCase)
                 else:
@@ -102,9 +106,19 @@ def assignment(request, id):
     context['failedTests'] = failedTests
     return render(request, 'assignment.html', context)
 
+def getStartDateYear(course):
+    return str(course['startDate']).split("-")[0]
 
 def home(request):
-    courses = Course.objects.all()
+    tmp = Course.objects.values()
+    courses = {}
+    
+    for course in tmp:
+        if courses.get(str(course['startDate']).split("-")[0]) == None:
+            courses[getStartDateYear(course)] = [course]
+        else:
+            courses[getStartDateYear(course)].append(course)
+
     return render(request, 'home.html', {'courses': courses})
 
 
@@ -132,7 +146,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('home/')
+    return redirect('/')
 
 # Function used to download jar solution file for specific assignment
 def download_solution(request, id):

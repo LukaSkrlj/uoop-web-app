@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.core.validators import FileExtensionValidator
@@ -81,8 +82,8 @@ class Assignment(models.Model):
     test = models.ForeignKey(
         "Test", on_delete=models.SET_NULL, null=True, blank=True)
     percentage = models.PositiveSmallIntegerField(default=0)
-    inputDescription = models.TextField(max_length=10000, default='')
-    outputDescription = models.TextField(max_length=10000, default='')
+    inputDescription = models.TextField(max_length=10000)
+    outputDescription = models.TextField(max_length=10000)
     isSolutionVisible = models.BooleanField(default=False)
     answer = models.TextField(max_length=10000, null=True, blank=True)
     tags = models.ManyToManyField("Tag")
