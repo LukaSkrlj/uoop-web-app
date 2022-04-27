@@ -12,9 +12,6 @@ import subprocess
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-
-# mediaPath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt\\uoop\\media\\'
-# mediaPath = 'C:\\Users\\Borna\\Documents\\DJANGO\\uoop-web-app\\media\\' #svatko svoje treba stavit ili preko env file-a
 mediaPath = os.path.join(BASE_DIR, 'media')
 filePath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt'
 
@@ -149,6 +146,12 @@ def logout_user(request):
     logout(request)
     return redirect('/')
 
+def osustavu(request):
+    return render(request, 'osustavu.html')
+
+def automatiziranaprovjera(request):
+    return render(request, 'automatiziranaprovjera.html')
+
 def quiz(request, id):
     quizs = Quiz.objects.get(id=id)
     questions = list(Question.objects.filter(quiz_id = id))
@@ -165,7 +168,6 @@ def quiz(request, id):
     else:
         form = QuizForm()     
     return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
-   
 
 # Function used to download jar solution file for specific assignment
 def download_solution(request, id):
@@ -174,6 +176,4 @@ def download_solution(request, id):
 # Function used to download jar template file for specific assignment
 def download_template(request, id):
     return download_file(id, TEMPLATES_FOLDER)
-
-
 

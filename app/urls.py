@@ -13,9 +13,8 @@ urlpatterns = [
     path("logout_user", views.logout_user, name="logout_user"),
     path("simple", views.simple, name="simple"),
     path("upload", views.upload, name="upload"),
+    path("automatiziranaprovjera/", views.automatiziranaprovjera, name="automatiziranaprovjera"), 
+    path("osustavu/", views.osustavu, name="osustavu"),
     path('download_template/<int:id>', views.download_template, name="download_template"),
     path('download_solution/<int:id>', views.download_solution, name="download_solution"),
-    # path("course/<int:id>", views.course, name="course"),
-    # path("ispit/<name>", views.test, name="test"),
-    # path("zadatak/<int:id>", views.assignment, name="assignment"),
 ]

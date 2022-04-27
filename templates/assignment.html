@@ -3,7 +3,8 @@
     <div class="container page-top-offset" style="margin: 0px; /*font-family: 'NotoSerif';*/"> <!-- nije isto ko na prog.riteh.hr s ovim fontom -->
         <p>
             <i class="fa-solid fa-arrow-left"></i>
-            <a href="http://127.0.0.1:8000/test/{{ assignment.test.id }}">{{ assignment.test.title }}</a>
+            
+            <a href="{% url 'uoop:test' assignment.test.id %}">{{ assignment.test.title }}</a>
         </p>
         <br>
         <h2><b>{{ assignment.title }}</b></h2>
