@@ -123,11 +123,11 @@
                             <div class="test-case-element"><i class="fa-solid fa-clock"></i> <b>Vrijeme:</b> 1ms</div>
                             <div class="test-case-element"><i class="fa-solid fa-share"></i> <b>Izlaz:</b> U redu</div>
                             <div style="display: flex; justify-content: space-between;">
-                                {% if userTestCase.testCase.hint %}
-                                    <div><i onClick="parseMathJax()" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ userTestCase.testCase.hint }}</p>" class="fa-solid fa-circle-info"></i></div>
+                                {% if userTestCase.testcase.hint %}
+                                    <div><i onClick="parseMathJax()" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ userTestCase.testcase.hint }}</p>" class="fa-solid fa-circle-info"></i></div>
                                 {% endif %}
 
-                                {% if userTestCase.testCase.isVisible %}
+                                {% if userTestCase.testcase.isVisible %}
                                     <div><i class="fa-solid fa-square-check"></i></div>
                                     <div><i class="fa-solid fa-right-to-bracket"></i></div>
                                     <div><i class="fa-solid fa-right-from-bracket"></i></div>
