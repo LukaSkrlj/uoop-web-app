@@ -77,31 +77,33 @@ def test(request, id):
 def assignment(request, id):
     testCases = TestCase.objects.filter(assignment=id)
     context = {}
-    context['userAssignment'] = UserAssignment.objects.filter(
-        assignment=id, newuser=request.user.id)
-    context['userTestCases'] = UserTestCase.objects.filter(userassignment=context['userAssignment'])
+    userAssignment = UserAssignment.objects.filter(
+        assignment=id, newuser=request.user.id).first()
+    context['userTestCases'] = UserTestCase.objects.filter(userassignment=userAssignment)
     context['assignment'] = Assignment.objects.get(id=id)
     context['tags'] = context['assignment'].tags.all()
     context['allTests'] = []
+    context['visibleTests'] = TestCase.objects.filter(isVisible=True)
     if request.method == 'POST':
         form = AssignmentForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            if(context['userAssignment'] is None):
+            if(userAssignment is None):
                 userAssignment = UserAssignment(assignment=context['assignment'], newuser=request.user)
                 userAssignment.save()
             for testCase in testCases:
                 ans = subprocess.check_output(
-                    ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.time_limit)
-                userTestCase = UserTestCase.objects.filter(userassignment=context['userAssignment'], testCase=testCase)
-                if(userTestCase.exists() == False):
-                    userTestCase = UserTestCase(userAssignment=userAssignment, testCase=testCase)
+                    ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.timeLimit)
+                userTestCase = UserTestCase.objects.filter(userassignment=userAssignment, testcase=testCase).first()
+                if(userTestCase is None):
+                    userTestCase = UserTestCase(userassignment=userAssignment, testcase=testCase)
                 # If answered correctly test case field isCorrect should be assigned true, by default it is false
                 if(ans == testCase.output.encode()):
                     userTestCase.is_correct=True
                 userTestCase.save()
                 context['allTests'].append(userTestCase)
             context['form'] = form
+            context['userAssignment'] = userAssignment
             return render(request, 'assignment.html', context)
     else:
         form = AssignmentForm()

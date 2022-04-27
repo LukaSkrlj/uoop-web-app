@@ -145,14 +145,14 @@ class Snippet(models.Model):
 
 class UserTestCase(models.Model):
     is_correct = models.BooleanField(default=False)
-    memory = models.PositiveSmallIntegerField()
-    time = models.PositiveSmallIntegerField()
-    error = models.TextField()
-    output_label = models.CharField(max_length=200)
-    userassignment = models.ForeignKey(
+    memory = models.PositiveSmallIntegerField(null=True)
+    time = models.PositiveSmallIntegerField(null=True)
+    error = models.TextField(null=True)
+    output_label = models.CharField(max_length=200, null=True)
+    userassignment = models.OneToOneField(
         'UserAssignment', on_delete=models.CASCADE, null=True
     )
-    testcase = models.ForeignKey(
+    testcase = models.OneToOneField(
         'TestCase', on_delete=models.CASCADE, null=True
     )
 class Quiz(models.Model):
