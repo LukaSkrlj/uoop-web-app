@@ -158,6 +158,8 @@ class UserTestCase(models.Model):
     testcase = models.OneToOneField(
         'TestCase', on_delete=models.CASCADE, null=True
     )
+
+    
 class Quiz(models.Model):
     title = models.CharField(max_length=50)
     course = models.ForeignKey("Course", on_delete=models.CASCADE, null=True)
