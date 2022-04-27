@@ -1,5 +1,4 @@
-from dataclasses import fields
-from .models import Snippet, StudentAssignment , StudentAnswer
+from .models import Snippet, StudentAnswer, UserAssignment
 from django import forms
 from django_ace import AceWidget
 
@@ -15,7 +14,7 @@ class SnippetForm(forms.ModelForm):
 
 class AssignmentForm(forms.ModelForm):
     class Meta:
-        model = StudentAssignment
+        model = UserAssignment
         fields = ('jar',)
     
 

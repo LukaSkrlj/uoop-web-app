@@ -1,48 +1,29 @@
 {% extends "base.html" %}
+{% load filter %}
 {% block content %}
-<style>
-    ul {
-        list-style-type: none;
-        font-size: 1.3em;
-    }
-
-    .page-header {
-        border-bottom: 1px solid rgba(133, 133, 133, 0.5);
-        margin-bottom: 30px;
-    }
-   
-</style>
-    <div class="container container-header">
-        <div class="page-header">
-            <h1>
-                <b>{{ course.title }}</b>
-                <small style="color: grey;">2019/2020</small>
-            </h1>
-        </div>
-        
-            {% comment %} 
-            <div class="contest-title">
-            <span class="glyphicon_clock glyphicon glyphicon-time"></span>
-            <a href="/course/{{ course.id }}/">{{ course.title }} {{ course.startDate }}/{{ course.endDate }}</a>
-            </div>
-            {% endcomment %}
-            <ul>
-            {% for test in tests %} 
-                <li>
-                    <i class="fa-solid fa-clock"></i>
-                   <a href="{% url 'uoop:test' test.id %}">{{ test.title }}</a> 
-                </li>
-           {% endfor %}
-            </ul>
-            <ul>
-            {% for quiz in quizs %}
-                
-                <li>
-                    <i class="fa-solid fa-clock" ></i>
-                    <a href="{% url 'uoop:quiz' quiz.id %}">{{ quiz.title }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-        
+<div class="container container-header page-top-offset course-page" style="margin: 0px"> <!-- potrebno da je tu style jer inace ne overridea ga -->
+    <div class="course-page-header">
+        <h1>
+            <b>{{ course.title }}</b>
+            <small style="color: grey;">{{ course|getSchoolYear }}</small>
+        </h1>
     </div>
+    <ul>
+    {% for test in tests %}
+        <li>
+            <i class="fa-solid fa-clock" style="/*color: black; background-color: white;*/"></i>
+            <!-- <i class="fa-regular fa-clock-three"></i> -->
+            <a href="{% url 'uoop:test' test.id %}">{{ test.title }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+    <ul>
+    {% for quiz in quizs %}
+        <li>
+            <i class="fa-solid fa-clock" ></i>
+            <a href="{% url 'uoop:quiz' quiz.id %}">{{ quiz.title }}</a>
+        </li>
+    {% endfor %}
+    </ul>  
+</div>
 {% endblock content %}

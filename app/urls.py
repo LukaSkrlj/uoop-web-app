@@ -3,7 +3,7 @@ from app import views
 
 app_name = 'uoop'
 urlpatterns = [
-    path("", views.main, name="main"),
+    path("", views.home, name="main"),
     path("home/", views.home, name="home"),
     path("quiz/<int:id>/", views.quiz, name="quiz"),
     path("test/<int:id>/", views.test, name="test"),
@@ -12,7 +12,9 @@ urlpatterns = [
     path("login_user", views.login_user, name="login_user"),
     path("logout_user", views.logout_user, name="logout_user"),
     path("simple", views.simple, name="simple"),
-    path("upload", views.upload, name="upload")
+    path("upload", views.upload, name="upload"),
+    path('download_template/<int:id>', views.download_template, name="download_template"),
+    path('download_solution/<int:id>', views.download_solution, name="download_solution"),
     # path("course/<int:id>", views.course, name="course"),
     # path("ispit/<name>", views.test, name="test"),
     # path("zadatak/<int:id>", views.assignment, name="assignment"),
