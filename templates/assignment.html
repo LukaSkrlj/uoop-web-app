@@ -1,13 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-    {% if assignment.assignmentTemplate %}
-        <a href="{% url 'uoop:download' assignment.id %}">Download PDF</a>
-    {% endif %}
     <div class="container page-top-offset" style="margin: 0px; /*font-family: 'NotoSerif';*/"> <!-- nije isto ko na prog.riteh.hr s ovim fontom -->
         <p>
             <i class="fa-solid fa-arrow-left"></i>
-            <!-- <a href="{{ assignment.test }}">P1 2019 Zadaci za vježbu</a> -->
-            <!-- <a href="#" onclick="redirect('{{ assignment.test.id }}')">{{ assignment.test.title }}</a> -->
             <a href="http://127.0.0.1:8000/test/{{ assignment.test.id }}">{{ assignment.test.title }}</a>
         </p>
         <br>
@@ -25,10 +20,10 @@
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" style="margin-left: 15px;" id="zadatak" role="tabpanel" aria-labelledby="zadatak-tab"> <!-- bez ovog margin left viri malo a ovi ostali ne, nez zas-->
+        <div class="tab-pane fade show active" style="margin-left: 1.5%;" id="zadatak" role="tabpanel" aria-labelledby="zadatak-tab"> <!-- bez ovog margin left viri malo a ovi ostali ne, nez zas-->
             <div class="row">
-                <div class="content" style="margin-right: 30px; max-width: 60%;">
-                    <div style="margin-top: 20px;">
+                <div class="content" style="margin-right: 3%; width: 60%;">
+                    <div style="margin-top: 4%;">
                         <p>
                             {{ assignment.description|safe }}
                         </p>
@@ -46,8 +41,8 @@
                         {{ assignment.outputDescription|safe }}
                     </p>
                     {% for visibleTest in visibleTests %}
-                    <div style="margin-bottom: 30px">
-                        <h3 style="margin-bottom: 20px;">
+                    <div style="margin-bottom: 5%">
+                        <h3 style="margin-bottom: 3%;">
                             <b>Ispitni uzorak #{{ forloop.counter }}</b>
                         </h3>
                         <div style="display: flex; position: relative;"> <!-- row -->
@@ -58,10 +53,8 @@
                                     </h5>
                                 </div>
                                 <div class="test-case" style="position: relative; flex-grow: 1;">
-                                    <!-- <pre class="input"><code id="tc-in-3022">{{visibleTest.input}}</code></pre> -->
                                     <code id="input-code-{{ forloop.counter }}">{{visibleTest.input}}</code>
-                                    <!-- <button style="position: absolute; margin: 0px; right: 0px; bottom: 0px; height: 30px; width: 70px; text-align: center; display: inline-block; font-size: 12px;" type="button" id="input-copy-btn-{{ forloop.counter }}" class="btn btn-primary copy-btn" onclick="copyClick(this)"><span>Kopiraj</span></button> -->
-                                    <span style="position: absolute; margin: 0px; right: 0px; bottom: 0px; height: 20px; width: 70px; text-align: center; display: inline-block; font-size: 12px; border-radius: 4px;" type="button" id="input-copy-btn-{{ forloop.counter }}" class="btn-primary copy-btn" onclick="copyClick(this)"><i class="fa-solid fa-copy"></i> Kopiraj</span>
+                                    <span type="button" id="input-copy-btn-{{ forloop.counter }}" class="btn-primary copy-btn" onclick="copyClick(this)"><i class="fa-solid fa-copy"></i> Kopiraj</span> <!-- vidi ako ce tu trebat mjenjat iz pixela u postotke,, i dole na 70.-->
                                 </div>
                             </div>
                             <div style="flex-grow: 1; display:flex; flex-direction: column;"> <!-- column -->
@@ -72,26 +65,10 @@
                                 </div>
                                 <div class="test-case" style="position: relative; flex-grow: 1;">
                                     <code id="output-code-{{ forloop.counter }}">{{visibleTest.output}}</code>
-                                    <span style="position: absolute; margin: 0px; right: 0px; bottom: 0px; height: 20px; width: 70px; text-align: center; display: inline-block; font-size: 12px; border-radius: 4px;" type="button" id="output-copy-btn-{{ forloop.counter }}" class="btn-primary copy-btn" onclick="copyClick(this)"><i class="fa-solid fa-copy"></i> Kopiraj</span>
+                                    <span type="button" id="output-copy-btn-{{ forloop.counter }}" class="btn-primary copy-btn" onclick="copyClick(this)"><i class="fa-solid fa-copy"></i> Kopiraj</span>
                                 </div>
                             </div>
                         </div>
-                    
-
-                        <!-- <h3>
-                            <span><b>Ulaz</b></span><span><b>Izlaz</b></span>
-                        </h3> -->
-                        <!-- <div class="sample">
-                            <pre class="input"><code id="tc-in-3022">{{visibleTest.input}}</code></pre><pre class="output"><code id="tc-out-3022">{{visibleTest.output}}</code></pre>
-                        </div> -->
-                        {% comment %} <div class="copy-btns">
-                            <div>
-                                <span class="btn-copy" data-toggle="tooltip" data-placement="bottom" data-trigger="manual" data-original-title="Kopirano!" data-target="tc-in-3022">Kopiraj</span>
-                            </div>
-                            <div>
-                                <span class="btn-copy" data-toggle="tooltip" data-placement="bottom" data-trigger="manual" data-original-title="Kopirano!" data-target="tc-out-3022">Kopiraj</span>
-                            </div>
-                        </div> {% endcomment %}
                         {% if visibleTest.hint %}
                             <blockquote class="hint">
                                 <div>
@@ -116,28 +93,88 @@
                         <b>Tagovi</b>
                     </h3>
                     {% for tag in tags %}
-                        <!-- <button type="button" class="btn btn-default">
-                            {{ tag.name }}
-                        </button> -->
                         <button type="button" class="btn btn-light btn-outline-dark">{{ tag.name }}</button>
                     {% endfor %}
                 </div>
             </div>
         </div>
         <div class="tab-pane fade" id="odgovor" role="tabpanel" aria-labelledby="odgovor-tab">
-            <form method="post" enctype="multipart/form-data">
+            <!-- TODO: 1 array di ce bit i passed i failed testovi i onda ovisno dal je prosao ili ne da ga prikaze zelenim/crvenim, isto da ako svi testovi nisu passed da pise Neispravno umjesto Ispravno-->
+            {% if passedTests|length > 0 %}
+            <div class="test-cases-container">
+                <div class="valid-invalid-title" >
+                    <div><i class="fa-solid fa-check" style="color: green;"></i> Ispravno</div> 
+                </div>
+                
+                {% for testCase in passedTests %}
+                <div class="test-case-wrapper valid-border">
+                    <div class="test-case-elements-wrapper valid-color">
+                        <div class="test-case-title-wrapper">
+                            <div class="test-case-title">
+                                <div><b>Ispravno</b></div>
+                                <div><i class="fa-solid fa-check"></i></div>
+                            </div>
+                            <div class="test-case-element"><i class="fa-solid fa-floppy-disk"></i> <b>Memorija:</b> 996kB</div>
+                            <div class="test-case-element"><i class="fa-solid fa-clock"></i> <b>Vrijeme:</b> 1ms</div>
+                            <div class="test-case-element"><i class="fa-solid fa-share"></i> <b>Izlaz:</b> U redu</div>
+                            <div style="display: flex; justify-content: space-between;">
+                                {% if testCase.hint %}
+                                    <div><i onClick="parseMathJax()" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ testCase.hint }}</p>" class="fa-solid fa-circle-info"></i></div>
+                                {% endif %}
+
+                                {% if testCase.isVisible %}
+                                    <div><i class="fa-solid fa-square-check"></i></div>
+                                    <div><i class="fa-solid fa-right-to-bracket"></i></div>
+                                    <div><i class="fa-solid fa-right-from-bracket"></i></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% for testCase in failedTests %}
+                <div class="test-case-wrapper invalid-border">
+                    <div class="test-case-elements-wrapper invalid-color">
+                        <div class="test-case-title-wrapper">
+                            <div class="test-case-title">
+                                <div><b>Neispravno</b></div>
+                                <div><i class="fa-solid fa-xmark"></i></div>
+                            </div>
+                            <div class="test-case-element"><i class="fa-solid fa-floppy-disk"></i> <b>Memorija:</b> 996kB</div>
+                            <div class="test-case-element"><i class="fa-solid fa-clock"></i> <b>Vrijeme:</b> 1ms</div>
+                            <div class="test-case-element"><i class="fa-solid fa-share"></i> <b>Izlaz:</b> U redu</div>
+                            <div style="display: flex; justify-content: space-between;">
+                                {% if testCase.hint %}
+                                    <div><i onClick="parseMathJax()" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ testCase.hint }}</p>" class="fa-solid fa-circle-info"></i></div>
+                                {% endif %}
+
+                                {% if testCase.isVisible%}
+                                    <div><i class="fa-solid fa-square-check"></i></div>
+                                    <div><i class="fa-solid fa-right-to-bracket"></i></div>
+                                    <div><i class="fa-solid fa-right-from-bracket"></i></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form id="form-uploadJar" method="post" enctype="multipart/form-data" style="margin-top: 2%">
                 {% csrf_token %}
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-primary">
                     Predaj
                 </button>
+                {% if assignment.assignmentTemplate %}
+                    <a class="btn btn-light" href="{% url 'uoop:download_template' assignment.id %}">Download template</a>
+                {% endif %}
             </form>
         </div>
+
+        {% if assignment.isSolutionVisible %}
         <div class="tab-pane fade" id="rjesenja" role="tabpanel" aria-labelledby="rjesenja-tab">
             <div id="subpub">
                 <h2>
@@ -146,306 +183,18 @@
                 <div class="highlight">
                     <pre>{{ assignment.solution }}</pre>
                 </div>
+                <a class="btn btn-primary" href="{% url 'uoop:download_solution' assignment.id %}">Download solution</a>
             </div>
-    </div>
-        <!-- </div>
         </div>
-
-        <div class="tab-content">
-            {% comment %} <div role="tabpanel" class="tab-pane fade" id="report">
-                <div id="code">
-                    <div id="challenge--code" class="code">
-                        #include <stdio.h>
-
-                            #ifndef DEBUG
-                            #define DEBUG(...)printf(__VA_ARGS__)
-                            #endif
-
-                            int main() {
-                                int a;
-                                float n, ukupno;
-
-                                scanf("%d %f", &a, &n);
-                                ukupno = a * n;
-
-                                printf("%f", ukupno);
-                                return 0;
-                            }
-                    </div>
-                    <div id="challenge--template" class="template">
-                        #include &lt;stdio.h&gt;
-
-                        #ifndef DEBUG
-                        #define DEBUG(...)printf(__VA_ARGS__)
-                        #endif
-
-                        int main() {
-
-                            return 0;
-                        }
-                    </div>
-                    <div id="challenge--diff">
-                        <table class="diff inlinediff">
-                            <tbody>
-                                <tr>
-                                    <th>...</th>
-                                    <th>...</th>
-                                        <td class="skip"></td>
-                                </tr>
-                                <tr>
-                                    <th>7</th>
-                                    <th>7</th>
-                                        <td class="equal">int main() {</td>
-                                </tr>
-                                <tr>
-                                    <th></th>
-                                    <th>8</th>
-                                        <td class="insert">&nbsp;&nbsp;&nbsp;&nbsp;int a;</td>
-
-                                </tr>
-                                <tr>
-                                    <th></th>
-                                    <th>9</th>
-                                    <td class="insert">&nbsp;&nbsp;&nbsp;&nbsp;float n, ukupno;</td>
-                                </tr>
-                                <tr>
-                                    <th>8</th>
-                                    <th>10</th>
-                                        <td class="equal"></td>
-                                </tr>
-                                <tr>
-                                    <th></th>
-                                    <th>11</th>
-                                    <td class="insert">&nbsp;&nbsp;&nbsp;&nbsp;scanf("%d %f", &amp;a, &amp;n);</td>
-                                </tr>
-                                <tr>
-                                    <th></th>
-                                    <th>12</th>
-                                    <td class="insert">&nbsp;&nbsp;&nbsp;&nbsp;ukupno = a * n;</td>
-                                </tr>
-                                <tr>
-                                    <th></th>
-                                    <th>13</th>
-                                    <td class="insert"></td>
-                                </tr>
-                                <tr>
-                                    <th></th>
-                                    <th>14</th>
-                                        <td class="insert">&nbsp;&nbsp;&nbsp;&nbsp;printf("%f", ukupno);</td>
-                                </tr>
-                                <tr>
-                                    <th>9</th>
-                                    <th>15</th>
-                                    <td class="equal">    return 0;</td>
-                                </tr>
-                                <tr>
-                                    <th>10</th>
-                                    <th>16</th>
-                                    <td class="equal">}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div> {% endcomment %}
-            <div role="tabpanel" class="tab-pane fade active in" id="problem">
-                <div class="row">
-                    <div class="content">
-                        <p>
-                            {{ assignment.description }}
-                        </p>
-                        <h2 id="ulazni-podaci">
-                            <b>Ulazni podaci</b>
-                        </h2>
-                        <p>
-                            {{ assignment.inputDescription }}
-                        </p>
-                        <h2 id="izlazni-podaci">
-                            <b>Izlazni podaci</b>
-                        </h2>
-                        <p>
-                            {{ assignment.outputDescription }}
-                        </p>
-                        {% for visibleTest in visibleTests %}
-                            <h2>
-                                <b>Ispitni uzorak #{{ forloop.counter }}</b>
-                            </h2>
-                            <h3>
-                                <span><b>Ulaz</b></span><span><b>Izlaz</b></span>
-                            </h3>
-                            <div class="sample">
-                                <pre class="input"><code id="tc-in-3022">{{visibleTest.input}}</code></pre><pre class="output"><code id="tc-out-3022">{{visibleTest.output}}</code></pre>
-                            </div>
-                            {% comment %} <div class="copy-btns">
-                                <div>
-                                    <span class="btn-copy" data-toggle="tooltip" data-placement="bottom" data-trigger="manual" data-original-title="Kopirano!" data-target="tc-in-3022">Kopiraj</span>
-                                </div>
-                                <div>
-                                    <span class="btn-copy" data-toggle="tooltip" data-placement="bottom" data-trigger="manual" data-original-title="Kopirano!" data-target="tc-out-3022">Kopiraj</span>
-                                </div>
-                            </div> {% endcomment %}
-                            {% if visibleTest.hint %}
-                                <blockquote class="hint">
-                                    <p>
-                                        {{ visibleTest.hint }}
-                                    </p>
-                                </blockquote>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    <!-- <div class="aside">
-                        <h3 class="tags">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="16"
-                                 height="16"
-                                 fill="currentColor"
-                                 class="bi bi-tags-fill"
-                                 viewBox="0 0 16 16">
-                                <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
-                                <path d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043-7.457-7.457z"/>
-                            </svg>
-                            Tagovi
-                        </h3>
-                        {% for tag in tags %}
-                            <button type="button" class="btn btn-default">
-                                {{ tag.name }}
-                            </button>
-                        {% endfor %}
-                    </div> 
-                </div>
-            </div>
-            <div role="tabpanel" class="tab-pane fade" id="submission">
-                <div id="subres" class="report">
-                    <div id="challenge">
-                        <div class="testresults testresults_1">
-                            <div id="result" class="ok">
-                                <span class="glyphicon glyphicon-ok glyphicon_green"></span>
-                                Ispravno
-                            </div>
-                            {% for testCase in passedTests %}
-                                <div class="testresult ok">
-                                    <span class="glyphicon glyphicon-ok glyphicon-correct"></span>
-                                    <p class="result">
-                                        Ispravno
-                                    </p>
-                                    <ul class="details list-unstyled">
-                                        <li class="memory">
-                                            <span class="glyphicon glyphicon-floppy-disk"></span>
-                                            <span><b>Memorija:</b></span>
-                                            992 kB
-                                        </li>
-                                        <li class="cpu">
-                                            <span class="glyphicon glyphicon-time"></span>
-                                            <span><b>Vrijeme:</b></span>
-                                            1 ms
-                                        </li>
-                                        <li class="exit">
-                                            <span class="glyphicon glyphicon-share-alt"></span>
-                                            <span><b>Izlaz:</b></span>
-                                            U redu
-                                        </li>
-                                        <div class="toolbar">
-                                            <span class="glyphicon glyphicon-check"></span>
-                                            <a class="" target="_blank" href=""><span class="glyphicon glyphicon-log-in"></span></a>
-                                            <a class="" target="_blank" href=""><span class="glyphicon glyphicon-log-out"></span></a>
-                                        </div>
-                                    </ul>
-                                </div>
-                                <div class="showoutput">
-                                        <div class="result-output">
-                                            <p>Izlaz</p>
-                                            <pre>40.000000</pre>
-                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="testcase-output">
-                                                                                                                                                                                                                                                                                                                                                                                                                            <p>Očekivani izlaz</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                            <pre>40.000000</pre>
-                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                            <a class="downloadin" target="_blank" href="">
-
-                                                                                                                                                                                                                                                        </a>
-                                                                                                                                                                                                                                                        <a class="downloadout" target="_blank" href="">
-
-                                                                                                                                                                                                    </a>
-                                                                                                                                            </div> 
-    {% endfor %}
-    {% for testCase in failedTests %}
-        <div class="testresult fal">
-            <span class="glyphicon glyphicon-remove glyphicon-correct"></span>
-            <p class="result">
-                Ispravno
-            </p>
-            <ul class="details list-unstyled">
-                <li class="memory">
-                    <span class="glyphicon glyphicon-floppy-disk"></span>
-                    <span><b>Memorija:</b></span>
-                    992 kB
-                </li>
-                <li class="cpu">
-                    <span class="glyphicon glyphicon-time"></span>
-                    <span><b>Vrijeme:</b></span>
-                    1 ms
-                </li>
-                <li class="exit">
-                    <span class="glyphicon glyphicon-share-alt"></span>
-                    <span><b>Izlaz:</b></span>
-                    U redu
-                </li>
-            </ul>
-            {% comment %} <div class="toolbar">
-                <div class="showoutput">
-                    <div class="result-output">
-                        <p>Izlaz</p>
-                        <pre>40.000000</pre>
-                                    </div>
-                                <div class="testcase-output">
-                                    <p>Očekivani izlaz</p>
-                                    <pre>40.000000</pre>
-                        </div>
-                </div>
-</div>  {% endcomment %}
-</div>
-{% endfor %}
-<div class="output">
-</div>
-</div>
-</div>
-</div>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">
-        Predaj
-    </button>
-</form>
-</div>
-<div role="tabpanel" class="tab-pane fade" id="subpub">
-    <div id="subpub">
-        <h2>
-            JAVA
-        </h2>
-        <div class="highlight">
-            <pre>{{assignment.solution}}</pre>
-        </div>
+        {% endif %}
     </div>
-</div>
-</div>
-</div>
-</div>
-<!-- <script>
-    $(document).ready( function () {
-    $('#myTable').DataTable();
-} );
-</script>  -->
+    
 <script>
     let intervalId
     const copyClick = (e) => {
-        // console.log(e);
-        // console.log(e.id);
-        tmp = e.id.split("-")
-        // console.log(tmp);
-        // console.log(tmp[0] + "-" + "copy" + "-" + tmp.slice(-1))
-        // console.log(document.getElementById(tmp[0] + "-" + "code" + "-" + tmp.slice(-1)).innerHTML)
+        tmp = e.id.split("-") //element's id as array
+
+        //copies text to the clipboard
         navigator.clipboard.writeText(document.getElementById(tmp[0] + "-" + "code" + "-" + tmp.slice(-1)).innerHTML)
         document.getElementById(e.id).innerHTML = "<i class='fa-solid fa-copy'></i> Kopirano!"
         document.getElementById(e.id).style.width = "90px"
@@ -456,6 +205,18 @@
             document.getElementById(e.id).innerHTML = "<i class='fa-solid fa-copy'></i> Kopiraj"
             document.getElementById(e.id).style.width = "70px"
         }, 500)
+    }
+    // initialize all popovers on a page
+    $(function () {
+        $('[data-toggle="popover"]').popover({
+            'html': true
+        })
+    })
+    
+    const parseMathJax = () => {
+        setTimeout(() => {
+            MathJax.typeset() //searches for unparsed elements and parses them 
+        }, 0)
     }
 </script>
 {% endblock content %}

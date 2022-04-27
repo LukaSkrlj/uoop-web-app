@@ -1,7 +1,10 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.core.validators import FileExtensionValidator
 from django.db import models
+
+from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
 
 
 class CustomUserManager(BaseUserManager):
@@ -79,18 +82,15 @@ class Assignment(models.Model):
     test = models.ForeignKey(
         "Test", on_delete=models.SET_NULL, null=True, blank=True)
     percentage = models.PositiveSmallIntegerField(default=0)
-    inputDescription = models.TextField(max_length=10000, default='')
-    outputDescription = models.TextField(max_length=10000, default='')
+    inputDescription = models.TextField(max_length=10000)
+    outputDescription = models.TextField(max_length=10000)
     isSolutionVisible = models.BooleanField(default=False)
     answer = models.TextField(max_length=10000, null=True, blank=True)
     tags = models.ManyToManyField("Tag")
-    assignmentTemplate = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to='assignment_templates', null=True)
+    assignmentTemplate = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to=TEMPLATES_FOLDER, null=True)
     #TODO try to read Java code from files and then solution atribute can be removed
-    solutionFile = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to='assignment_solutions', null=True)
+    solutionFile = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to=SOLUTIONS_FOLDER)
     solution = models.TextField(max_length=10000)
-
-    def __str__(self):
-        return self.title
 
 
 class TestCase(models.Model):
@@ -139,6 +139,47 @@ class Snippet(models.Model):
 
     class Meta:
         ordering = ('-created_at', )
+
+
+class Quiz(models.Model):
+    title = models.CharField(max_length=50)
+    course = models.ForeignKey("Course", on_delete=models.CASCADE, null=True)
+    description = models.CharField(max_length=300, null=True)
+    startDate = models.DateTimeField()
+    endDate = models.DateTimeField()
+    questionNum = models.IntegerField(default=0)
+    students = models.ManyToManyField(NewUser, blank=True)
+
+    def __str__(self):
+        return self.title
+    
+    def __getDate__(self):
+        return self.endDate
+
+
+class Question(models.Model):
+    text = models.CharField(max_length=50)
+    quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True,  related_name='question')
+    points = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.text
+    
+
+class Answer(models.Model):
+    text = models.CharField(max_length=50)
+    question = models.ForeignKey("Question", on_delete=models.CASCADE, null=True,  related_name='answer')
+    true = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text
+
+
+class StudentAnswer(models.Model):
+    question = models.ManyToManyField("Question")
+    answer = models.ManyToManyField("Answer")
+    students = models.ManyToManyField(NewUser, blank=True)
+
 
 #TODO improve student file management after user-assignment relation is added
 # def user_directory_path(instance, filename):

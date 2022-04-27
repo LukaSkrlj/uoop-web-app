@@ -1,22 +1,18 @@
-from django.http import Http404
+import os
 from django.views import generic
 from django.shortcuts import render
-from .forms import SnippetForm, AssignmentForm
-from .models import Assignment, Course, Snippet, Test, TestCase
+from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
+from app.helpers import download_file
+from uoop.settings import BASE_DIR
+from .forms import QuizForm, SnippetForm, AssignmentForm
+from .models import Assignment, Course, Question, Quiz, Snippet, StudentAnswer, Test, TestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-# Import mimetypes module
-import mimetypes
-# import os module
-import os
-# Import HttpResponse module
-from django.http.response import HttpResponse
-
-mediaPath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt\\uoop\\media\\'
+mediaPath = os.path.join(BASE_DIR, 'media')
 filePath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt'
 
 
@@ -65,8 +61,9 @@ def main(request):
 def course(request, id):
     course = Course.objects.get(id=id)
     tests = Test.objects.filter(course=id)
-    print(tests)
-    return render(request, 'course.html', {'course': course, 'tests': tests})
+    quizs = Quiz.objects.filter(course=id)
+    print(course, tests, quizs)
+    return render(request, 'course.html', {'course': course, 'tests': tests, 'quizs': quizs})
 
 
 def test(request, id):
@@ -91,7 +88,7 @@ def assignment(request, id):
             form.save()
             for testCase in testCases:
                 ans = subprocess.check_output(
-                    ['java', '-jar', mediaPath + request.FILES['jar'].name], input=testCase.input.encode(), timeout=testCase.time)
+                    ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.time)
                 if(ans == testCase.output.encode()):
                     passedTests.append(testCase)
                 else:
@@ -107,9 +104,19 @@ def assignment(request, id):
     context['failedTests'] = failedTests
     return render(request, 'assignment.html', context)
 
+def getStartDateYear(course):
+    return str(course['startDate']).split("-")[0]
 
 def home(request):
-    courses = Course.objects.all()
+    tmp = Course.objects.values()
+    courses = {}
+    
+    for course in tmp:
+        if courses.get(str(course['startDate']).split("-")[0]) == None:
+            courses[getStartDateYear(course)] = [course]
+        else:
+            courses[getStartDateYear(course)].append(course)
+
     return render(request, 'home.html', {'courses': courses})
 
 
@@ -130,16 +137,14 @@ def login_user(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home/')
+            return redirect('/')
     form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
 
 def logout_user(request):
     logout(request)
-    return redirect('home/')
-
-
+    return redirect('/')
 
 def osustavu(request):
     return render(request, 'osustavu.html')
@@ -147,35 +152,28 @@ def osustavu(request):
 def automatiziranaprovjera(request):
     return render(request, 'automatiziranaprovjera.html')
 
-# Function used to download jar file
-def download(request, id):
-    # find the current assignment in database
-    assignment = Assignment.objects.get(id=id)
+def quiz(request, id):
+    quizs = Quiz.objects.get(id=id)
+    questions = list(Question.objects.filter(quiz_id = id))
+    #answers = list(Answer.objects.filter(quiz__id = id).)
+    studentAnswers= StudentAnswer.objects.filter(answer__question__quiz=id)
+    if request.method == 'POST':
+        form = QuizForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home/')
+        else:
+            return redirect('home/') 
+            #return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+    else:
+        form = QuizForm()     
+    return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
 
-    # get fileName from current assignment
-    fileName = os.path.basename(assignment.assignmentTemplate.name)
+# Function used to download jar solution file for specific assignment
+def download_solution(request, id):
+    return download_file(id, SOLUTIONS_FOLDER)
 
-    #fileName should not be None
-    if fileName == None:
-        return Http404()
+# Function used to download jar template file for specific assignment
+def download_template(request, id):
+    return download_file(id, TEMPLATES_FOLDER)
 
-    # Define Django project base directory
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    # Define the full file path
-    filepath = BASE_DIR + '/media/assignment_templates/' + fileName
-
-    # Open the file for reading content
-    path = open(filepath, 'rb')
-
-    # Set the mime type
-    mime_type, _ = mimetypes.guess_type(filepath)
-
-    # Set the return value of the HttpResponse
-    response = HttpResponse(path, content_type=mime_type)
-
-    # Set the HTTP header for sending to browser
-    response['Content-Disposition'] = "attachment; filename=%s" % fileName
-
-    # Return the response value
-    return response
