@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.core.validators import FileExtensionValidator
@@ -86,9 +87,11 @@ class Assignment(models.Model):
     isSolutionVisible = models.BooleanField(default=False)
     answer = models.TextField(max_length=10000, null=True, blank=True)
     tags = models.ManyToManyField("Tag")
-    assignmentTemplate = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to=TEMPLATES_FOLDER, null=True)
-    #TODO try to read Java code from files and then solution atribute can be removed
-    solutionFile = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to=SOLUTIONS_FOLDER)
+    assignmentTemplate = models.FileField(validators=[FileExtensionValidator(
+        ['jar'])], upload_to='assignment_templates', null=True)
+    # TODO try to read Java code from files and then solution atribute can be removed
+    solutionFile = models.FileField(validators=[FileExtensionValidator(
+        ['jar'])], upload_to='assignment_solutions', null=True)
     solution = models.TextField(max_length=10000)
 
     def __str__(self):
@@ -101,8 +104,8 @@ class TestCase(models.Model):
     hint = models.CharField(max_length=255, null=True, blank=True)
     input = models.TextField(max_length=10000)
     output = models.TextField(max_length=10000)
-    memory = models.PositiveSmallIntegerField()
-    time = models.PositiveSmallIntegerField(default=30)
+    memoryLimit = models.PositiveSmallIntegerField()
+    timeLimit = models.PositiveSmallIntegerField(default=30)
     isVisible = models.BooleanField(default=False)
 
     def __str__(self):
@@ -142,7 +145,21 @@ class Snippet(models.Model):
     class Meta:
         ordering = ('-created_at', )
 
-#TODO improve student file management after user-assignment relation is added
+
+class UserTestCase(models.Model):
+    is_correct = models.BooleanField(default=False)
+    memory = models.PositiveSmallIntegerField()
+    time = models.PositiveSmallIntegerField()
+    error = models.TextField()
+    output_label = models.CharField()
+    userassignment = models.ForeignKey(
+        'UserAssignment', on_delete=models.CASCADE, null=True
+    )
+    testcase = models.ForeignKey(
+        'TestCase', on_delete=models.CASCADE, null=True
+    )
+
+# TODO improve student file management after user-assignment relation is added
 # def user_directory_path(instance, filename):
 #     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
 #     return 'user_{0}/{1}'.format(instance.user.id, filename)

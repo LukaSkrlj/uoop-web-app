@@ -1,9 +1,13 @@
+from cmath import log
+from pickle import TRUE
+from django.http import Http404
 from django.views import generic
 from django.shortcuts import render
 from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
+
 from app.helpers import download_file
 from .forms import SnippetForm, AssignmentForm
-from .models import Assignment, Course, Snippet, Test, TestCase
+from .models import Assignment, Course, Snippet, Test, TestCase, UserAssignment, UserTestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
@@ -11,7 +15,9 @@ from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 
-mediaPath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt\\uoop\\media\\'
+# mediaPath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt\\uoop\\media\\'
+# mediaPath = 'C:\\Users\\Borna\\Documents\\DJANGO\\uoop-web-app\\media\\' #svatko svoje treba stavit ili preko env file-a
+mediaPath = os.path.join(BASE_DIR, 'media')
 filePath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt'
 
 
@@ -74,37 +80,57 @@ def test(request, id):
 def assignment(request, id):
     testCases = TestCase.objects.filter(assignment=id)
     context = {}
-    passedTests = []
-    failedTests = []
+    context['userAssignment'] = UserAssignment.objects.filter(
+        assignment=id, newuser=request.user.id)
+    context['userTestCases'] = UserTestCase.objects.filter(userassignment=context['userAssignment'])
     context['assignment'] = Assignment.objects.get(id=id)
     context['visibleTests'] = TestCase.objects.filter(
         assignment=id).filter(isVisible=True)
     context['tags'] = context['assignment'].tags.all()
+    allTests = []
     if request.method == 'POST':
         form = AssignmentForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            if(context['userAssignment'] is None):
+                userAssignment = UserAssignment(assignment=context['assignment'], newuser=request.user)
+                userAssignment.save()
             for testCase in testCases:
                 ans = subprocess.check_output(
-                    ['java', '-jar', mediaPath + request.FILES['jar'].name], input=testCase.input.encode(), timeout=testCase.time)
+                    ['java', '-jar', mediaPath + request.FILES['jar'].name], input=testCase.input.encode(), timeout=testCase.time_limit)
+                userTestCase = UserTestCase.objects.filter(userassignment=context['userAssignment'], testCase=testCase)
+                if(userTestCase.exists() != None):
+                    userTestCase = UserTestCase(userAssignment=userAssignment, testCase=testCase)
+                # If answered correctly test case field isCorrect should be assigned true, by default it is false
                 if(ans == testCase.output.encode()):
-                    passedTests.append(testCase)
-                else:
-                    failedTests.append(testCase)
+                    userTestCase.is_correct=True
+                    userTestCase.testcase.is_visible=True
+                userTestCase.save()
+                allTests.append(userTestCase)
             context['form'] = form
-            context['passedTests'] = passedTests
-            context['failedTests'] = failedTests
+            context['allTests'] = allTests
             return render(request, 'assignment.html', context)
     else:
         form = AssignmentForm()
     context['form'] = form
-    context['passedTests'] = passedTests
-    context['failedTests'] = failedTests
+    context['allTests'] = TestCase
+   
+        
     return render(request, 'assignment.html', context)
 
+def getStartDateYear(course):
+    return str(course['startDate']).split("-")[0]
 
 def home(request):
-    courses = Course.objects.all()
+    tmp = Course.objects.values()
+    courses = {}
+    
+    for course in tmp:
+        if courses.get(str(course['startDate']).split("-")[0]) == None:
+            courses[getStartDateYear(course)] = [course]
+        else:
+            courses[getStartDateYear(course)].append(course)
+
     return render(request, 'home.html', {'courses': courses})
 
 
@@ -132,7 +158,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('home/')
+    return redirect('/')
 
 # Function used to download jar solution file for specific assignment
 def download_solution(request, id):

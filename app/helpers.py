@@ -4,6 +4,7 @@ from django.http import Http404, HttpResponse
 from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
 
 from app.models import Assignment
+from uoop.settings import BASE_DIR
 
 # abstracted logic for downloading files from specific folders
 def download_file(asignmentId, folder):
@@ -20,11 +21,11 @@ def download_file(asignmentId, folder):
     if fileName == None:
         return Http404()
 
-    # Define Django project base directory
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # # Define Django project base directory
+    # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # Define the full file path
-    filepath = BASE_DIR + '/media/'+ folder +'/' + fileName
+    filepath = os.path.join(BASE_DIR, "media", folder, fileName)
 
     # Open the file for reading content
     path = open(filepath, 'rb')
