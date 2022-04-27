@@ -94,6 +94,9 @@ class Assignment(models.Model):
         ['jar'])], upload_to='assignment_solutions', null=True)
     solution = models.TextField(max_length=10000)
 
+    def __str__(self):
+        return self.title
+
 
 class TestCase(models.Model):
     assignment = models.ForeignKey(
