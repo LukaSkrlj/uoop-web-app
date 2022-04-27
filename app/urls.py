@@ -5,6 +5,7 @@ app_name = 'uoop'
 urlpatterns = [
     path("", views.home, name="main"),
     path("home/", views.home, name="home"),
+    path("quiz/<int:id>/", views.quiz, name="quiz"),
     path("test/<int:id>/", views.test, name="test"),
     path("course/<int:id>/", views.course, name="courses"),
     path("assignment/<int:id>/", views.assignment, name="assignment"),

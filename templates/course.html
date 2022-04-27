@@ -17,5 +17,13 @@
         </li>
     {% endfor %}
     </ul>
+    <ul>
+    {% for quiz in quizs %}
+        <li>
+            <i class="fa-solid fa-clock" ></i>
+            <a href="{% url 'uoop:quiz' quiz.id %}">{{ quiz.title }}</a>
+        </li>
+    {% endfor %}
+    </ul>  
 </div>
 {% endblock content %}

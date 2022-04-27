@@ -4,8 +4,8 @@ from django.shortcuts import render
 from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
 from app.helpers import download_file
 from uoop.settings import BASE_DIR
-from .forms import SnippetForm, AssignmentForm
-from .models import Assignment, Course, Snippet, Test, TestCase
+from .forms import QuizForm, SnippetForm, AssignmentForm
+from .models import Assignment, Course, Question, Quiz, Snippet, StudentAnswer, Test, TestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
@@ -64,8 +64,9 @@ def main(request):
 def course(request, id):
     course = Course.objects.get(id=id)
     tests = Test.objects.filter(course=id)
-    print(tests)
-    return render(request, 'course.html', {'course': course, 'tests': tests})
+    quizs = Quiz.objects.filter(course=id)
+    print(course, tests, quizs)
+    return render(request, 'course.html', {'course': course, 'tests': tests, 'quizs': quizs})
 
 
 def test(request, id):
@@ -139,7 +140,7 @@ def login_user(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home/')
+            return redirect('/')
     form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
@@ -147,6 +148,24 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return redirect('/')
+
+def quiz(request, id):
+    quizs = Quiz.objects.get(id=id)
+    questions = list(Question.objects.filter(quiz_id = id))
+    #answers = list(Answer.objects.filter(quiz__id = id).)
+    studentAnswers= StudentAnswer.objects.filter(answer__question__quiz=id)
+    if request.method == 'POST':
+        form = QuizForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home/')
+        else:
+            return redirect('home/') 
+            #return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+    else:
+        form = QuizForm()     
+    return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+   
 
 # Function used to download jar solution file for specific assignment
 def download_solution(request, id):
