@@ -30,7 +30,7 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             {% if user.is_authenticated %}
-                <a class="navbar-brand" style="margin-left: 23%" href="http://127.0.0.1:8000/home">UOOP</a>
+                <a class="navbar-brand" style="margin-left: 23%" href="{% url 'uoop:home' %}">UOOP</a>
             {% else %}    
                 <a class="navbar-brand" style="margin-left: 23%" href="">UOOP</a>
             {% endif %}
@@ -44,8 +44,8 @@
                     Pomoć
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">O sustavu</a>
-                    <a class="dropdown-item" href="#">Automatizirana provjera</a>
+                    <a class="dropdown-item" href="{% url 'uoop:osustavu' %}">O sustavu</a>
+                    <a class="dropdown-item" href="{% url 'uoop:automatiziranaprovjera' %}">Automatizirana provjera</a>
                   </div>
                 </li>
                 <li class="nav-item" style="position: absolute; right: 20%;">

@@ -4,8 +4,8 @@ from django.shortcuts import render
 from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
 from app.helpers import download_file
 from uoop.settings import BASE_DIR
-from .forms import SnippetForm, AssignmentForm
-from .models import Assignment, Course, Snippet, Test, TestCase, UserAssignment, UserTestCase
+from .forms import QuizForm, SnippetForm, AssignmentForm
+from .models import Assignment, Course, Question, Quiz, Snippet, StudentAnswer, Test, TestCase, UserAssignment, UserTestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
@@ -13,8 +13,6 @@ from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 
-# mediaPath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt\\uoop\\media\\'
-# mediaPath = 'C:\\Users\\Borna\\Documents\\DJANGO\\uoop-web-app\\media\\' #svatko svoje treba stavit ili preko env file-a
 mediaPath = os.path.join(BASE_DIR, 'media')
 filePath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt'
 
@@ -64,8 +62,9 @@ def main(request):
 def course(request, id):
     course = Course.objects.get(id=id)
     tests = Test.objects.filter(course=id)
-    print(tests)
-    return render(request, 'course.html', {'course': course, 'tests': tests})
+    quizs = Quiz.objects.filter(course=id)
+    print(course, tests, quizs)
+    return render(request, 'course.html', {'course': course, 'tests': tests, 'quizs': quizs})
 
 
 def test(request, id):
@@ -93,7 +92,7 @@ def assignment(request, id):
                 userAssignment.save()
             for testCase in testCases:
                 ans = subprocess.check_output(
-                    ['java', '-jar', mediaPath + request.FILES['jar'].name], input=testCase.input.encode(), timeout=testCase.time_limit)
+                    ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.time_limit)
                 userTestCase = UserTestCase.objects.filter(userassignment=context['userAssignment'], testCase=testCase)
                 if(userTestCase.exists() == False):
                     userTestCase = UserTestCase(userAssignment=userAssignment, testCase=testCase)
@@ -143,7 +142,7 @@ def login_user(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home/')
+            return redirect('/')
     form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
@@ -152,6 +151,29 @@ def logout_user(request):
     logout(request)
     return redirect('/')
 
+def osustavu(request):
+    return render(request, 'osustavu.html')
+
+def automatiziranaprovjera(request):
+    return render(request, 'automatiziranaprovjera.html')
+
+def quiz(request, id):
+    quizs = Quiz.objects.get(id=id)
+    questions = list(Question.objects.filter(quiz_id = id))
+    #answers = list(Answer.objects.filter(quiz__id = id).)
+    studentAnswers= StudentAnswer.objects.filter(answer__question__quiz=id)
+    if request.method == 'POST':
+        form = QuizForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home/')
+        else:
+            return redirect('home/') 
+            #return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+    else:
+        form = QuizForm()     
+    return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+
 # Function used to download jar solution file for specific assignment
 def download_solution(request, id):
     return download_file(id, SOLUTIONS_FOLDER)
@@ -159,6 +181,4 @@ def download_solution(request, id):
 # Function used to download jar template file for specific assignment
 def download_template(request, id):
     return download_file(id, TEMPLATES_FOLDER)
-
-
 

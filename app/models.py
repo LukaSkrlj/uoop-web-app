@@ -82,8 +82,8 @@ class Assignment(models.Model):
     test = models.ForeignKey(
         "Test", on_delete=models.SET_NULL, null=True, blank=True)
     percentage = models.PositiveSmallIntegerField(default=0)
-    inputDescription = models.TextField(max_length=10000, default='')
-    outputDescription = models.TextField(max_length=10000, default='')
+    inputDescription = models.TextField(max_length=10000)
+    outputDescription = models.TextField(max_length=10000)
     isSolutionVisible = models.BooleanField(default=False)
     answer = models.TextField(max_length=10000, null=True, blank=True)
     tags = models.ManyToManyField("Tag")
@@ -93,9 +93,6 @@ class Assignment(models.Model):
     solutionFile = models.FileField(validators=[FileExtensionValidator(
         ['jar'])], upload_to='assignment_solutions', null=True)
     solution = models.TextField(max_length=10000)
-
-    def __str__(self):
-        return self.title
 
 
 class TestCase(models.Model):
@@ -158,8 +155,47 @@ class UserTestCase(models.Model):
     testcase = models.ForeignKey(
         'TestCase', on_delete=models.CASCADE, null=True
     )
+class Quiz(models.Model):
+    title = models.CharField(max_length=50)
+    course = models.ForeignKey("Course", on_delete=models.CASCADE, null=True)
+    description = models.CharField(max_length=300, null=True)
+    startDate = models.DateTimeField()
+    endDate = models.DateTimeField()
+    questionNum = models.IntegerField(default=0)
+    students = models.ManyToManyField(NewUser, blank=True)
 
-# TODO improve student file management after user-assignment relation is added
+    def __str__(self):
+        return self.title
+    
+    def __getDate__(self):
+        return self.endDate
+
+
+class Question(models.Model):
+    text = models.CharField(max_length=50)
+    quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True,  related_name='question')
+    points = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.text
+    
+
+class Answer(models.Model):
+    text = models.CharField(max_length=50)
+    question = models.ForeignKey("Question", on_delete=models.CASCADE, null=True,  related_name='answer')
+    true = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text
+
+
+class StudentAnswer(models.Model):
+    question = models.ManyToManyField("Question")
+    answer = models.ManyToManyField("Answer")
+    students = models.ManyToManyField(NewUser, blank=True)
+
+
+#TODO improve student file management after user-assignment relation is added
 # def user_directory_path(instance, filename):
 #     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
 #     return 'user_{0}/{1}'.format(instance.user.id, filename)
