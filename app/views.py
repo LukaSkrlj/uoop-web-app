@@ -1,11 +1,9 @@
-from cmath import log
-from pickle import TRUE
-from django.http import Http404
+import os
 from django.views import generic
 from django.shortcuts import render
 from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
-
 from app.helpers import download_file
+from uoop.settings import BASE_DIR
 from .forms import SnippetForm, AssignmentForm
 from .models import Assignment, Course, Snippet, Test, TestCase, UserAssignment, UserTestCase
 from django.shortcuts import render, redirect
@@ -84,10 +82,8 @@ def assignment(request, id):
         assignment=id, newuser=request.user.id)
     context['userTestCases'] = UserTestCase.objects.filter(userassignment=context['userAssignment'])
     context['assignment'] = Assignment.objects.get(id=id)
-    context['visibleTests'] = TestCase.objects.filter(
-        assignment=id).filter(isVisible=True)
     context['tags'] = context['assignment'].tags.all()
-    allTests = []
+    context['allTests'] = []
     if request.method == 'POST':
         form = AssignmentForm(request.POST, request.FILES)
         if form.is_valid():
@@ -99,22 +95,18 @@ def assignment(request, id):
                 ans = subprocess.check_output(
                     ['java', '-jar', mediaPath + request.FILES['jar'].name], input=testCase.input.encode(), timeout=testCase.time_limit)
                 userTestCase = UserTestCase.objects.filter(userassignment=context['userAssignment'], testCase=testCase)
-                if(userTestCase.exists() != None):
+                if(userTestCase.exists() == False):
                     userTestCase = UserTestCase(userAssignment=userAssignment, testCase=testCase)
                 # If answered correctly test case field isCorrect should be assigned true, by default it is false
                 if(ans == testCase.output.encode()):
                     userTestCase.is_correct=True
-                    userTestCase.testcase.is_visible=True
                 userTestCase.save()
-                allTests.append(userTestCase)
+                context['allTests'].append(userTestCase)
             context['form'] = form
-            context['allTests'] = allTests
             return render(request, 'assignment.html', context)
     else:
         form = AssignmentForm()
     context['form'] = form
-    context['allTests'] = TestCase
-   
         
     return render(request, 'assignment.html', context)
 

@@ -151,7 +151,7 @@ class UserTestCase(models.Model):
     memory = models.PositiveSmallIntegerField()
     time = models.PositiveSmallIntegerField()
     error = models.TextField()
-    output_label = models.CharField()
+    output_label = models.CharField(max_length=200)
     userassignment = models.ForeignKey(
         'UserAssignment', on_delete=models.CASCADE, null=True
     )
