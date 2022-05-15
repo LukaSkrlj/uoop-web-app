@@ -152,10 +152,10 @@ class UserTestCase(models.Model):
     time = models.PositiveSmallIntegerField(null=True)
     error = models.TextField(null=True)
     output_label = models.CharField(max_length=200, null=True)
-    userassignment = models.OneToOneField(
+    userassignment = models.ForeignKey(
         'UserAssignment', on_delete=models.CASCADE, null=True
     )
-    testcase = models.OneToOneField(
+    testcase = models.ForeignKey(
         'TestCase', on_delete=models.CASCADE, null=True
     )
 

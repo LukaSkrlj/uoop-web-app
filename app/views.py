@@ -119,14 +119,16 @@ def assignment(request, id):
                 ans = subprocess.check_output(
                     ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.timeLimit)
                 userTestCase = UserTestCase.objects.filter(userassignment=userAssignment, testcase=testCase).first()
-
+               
                 # if the test case does not exist create a new one
                 if(userTestCase is None):
                     userTestCase = UserTestCase(userassignment=userAssignment, testcase=testCase)
-                
+
                 # If answered correctly test case field isCorrect should be assigned true, by default it is false
                 if(ans == testCase.output.encode()):
                     userTestCase.is_correct=True
+                else: 
+                    userTestCase.is_correct=False
                 userTestCase.save()
                 # sppend all test cases
                 context['allTests'].append(userTestCase)
