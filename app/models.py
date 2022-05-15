@@ -87,10 +87,15 @@ class Assignment(models.Model):
     isSolutionVisible = models.BooleanField(default=False)
     answer = models.TextField(max_length=10000, null=True, blank=True)
     tags = models.ManyToManyField("Tag")
-    assignmentTemplate = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to=TEMPLATES_FOLDER, null=True)
-    #TODO try to read Java code from files and then solution atribute can be removed
-    solutionFile = models.FileField(validators=[FileExtensionValidator(['jar'])], upload_to=SOLUTIONS_FOLDER)
+    assignmentTemplate = models.FileField(validators=[FileExtensionValidator(
+        ['jar'])], upload_to='assignment_templates', null=True)
+    # TODO try to read Java code from files and then solution atribute can be removed
+    solutionFile = models.FileField(validators=[FileExtensionValidator(
+        ['jar'])], upload_to='assignment_solutions', null=True)
     solution = models.TextField(max_length=10000)
+
+    def __str__(self):
+        return self.title
 
 
 class TestCase(models.Model):
@@ -99,8 +104,8 @@ class TestCase(models.Model):
     hint = models.CharField(max_length=255, null=True, blank=True)
     input = models.TextField(max_length=10000)
     output = models.TextField(max_length=10000)
-    memory = models.PositiveSmallIntegerField()
-    time = models.PositiveSmallIntegerField(default=30)
+    memoryLimit = models.PositiveSmallIntegerField()
+    timeLimit = models.PositiveSmallIntegerField(default=30)
     isVisible = models.BooleanField(default=False)
 
     def __str__(self):
@@ -141,6 +146,20 @@ class Snippet(models.Model):
         ordering = ('-created_at', )
 
 
+class UserTestCase(models.Model):
+    is_correct = models.BooleanField(default=False)
+    memory = models.PositiveSmallIntegerField(null=True)
+    time = models.PositiveSmallIntegerField(null=True)
+    error = models.TextField(null=True)
+    output_label = models.CharField(max_length=200, null=True)
+    userassignment = models.ForeignKey(
+        'UserAssignment', on_delete=models.CASCADE, null=True
+    )
+    testcase = models.ForeignKey(
+        'TestCase', on_delete=models.CASCADE, null=True
+    )
+
+    
 class Quiz(models.Model):
     title = models.CharField(max_length=50)
     course = models.ForeignKey("Course", on_delete=models.CASCADE, null=True)

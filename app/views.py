@@ -5,13 +5,14 @@ from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
 from app.helpers import download_file
 from uoop.settings import BASE_DIR
 from .forms import QuizForm, SnippetForm, AssignmentForm
-from .models import Assignment, Course, Question, Quiz, Snippet, StudentAnswer, Test, TestCase
+from .models import Assignment, Course, Question, Quiz, Snippet, StudentAnswer, Test, TestCase, UserAssignment, UserTestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+
 mediaPath = os.path.join(BASE_DIR, 'media')
 filePath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt'
 
@@ -74,34 +75,74 @@ def test(request, id):
 
 
 def assignment(request, id):
+    # fetch all test cases related to current assignment
     testCases = TestCase.objects.filter(assignment=id)
+
+    #initialize context
     context = {}
-    passedTests = []
-    failedTests = []
+    
+    # find the user assignment if it exists
+    userAssignment = UserAssignment.objects.filter(
+        assignment=id, newuser=request.user.id).first()
+
+    # fetch all users test cases
+    context['userTestCases'] = UserTestCase.objects.filter(userassignment=userAssignment)
+
+    # get current assignment
     context['assignment'] = Assignment.objects.get(id=id)
-    context['visibleTests'] = TestCase.objects.filter(
-        assignment=id).filter(isVisible=True)
+
+    # get all tags related to this assignment
     context['tags'] = context['assignment'].tags.all()
+
+    # initialize test cases array
+    context['allTests'] = []
+
+    # filter only thets which are visible
+    context['visibleTests'] = TestCase.objects.filter(isVisible=True)
+
+    # if user submited the form run his submited file
     if request.method == 'POST':
+        # initialize form with request data
         form = AssignmentForm(request.POST, request.FILES)
+
         if form.is_valid():
+            # save the form if it is valid
             form.save()
+
+            # if userAssignment does not exist create a new instance 
+            if(userAssignment is None):
+                userAssignment = UserAssignment(assignment=context['assignment'], newuser=request.user)
+                userAssignment.save()
+
+            # if run the code for each test case
             for testCase in testCases:
                 ans = subprocess.check_output(
-                    ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.time)
+                    ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.timeLimit)
+                userTestCase = UserTestCase.objects.filter(userassignment=userAssignment, testcase=testCase).first()
+               
+                # if the test case does not exist create a new one
+                if(userTestCase is None):
+                    userTestCase = UserTestCase(userassignment=userAssignment, testcase=testCase)
+
+                # If answered correctly test case field isCorrect should be assigned true, by default it is false
                 if(ans == testCase.output.encode()):
-                    passedTests.append(testCase)
-                else:
-                    failedTests.append(testCase)
+                    userTestCase.is_correct=True
+                else: 
+                    userTestCase.is_correct=False
+                userTestCase.save()
+                # sppend all test cases
+                context['allTests'].append(userTestCase)
             context['form'] = form
-            context['passedTests'] = passedTests
-            context['failedTests'] = failedTests
+            context['userAssignment'] = userAssignment
+            
+            # render the page with context object
             return render(request, 'assignment.html', context)
     else:
+        # if user didn't sumbmit the form instantiate a new one and pass it to context
         form = AssignmentForm()
     context['form'] = form
-    context['passedTests'] = passedTests
-    context['failedTests'] = failedTests
+
+    # render the page with context object
     return render(request, 'assignment.html', context)
 
 def getStartDateYear(course):
@@ -155,7 +196,6 @@ def automatiziranaprovjera(request):
 def quiz(request, id):
     quizs = Quiz.objects.get(id=id)
     questions = list(Question.objects.filter(quiz_id = id))
-    #answers = list(Answer.objects.filter(quiz__id = id).)
     studentAnswers= StudentAnswer.objects.filter(answer__question__quiz=id)
     if request.method == 'POST':
         form = QuizForm(request.POST, request.FILES)
@@ -164,7 +204,6 @@ def quiz(request, id):
             return redirect('home/')
         else:
             return redirect('home/') 
-            #return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
     else:
         form = QuizForm()     
     return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
