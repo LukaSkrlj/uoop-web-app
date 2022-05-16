@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
-    'django_ace'
+    'django_ace',
+    'markdownify.apps.MarkdownifyConfig',
 ]
 
 # if DEBUG:

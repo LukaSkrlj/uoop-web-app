@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load markdownify %}
+<!-- {% load filter %} -->
 {% block content %}
     <div class="container page-top-offset" style="margin: 0px; /*font-family: 'NotoSerif';*/"> <!-- nije isto ko na prog.riteh.hr s ovim fontom -->
         <p>
@@ -24,23 +26,20 @@
         <div class="tab-pane fade show active" style="margin-left: 1.5%;" id="zadatak" role="tabpanel" aria-labelledby="zadatak-tab"> <!-- bez ovog margin left viri malo a ovi ostali ne, nez zas-->
             <div class="row">
                 <div class="content" style="margin-right: 3%; width: 60%;">
-                    <div style="margin-top: 4%;">
-                        <p>
-                            {{ assignment.description|safe }}
-                        </p>
+                    <div style="margin-top: 2%;">
+                        <p style="white-space: pre-line;">{{ assignment.description|markdownify }}</p>
                     </div>
+
                     <h3 id="ulazni-podaci">
                         <b>Ulaz</b>
                     </h3>
-                    <p id="ulaz">
-                        {{ assignment.inputDescription|safe }} <!-- safe -> tako da ako je npr <b>ej</b> rendera kao html a ne kao string -->
-                    </p>
+                    <p id="ulaz" style="white-space: pre-line;">{{ assignment.inputDescription|markdownify }}</p>
+
                     <h3 id="izlazni-podaci">
                         <b>Izlaz</b>
                     </h3>
-                    <p>
-                        {{ assignment.outputDescription|safe }}
-                    </p>
+                    <p style="white-space: pre-line;">{{ assignment.outputDescription|markdownify }}</p>
+
                     {% for visibleTest in visibleTests %}
                     <div style="margin-bottom: 5%">
                         <h3 style="margin-bottom: 3%;">
@@ -54,7 +53,7 @@
                                     </h5>
                                 </div>
                                 <div class="test-case" style="position: relative; flex-grow: 1;">
-                                    <code id="input-code-{{ forloop.counter }}">{{visibleTest.input}}</code>
+                                    <code class="tst-cs" id="input-code-{{ forloop.counter }}">{{visibleTest.input}}</code>
                                     <span type="button" id="input-copy-btn-{{ forloop.counter }}" class="btn-primary copy-btn" onclick="copyClick(this)"><i class="fa-solid fa-copy"></i> Kopiraj</span> <!-- vidi ako ce tu trebat mjenjat iz pixela u postotke,, i dole na 70.-->
                                 </div>
                             </div>
@@ -65,16 +64,14 @@
                                     </h5>
                                 </div>
                                 <div class="test-case" style="position: relative; flex-grow: 1;">
-                                    <code id="output-code-{{ forloop.counter }}">{{visibleTest.output}}</code>
+                                    <code class="tst-cs" id="output-code-{{ forloop.counter }}">{{visibleTest.output}}</code>
                                     <span type="button" id="output-copy-btn-{{ forloop.counter }}" class="btn-primary copy-btn" onclick="copyClick(this)"><i class="fa-solid fa-copy"></i> Kopiraj</span>
                                 </div>
                             </div>
                         </div>
                         {% if visibleTest.hint %}
                             <blockquote class="hint">
-                                <div>
-                                    {{ visibleTest.hint|safe }}
-                                </div>
+                                <div>{{ visibleTest.hint|markdownify }}</div>
                             </blockquote>
                         {% endif %}
                     </div>
@@ -124,11 +121,11 @@
                             <div class="test-case-element"><i class="fa-solid fa-share"></i> <b>Izlaz:</b> U redu</div>
                             <div style="display: flex; justify-content: space-between;">
                                 {% if userTestCase.testcase.hint %}
-                                    <div><i onClick="parseMathJax()" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ userTestCase.testcase.hint }}</p>" class="fa-solid fa-circle-info"></i></div>
+                                    <div><i onClick="parseMathJax()" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ userTestCase.testcase.hint|markdownify }}</p>" class="fa-solid fa-circle-info"></i></div>
                                 {% endif %}
 
-                                {% if userTestCase.testcase.isVisible %}
-                                    <div><i class="fa-solid fa-square-check"></i></div>
+                                {% if userTestCase.testcase.isVisible %} <!-- treba prikazat output i ocekivani (tocni) output -->
+                                    <div><i onClick="displayIO(`tu treba dodat za izlaz od user-a, treba u bazi napravit`, `{{ userTestCase.testcase.output }}`)" class="fa-solid fa-square-check" style="cursor: pointer;"></i></div> <!-- jedino sa backtickovima radi -->
                                     <div><i class="fa-solid fa-right-to-bracket"></i></div>
                                     <div><i class="fa-solid fa-right-from-bracket"></i></div>
                                 {% endif %} 
@@ -137,6 +134,20 @@
                     </div>
                 </div>
                 {% endfor %}
+                <div id="io-display" style="display: none; width: 100%;">
+                    <div style="display: flex; flex-direction: column; flex: 1 1 0px; justify-content: space-between">
+                        <div style="align-self: center">
+                            <h6>Izlaz</h5>
+                        </div>
+                        <div id="user-output" class="output output-margin"></div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; flex: 1 1 0px;">
+                        <div style="align-self: center">
+                           <h6>Očekivani izlaz</h6>
+                        </div>
+                        <div id="correct-answer" class="output expected_output-margin"></div>
+                    </div>
+                </div>
             </div>
             {% endif %}
 
@@ -196,5 +207,14 @@
             MathJax.typeset() //searches for unparsed elements and parses them 
         }, 0)
     }
+
+    const displayIO = (output, correctAnswer) => {
+        console.log(output, correctAnswer);
+        document.getElementById("io-display").style.display = "flex"
+
+        document.getElementById("user-output").innerHTML = output
+        document.getElementById("correct-answer").innerHTML = correctAnswer
+    }
+
 </script>
 {% endblock content %}

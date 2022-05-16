@@ -153,7 +153,7 @@ def home(request):
     courses = {}
     
     for course in tmp:
-        if courses.get(str(course['startDate']).split("-")[0]) == None:
+        if courses.get(getStartDateYear(course)) == None:
             courses[getStartDateYear(course)] = [course]
         else:
             courses[getStartDateYear(course)].append(course)
