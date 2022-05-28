@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load markdownify %}
-<!-- {% load filter %} -->
 {% block content %}
     <div class="container page-top-offset" style="margin: 0px; /*font-family: 'NotoSerif';*/"> <!-- nije isto ko na prog.riteh.hr s ovim fontom -->
         <p>
@@ -135,14 +134,14 @@
                 </div>
                 {% endfor %}
                 <div id="io-display" style="display: none; width: 100%;">
-                    <div style="display: flex; flex-direction: column; flex: 1 1 0px; justify-content: space-between">
-                        <div style="align-self: center">
+                    <div class="outputs">
+                        <div class="center">
                             <h6>Izlaz</h5>
                         </div>
                         <div id="user-output" class="output output-margin"></div>
                     </div>
-                    <div style="display: flex; flex-direction: column; flex: 1 1 0px;">
-                        <div style="align-self: center">
+                    <div class="outputs">
+                        <div class="center">
                            <h6>Očekivani izlaz</h6>
                         </div>
                         <div id="correct-answer" class="output expected_output-margin"></div>
@@ -209,7 +208,6 @@
     }
 
     const displayIO = (output, correctAnswer) => {
-        console.log(output, correctAnswer);
         document.getElementById("io-display").style.display = "flex"
 
         document.getElementById("user-output").innerHTML = output

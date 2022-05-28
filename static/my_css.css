@@ -282,3 +282,14 @@ blockquote, .hint {
 .expected_output-margin {
   margin-left: 10px;
 }
+
+.outputs {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 0px !important;
+  justify-content: space-between !important;
+  }
+
+.center {
+  align-self: center !important;
+}
