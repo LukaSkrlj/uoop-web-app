@@ -1,11 +1,12 @@
 import os
+from django.forms import formset_factory
 from django.views import generic
 from django.shortcuts import render
 from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
 from app.helpers import download_file
 from uoop.settings import BASE_DIR
-from .forms import QuizForm, SnippetForm, AssignmentForm
-from .models import Assignment, Course, Question, Quiz, Snippet, StudentAnswer, Test, TestCase, UserAssignment, UserTestCase
+from .forms import BaseQuestionFormSet, QuestionForm, QuizForm, SnippetForm, AssignmentForm
+from .models import Assignment, Course, NewUser, Question, Quiz, Snippet, StudentAnswer, StudentQuiz, Test, TestCase, UserAssignment, UserTestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
@@ -194,19 +195,63 @@ def automatiziranaprovjera(request):
     return render(request, 'automatiziranaprovjera.html')
 
 def quiz(request, id):
+    context = {}
+    correctAnswers = []
+    incorrectAnswers = []
+
     quizs = Quiz.objects.get(id=id)
-    questions = list(Question.objects.filter(quiz_id = id))
-    studentAnswers= StudentAnswer.objects.filter(answer__question__quiz=id)
+    studentAnswers = StudentAnswer.objects.filter(answer__question__quiz=id)
+    questions = Question.objects.filter(quiz_id = id)
+    studentQuiz= StudentQuiz()
+    studentQuiz.percentage = 0
+    mainform = QuizForm(instance = studentQuiz)
+    #QuizFormset = inlineformset_factory(StudentQuiz, StudentAnswer, fields = '__all__', min_num = 0, max_num = questions.count(), extra = 0)
+    ###QuizFormset = modelformset_factory(StudentAnswer, exclude = ('studentQuiz','question'), extra = 0,  max_num = questions.count(), min_num = 0)
+
+    qs = list(Question.objects.filter(quiz_id = id))
+    QuizFormset = formset_factory(QuestionForm, formset=BaseQuestionFormSet, extra=len(qs))#extra = 0,  max_num = questions.count(), min_num = questions.count())
+    formset = QuizFormset(form_kwargs={'questions': qs})
+
+    context['quizs'] = quizs
+    context['studentAnswers'] = studentAnswers
+    context['questions'] = questions
+    context['form'] = mainform
+    context['formset'] = formset
+
+    print(context['quizs'])
+    print(context['questions'])
+    print(context['studentAnswers'])
+
+    
     if request.method == 'POST':
-        form = QuizForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('home/')
+        mainform = QuizForm(request.POST)
+        formset = QuizFormset(request.POST)
+        if mainform.is_valid():
+            for form in formset:
+                instance = form.save(commit = False)
+                instance.studentQuiz = studentQuiz
+                instance.save()
+                print("SAVE")
+            context['form'] = mainform
+            context['formset'] = formset
+            context['correctAnswers'] = correctAnswers
+            context['incorrectAnswers'] = incorrectAnswers
+            print("POSTvalid!")
+            instance = mainform.save(commit = False)
+            instance.quiz = Quiz.objects.get(id=id)
+            instance.student = NewUser.objects.get(email=request.user.get_username())
+            instance.save()
+            return render(request, 'courses.html', context)
         else:
-            return redirect('home/') 
-    else:
-        form = QuizForm()     
-    return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+            print(mainform.errors)
+            print("POST.FORMINvalid!")
+            mainform = QuizForm()
+            context['form'] = mainform
+            print(mainform.errors)
+            print("POST.FORMINvalid!")
+            return render(request, 'quiz.html', context)
+    print("GET!")
+    return render(request, 'quiz.html', context)
 
 # Function used to download jar solution file for specific assignment
 def download_solution(request, id):

@@ -7,10 +7,20 @@
       display: none;
   }
 </style>
+<div style = "width:50%; font-size:large; text-align:center;margin: 0">
+  <h1>{{ quizs.title }}</h1>
+  <br>
+
+  <p>{{ quizs.description }}</p>
+  <br>
+
+  <p><b>Vrijeme početka ispita:</b> <span id = "maxTime">{{ quizs.startDate }}</span></p>
+  <br>
+
+  <p><b>Vrijeme završetka ispita:</b> <span id = "maxTime">{{ quizs.endDate }}</span></p>
+  <br>
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id = "openInfoModal" >Otvori ispit</button>
-{%for answer in answers%}
-{{ answer.text }}
-{% endfor %}
+</div>
 
 <span id = "score"></span>
 <!-- Info modal -->
@@ -23,11 +33,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" id = "quizInfo"> <!-- Dynamic span with quiz details -->
-        {{ quizs.description }}
-        <!--1. kontrolna zadaća prikazuje način polaganja kolegija putem uoop-riteh.hr sustava. Broj pokušaja je neograničen a ostvareni rezultati se ne evidentiraju.<br>
-        -->
-        <br>
+      <div class="modal-body" id = "quizInfo"> 
         <b>Vrijeme završetka ispita:</b> <span id = "maxTime">{{ quizs.endDate }}</span>
       </div>
       <div class="modal-footer">
@@ -50,30 +56,23 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      
-      {%for question in questions%}
-      <div class="modal-body" id = "questionPic"> <!--Place where the picture is displayed-->
-      </div>
-      <div class="modal-body" id = "question"> <!--Place where the question is displayed-->
-      <b>  {{ question.text }} </b>
-      </div>
-      <div class="modal-body" id = "answers"> <!-- Place where the buttons are displayed -->
-        <form action="" method = "post">
-          {% csrf_token %}
-        {%for answerOpt in question.answer.all%}
-        <input type="radio" name = '{{ question.text }}' value = '{{ answerOpt.text }}' > <label>{{ answerOpt.text }}</label><br>
-        {% endfor %}
-        
-      </div>
       <hr>
-      {% endfor %}
-     </form>
-
+      <div class="modal-body">
+          <form method="post">
+              {% csrf_token %}
+              {{ formset.management_form }}
+              {% for form in formset %}
+                <div class="modal-body">
+                    {{ form }}
+                </div>
+              {% endfor %}
+      </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-danger
         " data-dismiss="modal" id = "quizFinish" >Završi kviz</button> <!--Buttton finish quiz which activates alert box-->
         <!-- <button type="button" class="btn btn-primary" id = "nextQuestion">Iduće pitanje</button> Button to go to the next question -->
       </div>
+      </form>
       
     </div>
     
