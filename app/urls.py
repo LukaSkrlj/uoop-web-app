@@ -17,4 +17,6 @@ urlpatterns = [
     path("osustavu/", views.osustavu, name="osustavu"),
     path('download_template/<int:id>', views.download_template, name="download_template"),
     path('download_solution/<int:id>', views.download_solution, name="download_solution"),
+    path('input/<int:id>', views.input, name="input"),
+    path('output/<int:id>', views.output, name="output"),
 ]

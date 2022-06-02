@@ -12,13 +12,13 @@
         
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="zadatak-tab" data-toggle="tab" href="#zadatak" role="tab" aria-controls="zadatak" aria-selected="true">Zadatak</a>
+              <a class="nav-link active" onClick="hidePopovers()" id="zadatak-tab" data-toggle="tab" href="#zadatak" role="tab" aria-controls="zadatak" aria-selected="true">Zadatak</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="odgovor-tab" data-toggle="tab" href="#odgovor" role="tab" aria-controls="odgovor" aria-selected="false">Odgovor</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="rjesenja-tab" data-toggle="tab" href="#rjesenja" role="tab" aria-controls="rjesenja" aria-selected="false">Rješenja</a>
+              <a class="nav-link" onClick="hidePopovers()" id="rjesenja-tab" data-toggle="tab" href="#rjesenja" role="tab" aria-controls="rjesenja" aria-selected="false">Rješenja</a>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -123,10 +123,10 @@
                                     <div><i onClick="parseMathJax()" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ userTestCase.testcase.hint|markdownify }}</p>" class="fa-solid fa-circle-info"></i></div>
                                 {% endif %}
 
-                                {% if userTestCase.testcase.isVisible %} <!-- treba prikazat output i ocekivani (tocni) output -->
-                                    <div><i onClick="displayIO(`tu treba dodat za izlaz od user-a, treba u bazi napravit`, `{{ userTestCase.testcase.output }}`)" class="fa-solid fa-square-check" style="cursor: pointer;"></i></div> <!-- jedino sa backtickovima radi -->
-                                    <div><i class="fa-solid fa-right-to-bracket"></i></div>
-                                    <div><i class="fa-solid fa-right-from-bracket"></i></div>
+                                {% if userTestCase.testcase.isVisible %}
+                                    <div><i onClick="displayIO(`{{ userTestCase.user_output }}`, `{{ userTestCase.testcase.output }}`)" class="fa-solid fa-square-check pointer"></i></div>
+                                    <div><i onClick="openI_O(`{% url 'uoop:input' userTestCase.testcase.id %}`)" class="fa-solid fa-right-to-bracket pointer"></i></div>
+                                    <div><i onClick="openI_O(`{% url 'uoop:output' userTestCase.testcase.id %}`)" class="fa-solid fa-right-from-bracket pointer"></i></div> 
                                 {% endif %} 
                             </div>
                         </div>
@@ -150,7 +150,7 @@
             </div>
             {% endif %}
 
-            <form id="form-uploadJar" method="post" enctype="multipart/form-data" style="margin-top: 2%">
+            <form id="form-uploadJar" onsubmit="JARsubmited()" method="post" enctype="multipart/form-data" style="margin-top: 2%">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-primary">
@@ -189,7 +189,7 @@
         
         clearInterval(intervalId)
         
-        intervalId = setInterval(() => {
+        intervalId = setTimeout(() => {
             document.getElementById(e.id).innerHTML = "<i class='fa-solid fa-copy'></i> Kopiraj"
             document.getElementById(e.id).style.width = "70px"
         }, 500)
@@ -201,6 +201,14 @@
         })
     })
     
+    const hidePopovers = () => {    
+        $('[data-toggle="popover"]').popover('hide')
+    }
+
+    const JARsubmited = () => {
+        localStorage.setItem('submited', 'submited')
+    }
+
     const parseMathJax = () => {
         setTimeout(() => {
             MathJax.typeset() //searches for unparsed elements and parses them 
@@ -213,6 +221,25 @@
         document.getElementById("user-output").innerHTML = output
         document.getElementById("correct-answer").innerHTML = correctAnswer
     }
+
+    const openI_O = (url) => {
+        window.open(url, '_blank');
+    }
+
+    const isJARSubmited = () => { //after uploading jar and refresh, go to Odgovor tab
+        if(localStorage.getItem('submited')) {
+            console.log("loaded submited");
+            let evt = new MouseEvent("click", {
+                view: window,
+                bubbles: true,
+                cancelable: true,
+                clientX: 20,
+            })
+            localStorage.removeItem("submited")
+            document.getElementById("odgovor-tab").dispatchEvent(evt)
+        }
+    }
+    isJARSubmited()
 
 </script>
 {% endblock content %}

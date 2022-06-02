@@ -293,3 +293,7 @@ blockquote, .hint {
 .center {
   align-self: center !important;
 }
+
+.pointer {
+  cursor: pointer;
+}
