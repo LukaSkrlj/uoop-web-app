@@ -18,7 +18,8 @@ admin.site.register(NewUser)
 admin.site.register(UserTestCase)
 admin.site.register(StudentQuiz)
 
-class StudentAnswerInline(admin.TabularInline):
+#giving StudentQuiz inlines which contain StudentAnswers- for a simpler admin interface 
+class StudentAnswerInline(admin.TabularInline):        
     model = StudentAnswer
 
 class StudentQuizAdmin(admin.ModelAdmin):
@@ -28,7 +29,7 @@ admin.site.unregister(StudentQuiz)
 admin.site.register(StudentQuiz,StudentQuizAdmin)
 
 
-
+#giving Question inlines which contain Answers- for a simpler admin interface 
 class AnswerInline(admin.TabularInline):
     model = Answer
 
@@ -39,7 +40,7 @@ admin.site.unregister(Question)
 admin.site.register(Question,QuestionAdmin)
 
 
-
+#giving Quiz inlines which contain Questions- for a simpler admin interface 
 class QuestionInline(admin.TabularInline):
     model = Question
 

@@ -199,58 +199,51 @@ def quiz(request, id):
     correctAnswers = []
     incorrectAnswers = []
 
-    quizs = Quiz.objects.get(id=id)
-    studentAnswers = StudentAnswer.objects.filter(answer__question__quiz=id)
-    questions = Question.objects.filter(quiz_id = id)
-    studentQuiz= StudentQuiz()
-    studentQuiz.percentage = 0
-    mainform = QuizForm(instance = studentQuiz)
-    #QuizFormset = inlineformset_factory(StudentQuiz, StudentAnswer, fields = '__all__', min_num = 0, max_num = questions.count(), extra = 0)
-    ###QuizFormset = modelformset_factory(StudentAnswer, exclude = ('studentQuiz','question'), extra = 0,  max_num = questions.count(), min_num = 0)
+    quizs = Quiz.objects.get(id=id)                                                       #fetching quiz with given id
+    studentAnswers = StudentAnswer.objects.filter(answer__question__quiz=id)              #fetching all existing student answers
+    questions = Question.objects.filter(quiz_id = id)                                     #fetching all questions this quiz has
+    studentQuiz= StudentQuiz()                                                            #initializing studentQuiz object 
+    studentQuiz.percentage = 0                                                            #users percentage of correct answers is 0 in the beginning
+    mainform = QuizForm(instance = studentQuiz)                                           #initializing QuizForm
+   
+    qs = list(Question.objects.filter(quiz_id = id))                                      #saving all quiz questions in a list
+    QuizFormset = formset_factory(QuestionForm, formset=BaseQuestionFormSet, extra=len(qs)) 
+    formset = QuizFormset(form_kwargs={'questions': qs})                                  #making formset from QuestionForms-userAnswer model forms
 
-    qs = list(Question.objects.filter(quiz_id = id))
-    QuizFormset = formset_factory(QuestionForm, formset=BaseQuestionFormSet, extra=len(qs))#extra = 0,  max_num = questions.count(), min_num = questions.count())
-    formset = QuizFormset(form_kwargs={'questions': qs})
-
-    context['quizs'] = quizs
+    context['quizs'] = quizs                                                              #storing data to context which will be sent to quiz.html 
     context['studentAnswers'] = studentAnswers
     context['questions'] = questions
     context['form'] = mainform
     context['formset'] = formset
-
-    print(context['quizs'])
-    print(context['questions'])
-    print(context['studentAnswers'])
-
     
     if request.method == 'POST':
-        mainform = QuizForm(request.POST)
+        mainform = QuizForm(request.POST)                                                 #getting data from user-request.POST
         formset = QuizFormset(request.POST)
-        if mainform.is_valid():
-            for form in formset:
+        if mainform.is_valid():                                                           #TO DO:add formset.is_valid
+            for form in formset:                                                          #saving forms, the grading will be added here
                 instance = form.save(commit = False)
                 instance.studentQuiz = studentQuiz
                 instance.save()
-                print("SAVE")
+                print("SAVE")                                                             #TO DO:delete when finished
             context['form'] = mainform
             context['formset'] = formset
             context['correctAnswers'] = correctAnswers
             context['incorrectAnswers'] = incorrectAnswers
-            print("POSTvalid!")
+            print("POSTvalid!")                                                           #TO DO:delete when finished
             instance = mainform.save(commit = False)
-            instance.quiz = Quiz.objects.get(id=id)
+            instance.quiz = Quiz.objects.get(id=id)                                       #initializing student and saving studentQuiz form
             instance.student = NewUser.objects.get(email=request.user.get_username())
             instance.save()
             return render(request, 'courses.html', context)
         else:
             print(mainform.errors)
-            print("POST.FORMINvalid!")
+            print("POST.FORMINvalid!")                                                    #TO DO:delete when finished
             mainform = QuizForm()
             context['form'] = mainform
             print(mainform.errors)
-            print("POST.FORMINvalid!")
+            print("POST.FORMINvalid!")                                                    #TO DO:delete when finished                                
             return render(request, 'quiz.html', context)
-    print("GET!")
+    print("GET!")                                                                         #TO DO:delete when finished
     return render(request, 'quiz.html', context)
 
 # Function used to download jar solution file for specific assignment

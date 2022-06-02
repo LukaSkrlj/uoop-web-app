@@ -192,11 +192,11 @@ class Answer(models.Model):
     def __str__(self):
         return self.text
 
-class StudentQuiz(models.Model):
+class StudentQuiz(models.Model): #model that stores students name, name of the quiz and percentage he scored
     quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True)
     student = models.ForeignKey("NewUser", on_delete=models.CASCADE, null=True)
     percentage = models.IntegerField(default=0)
-    def __str__(self):
+    def __str__(self):  #naming object in db
        if self.quiz and self.student.first_name and self.student.lastName:
            return self.quiz.title + '-' + self.student.first_name + ' ' + self.student.lastName
        if self.quiz and self.student.email:
@@ -204,19 +204,16 @@ class StudentQuiz(models.Model):
        return "unknown"
 
 
-class StudentAnswer(models.Model):
+class StudentAnswer(models.Model): #model that stores students answer to a question
     studentQuiz = models.ForeignKey("StudentQuiz", on_delete=models.CASCADE, null=True)
     question = models.ForeignKey("Question", on_delete=models.CASCADE, null=True)
     answer = models.ForeignKey("Answer", on_delete=models.CASCADE, null=True)
-    #answer = models.CharField(max_length=50)
-    def __str__(self):
-        #if self.studentQuiz.quiz.title and self.question.text:
-        #   return self.studentQuiz.quiz.title + '-' + self.question.text
-        #if self.studentQuiz and not self.question.text:
-        #    return self.studentQuiz.quiz.title + '-' + '?'
-       if self.studentQuiz.quiz.title and self.answer:
-                return self.studentQuiz.quiz.title + '-' + self.answer
-       return  "unknown"
+    def __str__(self):  #naming object in db
+        if self.studentQuiz.quiz.title and self.question.text:
+                return self.studentQuiz.quiz.title + '-' + self.question.text
+        if self.studentQuiz.title and not self.question.text:
+                return self.studentQuiz.quiz.title + '-' + '?'
+        return  "unknown"
 
 
 #TODO improve student file management after user-assignment relation is added

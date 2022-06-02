@@ -17,60 +17,29 @@ class AssignmentForm(forms.ModelForm):
         model = UserAssignment
         fields = ('jar',)
     
-class QuestionForm(forms.ModelForm):
+class QuestionForm(forms.ModelForm):                                
     def __init__(self, *args, question, **kwargs):
-        #super(QuestionForm, self).__init__(*args, **kwargs)
-        #super().__init__(*args, **kwargs)
-        #self.fields['answer'] = forms.ModelChoiceField(queryset = Answer.objects.filter(question_id = question.id), label = question.text, widget=forms.RadioSelect)
-        #self.fields['answer'].queryset = Answer.objects.filter(question_id = question.id)
-        #self.fields['answer'].label = question.text
-        #super().__init__(*args, **kwargs)
-        super(QuestionForm, self).__init__(*args, **kwargs)
-        self.fields['answer'] = forms.ModelChoiceField(queryset = Answer.objects.filter(question_id = question.id), label = question.text, widget=forms.RadioSelect)
-        #self.fields['answer'].queryset = Answer.objects.filter(question_id = question.id)
-        #self.fields['answer'].widget=forms.RadioSelect
-        self.fields['answer'].label = question.text
-        self.question = question
-        #super(QuestionForm, self).__init__(*args, **kwargs)
+        super(QuestionForm, self).__init__(*args, **kwargs)                                                                         #calling constructor
+        self.fields['answer'] = forms.ModelChoiceField(queryset = Answer.objects.filter(question_id = question.id), 
+                                                        label = question.text, widget=forms.RadioSelect)                            #dynamically generationg radio form                                                                                  #dynamically adding question text 
+        self.question = question    	                                                                                            #dynamically adding question to a form
+        #super().__init__(*args, **kwargs)                                                                                          https://forum.djangoproject.com/t/pass-different-parameters-to-each-form-in-formset/4040/2
     class Meta:
-        model = StudentAnswer
-        exclude = ('studentQuiz', 'question')
-        answer = forms.ModelChoiceField(widget=forms.RadioSelect, queryset=Answer.objects.none())
-        
-        #######answer = forms.ChoiceField(choices= Answer.objects.filter(question_id = question.id), label = question.text, widget=forms.RadioSelect)
-       # author = forms.ModelMultipleChoiceField(queryset=Answer.objects.all())
-        
-        #super().__init__(*args, **kwargs)
-    
-     # 'question')
-        #answer = forms.ModelMultipleChoiceField(queryset=None)
-        ###answer = forms.ModelChoiceField(choices = Answer.objects.all(), label = "pitanje", widget=forms.RadioSelect)#choices = Answer.objects.filter(question_id = idq), label = "pitanje", widget=forms.RadioSelect)
-        #if my_bool:
-         #   self.fields['question'] = forms.CharField(max_length=256)
-        #question = 
-        
-        #fields = '__all__'
+        model = StudentAnswer                                                                                               
+        exclude = ('studentQuiz', 'question')                                                                                       #removing fields for these foreign key models
+        answer = forms.ModelChoiceField(widget=forms.RadioSelect, queryset=Answer.objects.none())                                   #
 
         
 class QuizForm(forms.ModelForm):
     class Meta:
         model = StudentQuiz
         exclude = ('quiz', 'student','percentage')
-    
-        #if my_bool:
-         #   self.fields['question'] = forms.CharField(max_length=256)
     def __init__(self, *args, **kwargs):
-       # self._idq = kwargs.pop('idq', None)
         super(QuizForm, self).__init__(*args, **kwargs)
     
 
-class BaseQuestionFormSet(forms.BaseFormSet):
+class BaseQuestionFormSet(forms.BaseFormSet):                                                                                       #used to pass different data parameters from list to each form
     def get_form_kwargs(self, index):
         kwargs = super().get_form_kwargs(index)
-        q = kwargs['questions'][index]
-        # note that instead of passing a dictionary which includes a copy
-        # of the formset's `form_kwargs`, we actually return a dictionary
-        # that holds a single key-value pair
-        return {'question': q}
-
-#QuizFormset = inlineformset_factory(StudentQuiz, StudentAnswer, fields = '__all__')#, QuestionForm)
+        q = kwargs['questions'][index]                  
+        return {'question': q}                                                                                                      #returns question object from forms index in a list

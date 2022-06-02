@@ -57,6 +57,7 @@
         </button>
       </div>
       <hr>
+      <!-- Displaying formset with radio buttons-->
       <div class="modal-body">
           <form method="post">
               {% csrf_token %}
@@ -67,6 +68,7 @@
                 </div>
               {% endfor %}
       </div>
+      
       <div class="modal-footer">
         <button type="submit" class="btn btn-danger
         " data-dismiss="modal" id = "quizFinish" >Završi kviz</button> <!--Buttton finish quiz which activates alert box-->
