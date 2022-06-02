@@ -8,7 +8,6 @@
           font-weight: normal;
           font-style: normal;
     }
-
 a {
     color: #428bca !important; /* !important da overwrite-a sta god da je zadano */
 }
@@ -32,19 +31,17 @@ a {
     margin: 0px !important;
 } */
 
-.hint {
+blockquote, .hint {
     display: flex !important;
     align-items: center !important;
-    border-left: 5px solid rgb(231, 227, 227) !important;
+    border-left: 5px solid rgb(220, 220, 220) !important;
     margin-top: 2.2%;
     min-height: 40px;
     align-items: center;
+    padding: 10px;
     /* margin-left: 5px; */
 }
 
-.hint div {
-    margin-left: 3%;
-}
 
 .sample {
     display: table;
@@ -86,7 +83,15 @@ a {
     border-radius: 0;   
   } 
 
-  code {
+  code { /* this is for markdown code */
+    color: black;
+    font-size: 92%;
+    background-color: #f5f5f5;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+  code.tst-cs { /* this is for test case input output code tag*/
     padding: 0;
     font-size: inherit;
     color: inherit;
@@ -94,6 +99,7 @@ a {
     background-color: transparent;
     border-radius: 0;
     color: black !important;
+    font-size: 0.9em;
   }
 
   .test-case {
@@ -253,4 +259,41 @@ a {
 
 .test-case-element {
   flex: 1;
+}
+
+
+.output {
+  word-break: break-all !important;
+  word-wrap: break-word !important;
+  color: #333 !important;
+  background-color: #f5f5f5 !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  padding: 9.5px !important;
+  font-size: 0.9em !important;
+  white-space: pre-line !important;
+  height: 100% !important;
+}
+
+.output-margin {
+  margin-right: 10px;
+}
+
+.expected_output-margin {
+  margin-left: 10px;
+}
+
+.outputs {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 0px !important;
+  justify-content: space-between !important;
+  }
+
+.center {
+  align-self: center !important;
+}
+
+.pointer {
+  cursor: pointer;
 }

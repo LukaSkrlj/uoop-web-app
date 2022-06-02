@@ -97,8 +97,8 @@ def assignment(request, id):
     # initialize test cases array
     context['allTests'] = []
 
-    # filter only thets which are visible
-    context['visibleTests'] = TestCase.objects.filter(isVisible=True)
+    # filter only tests which are visible and belong to that assignment
+    context['visibleTests'] = TestCase.objects.filter(assignment=id, isVisible=True)
 
     # if user submited the form run his submited file
     if request.method == 'POST':
@@ -129,8 +129,11 @@ def assignment(request, id):
                     userTestCase.is_correct=True
                 else: 
                     userTestCase.is_correct=False
+                
+                userTestCase.user_output = ans.decode() #decode because it's byte encoding
+
                 userTestCase.save()
-                # sppend all test cases
+                # append all test cases
                 context['allTests'].append(userTestCase)
             context['form'] = form
             context['userAssignment'] = userAssignment
@@ -139,6 +142,7 @@ def assignment(request, id):
             return render(request, 'assignment.html', context)
     else:
         # if user didn't sumbmit the form instantiate a new one and pass it to context
+        #TODO: nakon sta se fixa UserAssignment vidjet ako je user vec izvrtio testcaseove za ovaj zadatak i onda samo to displayat
         form = AssignmentForm()
     context['form'] = form
 
@@ -148,12 +152,24 @@ def assignment(request, id):
 def getStartDateYear(course):
     return str(course['startDate']).split("-")[0]
 
+def input(request, id):
+    input = TestCase.objects.get(id=id).input
+    context = {}
+    context["txt"] = input
+    return render(request, "input_output.html", context)
+
+def output(request, id):
+    output = TestCase.objects.get(id=id).output
+    context = {}
+    context["txt"] = output
+    return render(request, "input_output.html", context)
+
 def home(request):
     tmp = Course.objects.values()
     courses = {}
     
     for course in tmp:
-        if courses.get(str(course['startDate']).split("-")[0]) == None:
+        if courses.get(getStartDateYear(course)) == None:
             courses[getStartDateYear(course)] = [course]
         else:
             courses[getStartDateYear(course)].append(course)
