@@ -22,6 +22,10 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id = "openInfoModal" >Otvori ispit</button>
 </div>
 
+<!--<form action="" method = "post">
+  {% csrf_token %} -->
+
+
 
 <span id = "score"></span>
 <!-- Info modal -->
@@ -51,7 +55,7 @@
   <div class="modal-dialog .modal-dialog-scrollable" style="max-width: 80%;" >
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="staticBackdropLabel">{{ quiz.title }}</h4> <!-- Dynamic question number -->
+        <h4 class="modal-title" id="staticBackdropLabel">{{ quizs.title }}</h4> <!-- Dynamic question number -->
         <tab><button type="button" id = "timer" class="btn btn-primary" disabled><span id = "timeLeft"></span></button> <!--Button with time left, changes color in the last minute -->
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id = "closeModal2"> <!-- Cross button which activates alert box -->
           <span aria-hidden="true">&times;</span>
@@ -60,16 +64,15 @@
       <hr>
       <!-- Displaying formset with radio buttons-->
       <form action="" method = "post">
-        {% csrf_token %}
-        {% for question in questions %}
-           <div class="modal-body">
-              {{ question.text }}
-                 {% for answer in question.answer.all %}
-                      {{ answer.text }}
-                      <input type="radio" name = '{{ question.text }}' value = '{{ answer.text }}'>x<label> {{ answer.text }}</label></input><br>
-                 {% endfor %}
-           </div>
+      {% csrf_token %}
+      {% for question in questions %}
+      <div class="modal-body">
+      <h5>{{ question.text }}</h5>
+        {% for answer in question.answer.all %}
+             <input type="radio" name = '{{ question.text }}' value = '{{ answer.text }}'><label> {{ answer.text }}</label></input><br>
         {% endfor %}
+      </div>
+      {% endfor %}
       
       <div class="modal-footer">
         <button type="submit" class="btn btn-danger

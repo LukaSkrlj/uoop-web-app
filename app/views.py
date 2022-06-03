@@ -5,7 +5,7 @@ from django.shortcuts import render
 from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
 from app.helpers import download_file
 from uoop.settings import BASE_DIR
-from .forms import BaseQuestionFormSet, QuestionForm, QuizForm, SnippetForm, AssignmentForm
+from .forms import SnippetForm, AssignmentForm
 from .models import Assignment, Course, NewUser, Question, Quiz, Snippet, StudentAnswer, StudentQuiz, Test, TestCase, UserAssignment, UserTestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
@@ -201,16 +201,13 @@ def quiz(request, id):
     #answers = list(Answer.objects.filter(quiz__id = id).)
     studentAnswers = list(StudentAnswer.objects.filter(answer__question__quiz=id))
     if request.method == 'POST':
-        form = QuizForm(request.POST)
-        if form.is_valid():
-            form.save()
+            studQuiz = StudentQuiz.objects.create(quiz = Quiz.objects.get(id=id) , student = NewUser.objects.get(email=request.user.get_username()))
             return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
-        else:
-            return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+        #else:
             #return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
-    else:
-        form = QuizForm()     
-    return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+            #return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+    else:   
+        	return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
 
 # Function used to download jar solution file for specific assignment
 def download_solution(request, id):
