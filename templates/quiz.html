@@ -22,6 +22,7 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id = "openInfoModal" >Otvori ispit</button>
 </div>
 
+
 <span id = "score"></span>
 <!-- Info modal -->
 <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -58,26 +59,25 @@
       </div>
       <hr>
       <!-- Displaying formset with radio buttons-->
-      <div class="modal-body">
-          <form method="post">
-              {% csrf_token %}
-              {{ formset.management_form }}
-              {% for form in formset %}
-                <div class="modal-body">
-                    {{ form }}
-                </div>
-              {% endfor %}
-      </div>
+      <form action="" method = "post">
+        {% csrf_token %}
+        {% for question in questions %}
+           <div class="modal-body">
+              {{ question.text }}
+                 {% for answer in question.answer.all %}
+                      {{ answer.text }}
+                      <input type="radio" name = '{{ question.text }}' value = '{{ answer.text }}'>x<label> {{ answer.text }}</label></input><br>
+                 {% endfor %}
+           </div>
+        {% endfor %}
       
       <div class="modal-footer">
         <button type="submit" class="btn btn-danger
         " data-dismiss="modal" id = "quizFinish" >Završi kviz</button> <!--Buttton finish quiz which activates alert box-->
         <!-- <button type="button" class="btn btn-primary" id = "nextQuestion">Iduće pitanje</button> Button to go to the next question -->
       </div>
-      </form>
-      
-    </div>
-    
+    </form>
+     </div>
   </div>
 </div>
 
