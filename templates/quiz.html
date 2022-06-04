@@ -19,7 +19,11 @@
 
   <p><b>Vrijeme završetka ispita:</b> <span id = "maxTime">{{ quizs.endDate }}</span></p>
   <br>
+{% if quizvisible == 1 %}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id = "openInfoModal" >Otvori ispit</button>
+{% else %}
+<button type="button" class="btn btn-success" >Odgovori su pohranjeni</button>
+{% endif %}
 </div>
 
 <!--<form action="" method = "post">
@@ -52,31 +56,29 @@
  
 <!--Quiz modal, static data-backdrop so it doesnt't close by clicking background-->
 <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog .modal-dialog-scrollable" style="max-width: 80%;" >
+  <div class="modal-dialog modal-dialog-scrollable" style="max-width: 80%;" >
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="staticBackdropLabel">{{ quizs.title }}</h4> <!-- Dynamic question number -->
         <tab><button type="button" id = "timer" class="btn btn-primary" disabled><span id = "timeLeft"></span></button> <!--Button with time left, changes color in the last minute -->
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id = "closeModal2"> <!-- Cross button which activates alert box -->
-          <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <hr>
+      <div class="modal-body">
       <!-- Displaying formset with radio buttons-->
       <form action="" method = "post">
       {% csrf_token %}
       {% for question in questions %}
-      <div class="modal-body">
       <h5>{{ question.text }}</h5>
         {% for answer in question.answer.all %}
-             <input type="radio" name = '{{ question.text }}' value = '{{ answer.text }}'><label> {{ answer.text }}</label></input><br>
+             <input type="radio" name = '{{ question.text }}' value = '{{ answer.text }}'>  <label>{{ answer.text }}</label></input><br>
         {% endfor %}
-      </div>
+      <br>
       {% endfor %}
-      
+      </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-danger
-        " data-dismiss="modal" id = "quizFinish" >Završi kviz</button> <!--Buttton finish quiz which activates alert box-->
+        " data-dismiss="modal" id = "quizFinish">Završi kviz</button> <!--Buttton finish quiz which activates alert box-->
         <!-- <button type="button" class="btn btn-primary" id = "nextQuestion">Iduće pitanje</button> Button to go to the next question -->
       </div>
     </form>

@@ -6,7 +6,7 @@ from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
 from app.helpers import download_file
 from uoop.settings import BASE_DIR
 from .forms import SnippetForm, AssignmentForm
-from .models import Assignment, Course, NewUser, Question, Quiz, Snippet, StudentAnswer, StudentQuiz, Test, TestCase, UserAssignment, UserTestCase
+from .models import Answer, Assignment, Course, NewUser, Question, Quiz, Snippet, StudentAnswer, StudentQuiz, Test, TestCase, UserAssignment, UserTestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
@@ -200,14 +200,34 @@ def quiz(request, id):
     questions = list(Question.objects.filter(quiz_id = id))
     #answers = list(Answer.objects.filter(quiz__id = id).)
     studentAnswers = list(StudentAnswer.objects.filter(answer__question__quiz=id))
+    quizvisible = 1
+    if(StudentQuiz.objects.filter(quiz = quizs).filter(student =  (NewUser.objects.get(email=request.user.get_username()))).exists()):
+        quizvisible = 0
     if request.method == 'POST':
+        if(StudentQuiz.objects.filter(quiz = quizs).filter(student =  (NewUser.objects.get(email=request.user.get_username()))).exists()):
+            print("exists")
+        else:
             studQuiz = StudentQuiz.objects.create(quiz = Quiz.objects.get(id=id) , student = NewUser.objects.get(email=request.user.get_username()))
-            return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
-        #else:
-            #return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
-            #return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+            scoredPoints = 0
+            for question in questions:
+                response = request.POST.get(str(question.text))
+                print(response)
+                if(response != None):
+                    answer = Answer.objects.filter(text = response).get(question_id = question.id)
+                    studAnswer = StudentAnswer.objects.create(studentQuiz = studQuiz, question = question, answer = answer)
+                    if(answer.true):
+                        print("tocan")
+                        scoredPoints += question.points
+                        StudentAnswer.objects.filter(id=studAnswer.id).update(points=question.points)
+                else:
+                    studAnswer = StudentAnswer.objects.create(studentQuiz = studQuiz, question = question)
+            scoredPercentage = (scoredPoints/quizs.points)*100
+            StudentQuiz.objects.filter(id=studQuiz.id).update(points=scoredPoints)
+            StudentQuiz.objects.filter(id=studQuiz.id).update(percentage=scoredPercentage)
+            return redirect('/')
+        return redirect('/')
     else:   
-        	return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+        	return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers, 'quizvisible' : quizvisible})
 
 # Function used to download jar solution file for specific assignment
 def download_solution(request, id):

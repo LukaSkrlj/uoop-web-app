@@ -167,6 +167,7 @@ class Quiz(models.Model):
     startDate = models.DateTimeField()
     endDate = models.DateTimeField()
     students = models.ManyToManyField(NewUser, blank=True)
+    points = models.FloatField(default = 0)
 
     def __str__(self):
         return self.title
@@ -195,7 +196,8 @@ class Answer(models.Model):
 class StudentQuiz(models.Model): #model that stores students name, name of the quiz and percentage he scored
     quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True)
     student = models.ForeignKey("NewUser", on_delete=models.CASCADE, null=True)
-    percentage = models.IntegerField(default=0)
+    points =  models.FloatField(default = 0)
+    percentage = models.FloatField(default = 0)
     def __str__(self):  #naming object in db
        if self.quiz and self.student.first_name and self.student.lastName:
            return self.quiz.title + '-' + self.student.first_name + ' ' + self.student.lastName
@@ -208,11 +210,12 @@ class StudentAnswer(models.Model): #model that stores students answer to a quest
     studentQuiz = models.ForeignKey("StudentQuiz", on_delete=models.CASCADE, null=True)
     question = models.ForeignKey("Question", on_delete=models.CASCADE, null=True)
     answer = models.ForeignKey("Answer", on_delete=models.CASCADE, null=True)
+    points =  models.FloatField(default = 0)
     def __str__(self):  #naming object in db
-        if self.studentQuiz.quiz.title and self.question.text:
-                return self.studentQuiz.quiz.title + '-' + self.question.text
-        if self.studentQuiz.title and not self.question.text:
-                return self.studentQuiz.quiz.title + '-' + '?'
+        if self.studentQuiz.quiz.title and self.question.text and self.studentQuiz.student.email:
+                return self.studentQuiz.quiz.title + '-' + self.question.text + '-' + self.studentQuiz.student.email
+        if self.studentQuiz.title and not self.question.text and self.studentQuiz.student.email:
+                return self.studentQuiz.quiz.title + '-' + '?-' + self.studentQuiz.student.email
         return  "unknown"
 
 
