@@ -1,4 +1,5 @@
 import os
+from django.urls import reverse
 from django.views import generic
 from django.shortcuts import render
 from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
@@ -178,14 +179,14 @@ def login_user(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('/')
+            return redirect(reverse('app:home'))
     form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
 
 def logout_user(request):
     logout(request)
-    return redirect('/')
+    return redirect(reverse('app:home'))
 
 def osustavu(request):
     return render(request, 'osustavu.html')

@@ -4,7 +4,7 @@
         <p>
             <i class="fa-solid fa-arrow-left"></i>
             
-            <a href="{% url 'uoop:test' assignment.test.id %}">{{ assignment.test.title }}</a>
+            <a href="{% url 'app:test' assignment.test.id %}">{{ assignment.test.title }}</a>
         </p>
         <br>
         <h2><b>{{ assignment.title }}</b></h2>
@@ -147,7 +147,7 @@
                     Predaj
                 </button>
                 {% if assignment.assignmentTemplate %}
-                    <a class="btn btn-light" href="{% url 'uoop:download_template' assignment.id %}">Download template</a>
+                    <a class="btn btn-light" href="{% url 'app:download_template' assignment.id %}">Download template</a>
                 {% endif %}
             </form>
         </div>
@@ -161,7 +161,7 @@
                 <div class="highlight">
                     <pre>{{ assignment.solution }}</pre>
                 </div>
-                <a class="btn btn-primary" href="{% url 'uoop:download_solution' assignment.id %}">Download solution</a>
+                <a class="btn btn-primary" href="{% url 'app:download_solution' assignment.id %}">Download solution</a>
             </div>
         </div>
         {% endif %}
