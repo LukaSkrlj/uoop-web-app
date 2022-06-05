@@ -33,7 +33,7 @@ admin.site.register(StudentQuiz,StudentQuizAdmin)
 #giving Question inlines which contain Answers- for a simpler admin interface 
 class AnswerInline(admin.TabularInline):
     model = Answer
-    extra = 0
+    extra = 2
 
 class QuestionAdmin(admin.ModelAdmin):
    inlines = [AnswerInline,]
@@ -46,7 +46,7 @@ admin.site.register(Question,QuestionAdmin)
 #giving Quiz inlines which contain Questions- for a simpler admin interface 
 class QuestionInline(admin.TabularInline):
     model = Question
-    extra = 0
+    extra = 2
 
 class QuizAdmin(admin.ModelAdmin):
    inlines = [QuestionInline,]

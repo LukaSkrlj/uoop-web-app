@@ -7,6 +7,7 @@
       display: none;
   }
 </style>
+<!-- Displaying info about quiz-->
 <div class = "centeredTextDiv">
   <h1>{{ quizs.title }}</h1>
   <br>
@@ -19,6 +20,7 @@
 
   <p><b>Vrijeme završetka ispita:</b> <span id = "maxTime">{{ quizs.endDate }}</span></p>
   <br>
+<!--Disable user from submitting more than one quiz-->
 {% if quizvisible == 1 %}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id = "openInfoModal" >Otvori ispit</button>
 {% else %}
@@ -86,14 +88,15 @@
   </div>
 </div>
 
-<!--</script>-->
+<!--Sending database data to js file-->
 <script>
-    var maxMinutes = '{{ quizs.endDate.minute }}';
+    var maxMilliseconds = '{{ quizs.endDate.milisecond }}'; 
     var maxSeconds = '{{ quizs.endDate.second }}'; 
-    var minMinutes = '{{ quizs.startDate.minute }}';
-    var minSeconds = '{{ quizs.startDate.second }}';
-    $("input[type=radio]").attr('disabled', true);
-    $("input[type=radio]").attr('disabled', false);
+    var maxMinutes = '{{ quizs.endDate.minute }}';
+    var maxHours = '{{ quizs.endDate.hour }}';
+    var maxDays = '{{ quizs.endDate.day }}';
+    var maxMonths = '{{ quizs.endDate.month }}';
+    var maxYears = '{{ quizs.endDate.year }}';
 </script>
 
 <script src="{% static 'components/js/onePageQuiz.js' %}" ></script> 

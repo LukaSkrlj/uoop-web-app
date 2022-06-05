@@ -196,36 +196,44 @@ def automatiziranaprovjera(request):
 
 
 def quiz(request, id):
+    #fetching data from database
     quizs = Quiz.objects.get(id=id)
     questions = list(Question.objects.filter(quiz_id = id))
-    #answers = list(Answer.objects.filter(quiz__id = id).)
     studentAnswers = list(StudentAnswer.objects.filter(answer__question__quiz=id))
+    #disables student from submitting more than one quiz
     quizvisible = 1
     if(StudentQuiz.objects.filter(quiz = quizs).filter(student =  (NewUser.objects.get(email=request.user.get_username()))).exists()):
-        quizvisible = 0
-    if request.method == 'POST':
+        quizvisible = 0 
+
+    if request.method == 'POST':  #quiz submitted
         if(StudentQuiz.objects.filter(quiz = quizs).filter(student =  (NewUser.objects.get(email=request.user.get_username()))).exists()):
             print("exists")
         else:
+            #creating studentQuiz object with available data
             studQuiz = StudentQuiz.objects.create(quiz = Quiz.objects.get(id=id) , student = NewUser.objects.get(email=request.user.get_username()))
             scoredPoints = 0
-            for question in questions:
-                response = request.POST.get(str(question.text))
-                print(response)
+            for question in questions: #iterating through question objects in quiz
+                response = request.POST.get(str(question.text)) #fetching selected radio button value
+
+                #creating studentQuiz object with answer object
                 if(response != None):
                     answer = Answer.objects.filter(text = response).get(question_id = question.id)
                     studAnswer = StudentAnswer.objects.create(studentQuiz = studQuiz, question = question, answer = answer)
-                    if(answer.true):
-                        print("tocan")
+                    if(answer.true): #incrementing scored points 
                         scoredPoints += question.points
                         StudentAnswer.objects.filter(id=studAnswer.id).update(points=question.points)
+
+                 #creating studentQuiz object without answer object
                 else:
                     studAnswer = StudentAnswer.objects.create(studentQuiz = studQuiz, question = question)
+
+            #saving percentage and points data to studentQuiz
             scoredPercentage = (scoredPoints/quizs.points)*100
             StudentQuiz.objects.filter(id=studQuiz.id).update(points=scoredPoints)
             StudentQuiz.objects.filter(id=studQuiz.id).update(percentage=scoredPercentage)
             return redirect('/')
         return redirect('/')
+    #accessing quiz.html first time 
     else:   
         	return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers, 'quizvisible' : quizvisible})
 

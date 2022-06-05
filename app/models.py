@@ -163,11 +163,11 @@ class UserTestCase(models.Model):
 class Quiz(models.Model):
     title = models.CharField(max_length=50)
     course = models.ForeignKey("Course", on_delete=models.CASCADE, null=True)
-    description = models.CharField(max_length=300, null=True)
-    startDate = models.DateTimeField()
-    endDate = models.DateTimeField()
-    students = models.ManyToManyField(NewUser, blank=True)
-    points = models.FloatField(default = 0)
+    description = models.CharField(max_length=300, null=True)  #info about quiz questions, tips
+    startDate = models.DateTimeField() #when thw quiz is opened
+    endDate = models.DateTimeField() #when quiz closes
+    students = models.ManyToManyField(NewUser, blank=True) #student who are assigned to quiz
+    points = models.FloatField(default = 0)   #points student can make with quiz
 
     def __str__(self):
         return self.title
@@ -179,7 +179,7 @@ class Quiz(models.Model):
 class Question(models.Model):
     text = models.CharField(max_length=50)
     quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True,  related_name='question')
-    points = models.IntegerField(default=0)
+    points = models.IntegerField(default=0) #how much points student scores by submitting right answer
 
     def __str__(self):
         return self.text
@@ -188,16 +188,16 @@ class Question(models.Model):
 class Answer(models.Model):
     text = models.CharField(max_length=50)
     question = models.ForeignKey("Question", on_delete=models.CASCADE, null=True,  related_name='answer')
-    true = models.BooleanField(default=False)
+    true = models.BooleanField(default=False)   #if answer is correct
 
     def __str__(self):
         return self.text
 
 class StudentQuiz(models.Model): #model that stores students name, name of the quiz and percentage he scored
-    quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True)
+    quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True)   
     student = models.ForeignKey("NewUser", on_delete=models.CASCADE, null=True)
-    points =  models.FloatField(default = 0)
-    percentage = models.FloatField(default = 0)
+    points =  models.FloatField(default = 0)    #points user scored
+    percentage = models.FloatField(default = 0)  #percentage of students success in quiz
     def __str__(self):  #naming object in db
        if self.quiz and self.student.first_name and self.student.lastName:
            return self.quiz.title + '-' + self.student.first_name + ' ' + self.student.lastName
@@ -207,10 +207,10 @@ class StudentQuiz(models.Model): #model that stores students name, name of the q
 
 
 class StudentAnswer(models.Model): #model that stores students answer to a question
-    studentQuiz = models.ForeignKey("StudentQuiz", on_delete=models.CASCADE, null=True)
+    studentQuiz = models.ForeignKey("StudentQuiz", on_delete=models.CASCADE, null=True) #inherits studentQuiz model
     question = models.ForeignKey("Question", on_delete=models.CASCADE, null=True)
-    answer = models.ForeignKey("Answer", on_delete=models.CASCADE, null=True)
-    points =  models.FloatField(default = 0)
+    answer = models.ForeignKey("Answer", on_delete=models.CASCADE, null=True) #chosen answer
+    points =  models.FloatField(default = 0) #points student scored with this answer
     def __str__(self):  #naming object in db
         if self.studentQuiz.quiz.title and self.question.text and self.studentQuiz.student.email:
                 return self.studentQuiz.quiz.title + '-' + self.question.text + '-' + self.studentQuiz.student.email
