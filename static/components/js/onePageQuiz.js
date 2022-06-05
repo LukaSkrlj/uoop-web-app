@@ -12,17 +12,19 @@ startQuiz.addEventListener('click', startQuizFunction)
 startQuiz.addEventListener('click', closeDialog)
 quizFinish.addEventListener('click', submitClicked)
 
-//Making time object with info from database
-var finishTime = new Date(maxYears, maxMonths, maxDays, maxHours, maxMinutes, maxSeconds, maxMilliseconds);
-var countDownDate = finishTime.getTime();
-countDownDate -= 1000*60*60*24*29 + 1000*60*60*22; //hardcocded->to do: fix django admin timezone month
-var distance = 0
-function calculateTimeLeft(){
+//Making time object with info about quiz submit time from database
+var finishTime = new Date(Date.UTC(maxYears, maxMonths-1, maxDays, maxHours, maxMinutes, maxSeconds, maxMilliseconds));//month-1 because months are in a span 0-11
+var countDownDate = finishTime.getTime(); //converting time to miliseconds
+var distance = 0 
 
-  // Returns the value of cureent day and time
+
+function calculateTimeLeft(){
+  // Returns the value of current day and time
   var now = new Date().getTime();
-  // Find the distance between now and the count down date
+
+  // Find the distance between now and the final quiz submit date
   var distance = countDownDate - now ;
+
   // Time calculations for days, hours, minutes and seconds left
   var days = Math.floor(distance / (1000 * 60 * 60 * 24));
   var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
