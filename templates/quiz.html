@@ -24,6 +24,7 @@
 {% if quizvisible == 1 %}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id = "openInfoModal" >Otvori ispit</button>
 {% else %}
+<p><b>Vaša ocjena na kvizu:</b> {{ studentQuizs.points }}/{{ quizs.points }} - {{ studentQuizs.percentage }}%</b></p>
 <button type="button" class="btn btn-success" >Odgovori su pohranjeni</button>
 {% endif %}
 </div>

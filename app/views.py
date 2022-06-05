@@ -204,7 +204,9 @@ def quiz(request, id):
     quizvisible = 1
     if(StudentQuiz.objects.filter(quiz = quizs).filter(student =  (NewUser.objects.get(email=request.user.get_username()))).exists()):
         quizvisible = 0 
-
+        studentQuizs = StudentQuiz.objects.filter(quiz = quizs).get(student =  (NewUser.objects.get(email=request.user.get_username())))
+    else:
+        studentQuizs = None
     if request.method == 'POST':  #quiz submitted
         if(StudentQuiz.objects.filter(quiz = quizs).filter(student =  (NewUser.objects.get(email=request.user.get_username()))).exists()):
             print("exists")
@@ -238,7 +240,7 @@ def quiz(request, id):
         return redirect('/')
     #accessing quiz.html first time 
     else:   
-        	return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers, 'quizvisible' : quizvisible})
+        	return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers, 'quizvisible' : quizvisible, 'studentQuizs' : studentQuizs})
 
 # Function used to download jar solution file for specific assignment
 def download_solution(request, id):
