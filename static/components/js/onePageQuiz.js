@@ -23,7 +23,7 @@ function calculateTimeLeft(){
   var now = new Date().getTime();
 
   // Find the distance between now and the final quiz submit date
-  var distance = countDownDate - now ;
+  distance = countDownDate - now ;
 
   // Time calculations for days, hours, minutes and seconds left
   var days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -41,7 +41,7 @@ function calculateTimeLeft(){
 
   // If the count down is finished
   if (distance <= 0) {
-    closeQuiz();
+    quizFinish.click();
     clearInterval(x);
     timeLeft.innerHTML = "0:0";
   }
@@ -53,18 +53,18 @@ function calculateTimeLeft(){
 function alertPopUp() {
   var txt
   if (confirm("Jeste li sigurni da želite završiti kviz")) {
-    closeQuiz()   
+    closeQuiz(); 
   } else {
     //
   }
 }
 //if available time has passsed close the quiz or allow student to go back to quiz
 function submitClicked(){
-  if(distance == 0){
-    closeQuiz()
+  if(distance > 0){
+    alertPopUp();
   }
   else{
-    alertPopUp()
+    closeQuiz();
   }
 }
 
@@ -82,7 +82,6 @@ function closeQuiz() {
 		$('body').removeClass('modal-open');
 		$('.modal-backdrop').remove(); 
     $("#openInfoModal").hide();
-    quizFinish.click();
 
   }
 

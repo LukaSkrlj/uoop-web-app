@@ -228,9 +228,12 @@ def quiz(request, id):
                     studAnswer = StudentAnswer.objects.create(studentQuiz = studQuiz, question = question)
 
             #saving percentage and points data to studentQuiz
-            scoredPercentage = (scoredPoints/quizs.points)*100
+            if(quizs.points > 0):  #avoiding division by zero error
+                scoredPercentage = (scoredPoints/quizs.points)*100
+                StudentQuiz.objects.filter(id=studQuiz.id).update(percentage=scoredPercentage)
+
             StudentQuiz.objects.filter(id=studQuiz.id).update(points=scoredPoints)
-            StudentQuiz.objects.filter(id=studQuiz.id).update(percentage=scoredPercentage)
+            
             return redirect('/')
         return redirect('/')
     #accessing quiz.html first time 
