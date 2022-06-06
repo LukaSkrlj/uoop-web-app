@@ -18,11 +18,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='NewUser',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
-                ('email', models.EmailField(max_length=254, unique=True, verbose_name='email address')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('password', models.CharField(
+                    max_length=128, verbose_name='password')),
+                ('last_login', models.DateTimeField(
+                    blank=True, null=True, verbose_name='last login')),
+                ('is_superuser', models.BooleanField(default=False,
+                 help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
+                ('email', models.EmailField(max_length=254,
+                 unique=True, verbose_name='email address')),
                 ('first_name', models.CharField(max_length=100)),
                 ('lastName', models.CharField(max_length=100)),
                 ('is_staff', models.BooleanField(default=False)),
@@ -35,7 +40,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Answer',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('text', models.CharField(max_length=50)),
                 ('true', models.BooleanField(default=False)),
             ],
@@ -43,7 +49,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Assignment',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=50)),
                 ('description', models.TextField(max_length=10000)),
                 ('percentage', models.PositiveSmallIntegerField(default=0)),
@@ -51,26 +58,32 @@ class Migration(migrations.Migration):
                 ('outputDescription', models.TextField(max_length=10000)),
                 ('isSolutionVisible', models.BooleanField(default=False)),
                 ('answer', models.TextField(blank=True, max_length=10000, null=True)),
-                ('assignmentTemplate', models.FileField(null=True, upload_to='assignment_templates', validators=[django.core.validators.FileExtensionValidator(['jar'])])),
-                ('solutionFile', models.FileField(null=True, upload_to='assignment_solutions', validators=[django.core.validators.FileExtensionValidator(['jar'])])),
+                ('assignmentTemplate', models.FileField(null=True, upload_to='assignment_templates',
+                 validators=[django.core.validators.FileExtensionValidator(['jar'])])),
+                ('solutionFile', models.FileField(null=True, upload_to='assignment_solutions',
+                 validators=[django.core.validators.FileExtensionValidator(['jar'])])),
                 ('solution', models.TextField(max_length=10000)),
+                ('test_class', models.CharField(default='JunitTest', max_length=50)),
             ],
         ),
         migrations.CreateModel(
             name='Course',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=50)),
                 ('shortTitle', models.CharField(max_length=5, unique=True)),
                 ('startDate', models.DateTimeField()),
                 ('endDate', models.DateTimeField()),
-                ('newusers', models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL)),
+                ('newusers', models.ManyToManyField(
+                    blank=True, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
             name='Question',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('text', models.CharField(max_length=50)),
                 ('points', models.IntegerField(default=0)),
             ],
@@ -78,19 +91,23 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Quiz',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=50)),
                 ('description', models.CharField(max_length=300, null=True)),
                 ('startDate', models.DateTimeField()),
                 ('endDate', models.DateTimeField()),
-                ('course', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.course')),
-                ('students', models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL)),
+                ('course', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.CASCADE, to='app.course')),
+                ('students', models.ManyToManyField(
+                    blank=True, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
             name='Snippet',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('text', models.TextField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
             ],
@@ -101,7 +118,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Tag',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=20)),
                 ('link', models.CharField(blank=True, max_length=255, null=True)),
             ],
@@ -109,73 +127,92 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TestCase',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('hint', models.CharField(blank=True, max_length=255, null=True)),
                 ('input', models.TextField(max_length=10000)),
                 ('output', models.TextField(max_length=10000)),
                 ('memoryLimit', models.PositiveSmallIntegerField()),
                 ('timeLimit', models.PositiveSmallIntegerField(default=30)),
                 ('isVisible', models.BooleanField(default=False)),
-                ('assignment', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.assignment')),
+                ('assignment', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='app.assignment')),
             ],
         ),
         migrations.CreateModel(
             name='UserAssignment',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('jar', models.FileField(upload_to='', validators=[django.core.validators.FileExtensionValidator(['jar'])])),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('jar', models.FileField(upload_to='', validators=[
+                 django.core.validators.FileExtensionValidator(['jar'])])),
                 ('percentage', models.PositiveSmallIntegerField(default=0)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('assignment', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.assignment')),
-                ('newuser', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('assignment', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.CASCADE, to='app.assignment')),
+                ('newuser', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
             name='UserTestCase',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('is_correct', models.BooleanField(default=False)),
                 ('memory', models.PositiveSmallIntegerField(null=True)),
                 ('time', models.PositiveSmallIntegerField(null=True)),
                 ('error', models.TextField(null=True)),
                 ('output_label', models.CharField(max_length=200, null=True)),
-                ('testcase', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.testcase')),
-                ('userassignment', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.userassignment')),
+                ('testcase', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.CASCADE, to='app.testcase')),
+                ('userassignment', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.CASCADE, to='app.userassignment')),
             ],
         ),
         migrations.CreateModel(
             name='Test',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=50)),
                 ('startDate', models.DateTimeField()),
                 ('endDate', models.DateTimeField()),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.course')),
+                ('course', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='app.course')),
             ],
         ),
         migrations.CreateModel(
             name='StudentQuiz',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('percentage', models.IntegerField(default=0)),
-                ('quiz', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.quiz')),
-                ('student', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('quiz', models.ForeignKey(null=True,
+                 on_delete=django.db.models.deletion.CASCADE, to='app.quiz')),
+                ('student', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
             name='StudentAnswer',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('answer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.answer')),
-                ('question', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.question')),
-                ('studentQuiz', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.studentquiz')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('answer', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.CASCADE, to='app.answer')),
+                ('question', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.CASCADE, to='app.question')),
+                ('studentQuiz', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.CASCADE, to='app.studentquiz')),
             ],
         ),
         migrations.AddField(
             model_name='question',
             name='quiz',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='question', to='app.quiz'),
+            field=models.ForeignKey(
+                null=True, on_delete=django.db.models.deletion.CASCADE, related_name='question', to='app.quiz'),
         ),
         migrations.AddField(
             model_name='assignment',
@@ -185,12 +222,14 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='assignment',
             name='test',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='app.test'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='app.test'),
         ),
         migrations.AddField(
             model_name='answer',
             name='question',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='answer', to='app.question'),
+            field=models.ForeignKey(
+                null=True, on_delete=django.db.models.deletion.CASCADE, related_name='answer', to='app.question'),
         ),
         migrations.AddField(
             model_name='newuser',
@@ -200,11 +239,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='newuser',
             name='groups',
-            field=models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups'),
+            field=models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+                                         related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups'),
         ),
         migrations.AddField(
             model_name='newuser',
             name='user_permissions',
-            field=models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions'),
+            field=models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set',
+                                         related_query_name='user', to='auth.permission', verbose_name='user permissions'),
         ),
     ]

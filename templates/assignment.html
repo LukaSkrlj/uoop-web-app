@@ -149,8 +149,28 @@
                 </div>
             </div>
             {% endif %}
+<<<<<<< Updated upstream
 
             <form id="form-uploadJar" onsubmit="JARsubmited()" method="post" enctype="multipart/form-data" style="margin-top: 2%">
+=======
+            {% if junit %}
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header">
+                    <a class="card-link" data-toggle="collapse" href="#collapseOne">
+                        JUNIT
+                    </a>
+                    </div>
+                    <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                    <div class="card-body">
+                        {{ junit }}
+                    </div>
+                    </div>
+                </div>
+            </div>
+             {% endif %}
+            <form id="form-uploadJar" method="post" enctype="multipart/form-data" style="margin-top: 2%">
+>>>>>>> Stashed changes
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-primary">
