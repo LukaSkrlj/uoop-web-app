@@ -117,17 +117,21 @@ def assignment(request, id):
                 userAssignment = UserAssignment(
                     assignment=context['assignment'], newuser=request.user)
                 userAssignment.save()
-            junitTestsOut, junitTestErr = Popen('java -cp ' + os.path.join(mediaPath, request.FILES['jar'].name) + ';' + os.path.join(
-                BASE_DIR, 'junit.jar junit.textui.TestRunner ' + context['assignment'].test_class), stdin=PIPE, stderr=PIPE, stdout=PIPE).communicate()
-            context['junit'] = junitTestsOut.decode(
-                "utf-8") + junitTestErr.decode("utf-8")
+
+            try:
+                junitTestsOut, junitTestErr = Popen('java -cp ' + os.path.join(mediaPath, request.FILES['jar'].name) + ';' + os.path.join(
+                    BASE_DIR, 'junit.jar junit.textui.TestRunner ' + context['assignment'].test_class), stdin=PIPE, stderr=PIPE, stdout=PIPE).communicate()
+                context['junit'] = junitTestsOut.decode(
+                    "utf-8") + junitTestErr.decode("utf-8")
+            except:
+                print('JUNIT ERROR')
             # if run the code for each test case
             for testCase in testCases:
                 try:
                     ans = check_output(
                         ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.timeLimit)
                 except:
-                    print('err')
+                    print('Compiling failed')
 
                 userTestCase = UserTestCase.objects.filter(
                     userassignment=userAssignment, testcase=testCase).first()
