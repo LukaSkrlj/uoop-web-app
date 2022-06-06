@@ -1,4 +1,4 @@
-from .models import Snippet, StudentAnswer, UserAssignment
+from .models import Answer, Question, Snippet, StudentAnswer, StudentQuiz, UserAssignment
 from django import forms
 from django_ace import AceWidget
 
@@ -17,8 +17,3 @@ class AssignmentForm(forms.ModelForm):
         model = UserAssignment
         fields = ('jar',)
     
-
-class QuizForm(forms.ModelForm):
-    class Meta:
-        model = StudentAnswer
-        fields = '__all__'

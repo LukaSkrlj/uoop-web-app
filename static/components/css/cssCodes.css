@@ -1,0 +1,21 @@
+.centeredDiv{
+        width:50%; 
+        font-size:large; 
+        text-align:justify;
+        display: block;margin:0
+}
+.imgStyle{
+    width:80%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.centeredTextDiv{
+    width:50%; 
+    font-size:large; 
+    text-align:center;
+    margin: 0;}
+.questionText{
+        font-size:large; 
+        font-weight: bold;
+        }

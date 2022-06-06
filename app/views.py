@@ -1,11 +1,12 @@
 import os
+from django.forms import formset_factory
 from django.views import generic
 from django.shortcuts import render
 from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
 from app.helpers import download_file
 from uoop.settings import BASE_DIR
-from .forms import QuizForm, SnippetForm, AssignmentForm
-from .models import Assignment, Course, Question, Quiz, Snippet, StudentAnswer, Test, TestCase, UserAssignment, UserTestCase
+from .forms import SnippetForm, AssignmentForm
+from .models import Answer, Assignment, Course, NewUser, Question, Quiz, Snippet, StudentAnswer, StudentQuiz, Test, TestCase, UserAssignment, UserTestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
 import subprocess
@@ -209,20 +210,53 @@ def osustavu(request):
 def automatiziranaprovjera(request):
     return render(request, 'automatiziranaprovjera.html')
 
+
 def quiz(request, id):
+    #fetching data from database
     quizs = Quiz.objects.get(id=id)
     questions = list(Question.objects.filter(quiz_id = id))
-    studentAnswers= StudentAnswer.objects.filter(answer__question__quiz=id)
-    if request.method == 'POST':
-        form = QuizForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('home/')
-        else:
-            return redirect('home/') 
+    studentAnswers = list(StudentAnswer.objects.filter(answer__question__quiz=id))
+    #disables student from submitting more than one quiz
+    quizvisible = 1
+    if(StudentQuiz.objects.filter(quiz = quizs).filter(student =  (NewUser.objects.get(email=request.user.get_username()))).exists()):
+        quizvisible = 0 
+        studentQuizs = StudentQuiz.objects.filter(quiz = quizs).get(student =  (NewUser.objects.get(email=request.user.get_username())))
     else:
-        form = QuizForm()     
-    return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers})
+        studentQuizs = None
+    if request.method == 'POST':  #quiz submitted
+        if(StudentQuiz.objects.filter(quiz = quizs).filter(student =  (NewUser.objects.get(email=request.user.get_username()))).exists()):
+            print("exists")
+        else:
+            #creating studentQuiz object with available data
+            studQuiz = StudentQuiz.objects.create(quiz = Quiz.objects.get(id=id) , student = NewUser.objects.get(email=request.user.get_username()))
+            scoredPoints = 0
+            for question in questions: #iterating through question objects in quiz
+                response = request.POST.get(str(question.text)) #fetching selected radio button value
+
+                #creating studentQuiz object with answer object
+                if(response != None):
+                    answer = Answer.objects.filter(text = response).get(question_id = question.id)
+                    studAnswer = StudentAnswer.objects.create(studentQuiz = studQuiz, question = question, answer = answer)
+                    if(answer.true): #incrementing scored points 
+                        scoredPoints += question.points
+                        StudentAnswer.objects.filter(id=studAnswer.id).update(points=question.points)
+
+                 #creating studentQuiz object without answer object
+                else:
+                    studAnswer = StudentAnswer.objects.create(studentQuiz = studQuiz, question = question)
+
+            #saving percentage and points data to studentQuiz
+            if(quizs.points > 0):  #avoiding division by zero error
+                scoredPercentage = (scoredPoints/quizs.points)*100
+                StudentQuiz.objects.filter(id=studQuiz.id).update(percentage=scoredPercentage)
+
+            StudentQuiz.objects.filter(id=studQuiz.id).update(points=scoredPoints)
+            
+            return redirect('/')
+        return redirect('/')
+    #accessing quiz.html first time 
+    else:   
+        	return render(request, 'quiz.html', {'quizs':quizs, 'questions':questions, 'studentAnswers':studentAnswers, 'quizvisible' : quizvisible, 'studentQuizs' : studentQuizs})
 
 # Function used to download jar solution file for specific assignment
 def download_solution(request, id):
