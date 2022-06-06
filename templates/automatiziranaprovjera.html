@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<div style = "width:50%; font-size:large; text-align:justify;margin: 0">
+<div class = "centeredDiv">
 <br>
 <h1>Automatizirana provjera</h1>
 <p>Rješenja se provjeravaju po principu ispitnih uzoraka. Svaki ispitni uzorak sastoji se od ulazne i izlazne ispitne datoteke. Svakom zadatku pridružen je određeni broj ispitnih uzoraka, uobičajeno je nekoliko uzoraka javno dostupno te su dodatno objašnjeni u tekstu zadatka dok su ostali skriveni.</p>
@@ -16,19 +16,19 @@
 <ul><h3>Postupak postavljanja rješenja zadatka na server</h3>
 <li>Desni klik na projekt</li>
 <li>U padajućem izborniku odabrati <b><i>Export</i></b></li>
-<img src = "{%static 'images/automatiziranaprovjera1.png' %}" style = "width:80%;display: block;margin-left: auto;margin-right: auto;" />
+<img src = "{%static 'images/automatiziranaprovjera1.png' %}" class = "imgStyle" />
 <br>
 <li>U novootvorenom izborniku izabrati <b><i>JAR file</i></b></li>
 <li>Stisnuti <b><i>Next></i></b></li>
 
-<img src = "{%static '/images/automatiziranaprovjera2.png' %}" style = "width:80%;display: block;margin-left: auto;margin-right: auto;" />
+<img src = "{%static '/images/automatiziranaprovjera2.png' %}" class = "imgStyle" />
 <br>
 <li>U select <b><i>Export destination</i></b> dodati mjesto gdje želimo pohraniti projekt</li>
 
-<img src = "{%static '/images/automatiziranaprovjera3.png' %}" style = "width:80%;display: block;margin-left: auto;margin-right: auto;" />
+<img src = "{%static '/images/automatiziranaprovjera3.png' %}" class = "imgStyle" />
 <br>
 <li>U rubrici Odgovor stisnuti  <b><i>Odaberi datoteku</i></b> i odabrati JAR file iz lokalnih datoteka računala</li>
-<img src = "{%static '/images/automatiziranaprovjera4.png' %}" style = "width:80%;display: block;margin-left: auto;margin-right: auto;" />
+<img src = "{%static '/images/automatiziranaprovjera4.png' %}" class = "imgStyle" />
 <br>
 <li>Stisnuti  <b><i>Predaj</i></b></li></ul>
 

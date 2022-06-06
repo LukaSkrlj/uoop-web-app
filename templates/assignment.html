@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load markdownify %}
 {% block content %}
     <div class="container page-top-offset" style="margin: 0px; /*font-family: 'NotoSerif';*/"> <!-- nije isto ko na prog.riteh.hr s ovim fontom -->
         <p>
@@ -11,36 +12,33 @@
         
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="zadatak-tab" data-toggle="tab" href="#zadatak" role="tab" aria-controls="zadatak" aria-selected="true">Zadatak</a>
+              <a class="nav-link active" onClick="hidePopovers()" id="zadatak-tab" data-toggle="tab" href="#zadatak" role="tab" aria-controls="zadatak" aria-selected="true">Zadatak</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="odgovor-tab" data-toggle="tab" href="#odgovor" role="tab" aria-controls="odgovor" aria-selected="false">Odgovor</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="rjesenja-tab" data-toggle="tab" href="#rjesenja" role="tab" aria-controls="rjesenja" aria-selected="false">Rješenja</a>
+              <a class="nav-link" onClick="hidePopovers()" id="rjesenja-tab" data-toggle="tab" href="#rjesenja" role="tab" aria-controls="rjesenja" aria-selected="false">Rješenja</a>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" style="margin-left: 1.5%;" id="zadatak" role="tabpanel" aria-labelledby="zadatak-tab"> <!-- bez ovog margin left viri malo a ovi ostali ne, nez zas-->
             <div class="row">
                 <div class="content" style="margin-right: 3%; width: 60%;">
-                    <div style="margin-top: 4%;">
-                        <p>
-                            {{ assignment.description|safe }}
-                        </p>
+                    <div style="margin-top: 2%;">
+                        <p style="white-space: pre-line;">{{ assignment.description|markdownify }}</p>
                     </div>
+
                     <h3 id="ulazni-podaci">
                         <b>Ulaz</b>
                     </h3>
-                    <p id="ulaz">
-                        {{ assignment.inputDescription|safe }} <!-- safe -> tako da ako je npr <b>ej</b> rendera kao html a ne kao string -->
-                    </p>
+                    <p id="ulaz" style="white-space: pre-line;">{{ assignment.inputDescription|markdownify }}</p>
+
                     <h3 id="izlazni-podaci">
                         <b>Izlaz</b>
                     </h3>
-                    <p>
-                        {{ assignment.outputDescription|safe }}
-                    </p>
+                    <p style="white-space: pre-line;">{{ assignment.outputDescription|markdownify }}</p>
+
                     {% for visibleTest in visibleTests %}
                     <div style="margin-bottom: 5%">
                         <h3 style="margin-bottom: 3%;">
@@ -54,7 +52,7 @@
                                     </h5>
                                 </div>
                                 <div class="test-case" style="position: relative; flex-grow: 1;">
-                                    <code id="input-code-{{ forloop.counter }}">{{visibleTest.input}}</code>
+                                    <code class="tst-cs" id="input-code-{{ forloop.counter }}">{{visibleTest.input}}</code>
                                     <span type="button" id="input-copy-btn-{{ forloop.counter }}" class="btn-primary copy-btn" onclick="copyClick(this)"><i class="fa-solid fa-copy"></i> Kopiraj</span> <!-- vidi ako ce tu trebat mjenjat iz pixela u postotke,, i dole na 70.-->
                                 </div>
                             </div>
@@ -65,16 +63,14 @@
                                     </h5>
                                 </div>
                                 <div class="test-case" style="position: relative; flex-grow: 1;">
-                                    <code id="output-code-{{ forloop.counter }}">{{visibleTest.output}}</code>
+                                    <code class="tst-cs" id="output-code-{{ forloop.counter }}">{{visibleTest.output}}</code>
                                     <span type="button" id="output-copy-btn-{{ forloop.counter }}" class="btn-primary copy-btn" onclick="copyClick(this)"><i class="fa-solid fa-copy"></i> Kopiraj</span>
                                 </div>
                             </div>
                         </div>
                         {% if visibleTest.hint %}
                             <blockquote class="hint">
-                                <div>
-                                    {{ visibleTest.hint|safe }}
-                                </div>
+                                <div>{{ visibleTest.hint|markdownify }}</div>
                             </blockquote>
                         {% endif %}
                     </div>
@@ -124,23 +120,37 @@
                             <div class="test-case-element"><i class="fa-solid fa-share"></i> <b>Izlaz:</b> U redu</div>
                             <div style="display: flex; justify-content: space-between;">
                                 {% if userTestCase.testcase.hint %}
-                                    <div><i onClick="parseMathJax()" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ userTestCase.testcase.hint }}</p>" class="fa-solid fa-circle-info"></i></div>
+                                    <div><i onClick="parseMathJax()" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ userTestCase.testcase.hint|markdownify }}</p>" class="fa-solid fa-circle-info"></i></div>
                                 {% endif %}
 
                                 {% if userTestCase.testcase.isVisible %}
-                                    <div><i class="fa-solid fa-square-check"></i></div>
-                                    <div><i class="fa-solid fa-right-to-bracket"></i></div>
-                                    <div><i class="fa-solid fa-right-from-bracket"></i></div>
+                                    <div><i onClick="displayIO(`{{ userTestCase.user_output }}`, `{{ userTestCase.testcase.output }}`)" class="fa-solid fa-square-check pointer"></i></div>
+                                    <div><i onClick="openI_O(`{% url 'app:input' userTestCase.testcase.id %}`)" class="fa-solid fa-right-to-bracket pointer"></i></div>
+                                    <div><i onClick="openI_O(`{% url 'app:output' userTestCase.testcase.id %}`)" class="fa-solid fa-right-from-bracket pointer"></i></div> 
                                 {% endif %} 
                             </div>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
+                <div id="io-display" style="display: none; width: 100%;">
+                    <div class="outputs">
+                        <div class="center">
+                            <h6>Izlaz</h5>
+                        </div>
+                        <div id="user-output" class="output output-margin"></div>
+                    </div>
+                    <div class="outputs">
+                        <div class="center">
+                           <h6>Očekivani izlaz</h6>
+                        </div>
+                        <div id="correct-answer" class="output expected_output-margin"></div>
+                    </div>
+                </div>
             </div>
             {% endif %}
 
-            <form id="form-uploadJar" method="post" enctype="multipart/form-data" style="margin-top: 2%">
+            <form id="form-uploadJar" onsubmit="JARsubmited()" method="post" enctype="multipart/form-data" style="margin-top: 2%">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-primary">
@@ -179,7 +189,7 @@
         
         clearInterval(intervalId)
         
-        intervalId = setInterval(() => {
+        intervalId = setTimeout(() => {
             document.getElementById(e.id).innerHTML = "<i class='fa-solid fa-copy'></i> Kopiraj"
             document.getElementById(e.id).style.width = "70px"
         }, 500)
@@ -191,10 +201,44 @@
         })
     })
     
+    const hidePopovers = () => {    
+        $('[data-toggle="popover"]').popover('hide')
+    }
+
+    const JARsubmited = () => {
+        localStorage.setItem('submited', 'submited')
+    }
+
     const parseMathJax = () => {
         setTimeout(() => {
             MathJax.typeset() //searches for unparsed elements and parses them 
         }, 0)
     }
+
+    const displayIO = (output, correctAnswer) => {
+        document.getElementById("io-display").style.display = "flex"
+
+        document.getElementById("user-output").innerHTML = output
+        document.getElementById("correct-answer").innerHTML = correctAnswer
+    }
+
+    const openI_O = (url) => {
+        window.open(url, '_blank');
+    }
+
+    const isJARSubmited = () => { //after uploading jar and refresh, go to Odgovor tab
+        if(localStorage.getItem('submited')) {
+            let evt = new MouseEvent("click", {
+                view: window,
+                bubbles: true,
+                cancelable: true,
+                clientX: 20,
+            })
+            localStorage.removeItem("submited")
+            document.getElementById("odgovor-tab").dispatchEvent(evt)
+        }
+    }
+    isJARSubmited()
+
 </script>
 {% endblock content %}

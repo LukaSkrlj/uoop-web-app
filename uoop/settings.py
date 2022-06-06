@@ -33,7 +33,9 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
- 
+
+
+
 INSTALLED_APPS = [
     'djangocms_admin_style',
     'django.contrib.admin',
@@ -45,12 +47,11 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'app',
     'app_cms_integration',
-    'django_ace',
     'cms',
     'menus',
     'treebeard',
     'sekizai',
-    # 'filer',
+    'django_ace',
     'easy_thumbnails',
     'mptt',
     'djangocms_text_ckeditor',
@@ -61,11 +62,11 @@ INSTALLED_APPS = [
     # 'djangocms_googlemap',
     # 'djangocms_snippet',
     # 'djangocms_style',
-    
-    
+    'markdownify.apps.MarkdownifyConfig',
 ]
 
-
+    # # 'filer',
+    
 
 # if DEBUG:
 #     INSTALLED_APPS += ('mockdjangosaml2',)
@@ -73,7 +74,7 @@ INSTALLED_APPS = [
 #     INSTALLED_APPS += ('djangosaml2',)
 
 MIDDLEWARE = [
-    'cms.middleware.utils.ApphookReloadMiddleware',
+    # 'cms.middleware.utils.ApphookReloadMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -82,10 +83,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'cms.middleware.user.CurrentUserMiddleware',
-    'cms.middleware.page.CurrentPageMiddleware',
-    'cms.middleware.toolbar.ToolbarMiddleware',
-    'cms.middleware.language.LanguageCookieMiddleware',
+    # 'cms.middleware.user.CurrentUserMiddleware',
+    # 'cms.middleware.page.CurrentPageMiddleware',
+    # 'cms.middleware.toolbar.ToolbarMiddleware',
+    # 'cms.middleware.language.LanguageCookieMiddleware',
 ]
 
 ROOT_URLCONF = 'uoop.urls'
@@ -103,7 +104,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'sekizai.context_processors.sekizai',
+                # 'sekizai.context_processors.sekizai',
             ],
         },
     },
@@ -170,7 +171,7 @@ SAML_ATTRIBUTE_MAPPING = {
 
 LANGUAGE_CODE = 'en'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Zagreb'
 
 USE_I18N = True
 
@@ -259,9 +260,9 @@ LANGUAGES = [
     ('de', 'German'),
 ]
 
-CMS_TEMPLATES = [
-    ('home.html', 'Home page template'),
-]
+# CMS_TEMPLATES = [
+#     ('home.html', 'Home page template'),
+# ]
 
 THUMBNAIL_HIGH_RESOLUTION = True
 
