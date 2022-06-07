@@ -34,17 +34,39 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+
+
 INSTALLED_APPS = [
+    'djangocms_admin_style',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'app',
+    'app_cms_integration',
+    'cms',
+    'menus',
+    'treebeard',
+    'sekizai',
     'django_ace',
+    'easy_thumbnails',
+    'mptt',
+    'djangocms_text_ckeditor',
+    # 'djangocms_link',
+    # 'djangocms_file',
+    # 'djangocms_picture',
+    # 'djangocms_video',
+    # 'djangocms_googlemap',
+    # 'djangocms_snippet',
+    # 'djangocms_style',
     'markdownify.apps.MarkdownifyConfig',
 ]
+
+    # # 'filer',
+    
 
 # if DEBUG:
 #     INSTALLED_APPS += ('mockdjangosaml2',)
@@ -52,6 +74,7 @@ INSTALLED_APPS = [
 #     INSTALLED_APPS += ('djangosaml2',)
 
 MIDDLEWARE = [
+    # 'cms.middleware.utils.ApphookReloadMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -59,9 +82,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    # 'cms.middleware.user.CurrentUserMiddleware',
+    # 'cms.middleware.page.CurrentPageMiddleware',
+    # 'cms.middleware.toolbar.ToolbarMiddleware',
+    # 'cms.middleware.language.LanguageCookieMiddleware',
 ]
 
 ROOT_URLCONF = 'uoop.urls'
+
+SITE_ID = 1
 
 TEMPLATES = [
     {
@@ -74,6 +104,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # 'sekizai.context_processors.sekizai',
             ],
         },
     },
@@ -81,6 +112,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'uoop.wsgi.application'
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Database
 
@@ -137,7 +169,7 @@ SAML_ATTRIBUTE_MAPPING = {
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Europe/Zagreb'
 
@@ -222,3 +254,21 @@ MOCK_SAML2_USERS = {
         },
     },
 }
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('de', 'German'),
+]
+
+# CMS_TEMPLATES = [
+#     ('home.html', 'Home page template'),
+# ]
+
+THUMBNAIL_HIGH_RESOLUTION = True
+
+THUMBNAIL_PROCESSORS = (
+    'easy_thumbnails.processors.colorspace',
+    'easy_thumbnails.processors.autocrop',
+    'filer.thumbnail_processors.scale_and_crop_with_subject_location',
+    'easy_thumbnails.processors.filters'
+)

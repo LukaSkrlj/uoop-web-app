@@ -9,7 +9,7 @@ from .forms import SnippetForm, AssignmentForm
 from .models import Answer, Assignment, Course, NewUser, Question, Quiz, Snippet, StudentAnswer, StudentQuiz, Test, TestCase, UserAssignment, UserTestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
-import subprocess
+from subprocess import PIPE, check_output, Popen
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -41,8 +41,8 @@ def simple(request):
             testfile.close
             f.close
 
-            process = subprocess.Popen("C:\\Users\\Skerlj\\Desktop\\izprojekt\\test.bat", shell=True, universal_newlines=True,
-                                       stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf8')
+            process = Popen("C:\\Users\\Skerlj\\Desktop\\izprojekt\\test.bat", shell=True, universal_newlines=True,
+                            stdin=PIPE, stdout=PIPE, stderr=PIPE, encoding='utf8')
             out, err = process.communicate()
             print(out, err)
             # print(settings.BASE_DIR)
@@ -120,10 +120,25 @@ def assignment(request, id):
             # save the form if it is valid
             form.save()
 
+            # if userAssignment does not exist create a new instance
+            if(userAssignment is None):
+                userAssignment = UserAssignment(
+                    assignment=context['assignment'], newuser=request.user)
+                userAssignment.save()
+
+            try:
+                junitTestsOut, junitTestErr = Popen('java -cp ' + os.path.join(mediaPath, request.FILES['jar'].name) + ';' + os.path.join(
+                    BASE_DIR, 'junit.jar junit.textui.TestRunner ' + context['assignment'].test_class), stdin=PIPE, stderr=PIPE, stdout=PIPE).communicate()
+                context['junit'] = junitTestsOut.decode(
+                    "utf-8") + junitTestErr.decode("utf-8")
+            except:
+                print('JUNIT ERROR')
+
             # if run the code for each test case
             for testCase in testCases:
-                ans = subprocess.check_output(
+                ans = check_output(
                     ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.timeLimit)
+
                 userTestCase = UserTestCase.objects.filter(
                     userassignment=userAssignment, testcase=testCase).first()
 
