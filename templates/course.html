@@ -13,7 +13,7 @@
         <li>
             <i class="fa-solid fa-clock" style="/*color: black; background-color: white;*/"></i>
             <!-- <i class="fa-regular fa-clock-three"></i> -->
-            <a href="{% url 'uoop:test' test.id %}">{{ test.title }}</a>
+            <a href="{% url 'app:test' test.id %}">{{ test.title }}</a>
         </li>
     {% endfor %}
     </ul>
@@ -21,7 +21,7 @@
     {% for quiz in quizs %}
         <li>
             <i class="fa-solid fa-clock" ></i>
-            <a href="{% url 'uoop:quiz' quiz.id %}">{{ quiz.title }}</a>
+            <a href="{% url 'app:quiz' quiz.id %}">{{ quiz.title }}</a>
         </li>
     {% endfor %}
     </ul>  
