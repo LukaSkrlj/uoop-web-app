@@ -106,7 +106,15 @@ def assignment(request, id):
     # if user submited the form run his submited file
     if request.method == 'POST':
         # initialize form with request data
-        form = AssignmentForm(request.POST, request.FILES)
+
+        # if userAssignment does not exist create a new instance
+        if(userAssignment is None):
+            userAssignment = UserAssignment(
+                assignment=context['assignment'], newuser=request.user)
+            userAssignment.save()
+
+        form = AssignmentForm(request.POST, request.FILES,
+                              instance=userAssignment)
 
         if form.is_valid():
             # save the form if it is valid
@@ -125,11 +133,11 @@ def assignment(request, id):
                     "utf-8") + junitTestErr.decode("utf-8")
             except:
                 print('JUNIT ERROR')
+
             # if run the code for each test case
             for testCase in testCases:
                 ans = check_output(
                     ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.timeLimit)
-                
 
                 userTestCase = UserTestCase.objects.filter(
                     userassignment=userAssignment, testcase=testCase).first()
@@ -150,19 +158,18 @@ def assignment(request, id):
                 userTestCase.save()
                 # append all test cases
                 context['allTests'].append(userTestCase)
-            context['form'] = form
             context['userAssignment'] = userAssignment
+            context['form'] = form
 
             # render the page with context object
             return render(request, 'assignment.html', context)
     else:
         # if user didn't sumbmit the form instantiate a new one and pass it to context
         # TODO: nakon sta se fixa UserAssignment vidjet ako je user vec izvrtio testcaseove za ovaj zadatak i onda samo to displayat
-        form = AssignmentForm()
-    context['form'] = form
-
-    # render the page with context object
-    return render(request, 'assignment.html', context)
+        form = AssignmentForm(instance=userAssignment)
+        context['form'] = form
+        # render the page with context object
+        return render(request, 'assignment.html', context)
 
 
 def getStartDateYear(course):
