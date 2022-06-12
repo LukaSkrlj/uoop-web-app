@@ -143,8 +143,8 @@ def assignment(request, id):
                 userTestCase.save()
                 # append all test cases
                 context['allTests'].append(userTestCase)
-                context['userAssignment'] = userAssignment
-                context['form'] = form
+            context['userAssignment'] = userAssignment
+            context['form'] = form
 
             # render the page with context object
             return render(request, 'assignment.html', context)
