@@ -106,17 +106,17 @@ def assignment(request, id):
     # if user submited the form run his submited file
     if request.method == 'POST':
         # initialize form with request data
-        form = AssignmentForm(request.POST, request.FILES)
+        if(userAssignment is None):
+            userAssignment = UserAssignment(
+                assignment=context['assignment'], newuser=request.user)
+            userAssignment.save()
+
+        form = AssignmentForm(request.POST, request.FILES,
+                              instance=userAssignment)
 
         if form.is_valid():
             # save the form if it is valid
             form.save()
-
-            # if userAssignment does not exist create a new instance
-            if(userAssignment is None):
-                userAssignment = UserAssignment(
-                    assignment=context['assignment'], newuser=request.user)
-                userAssignment.save()
 
             try:
                 junitTestsOut, junitTestErr = Popen('java -cp ' + os.path.join(mediaPath, request.FILES['jar'].name) + ';' + os.path.join(
@@ -158,8 +158,8 @@ def assignment(request, id):
     else:
         # if user didn't sumbmit the form instantiate a new one and pass it to context
         # TODO: nakon sta se fixa UserAssignment vidjet ako je user vec izvrtio testcaseove za ovaj zadatak i onda samo to displayat
-        form = AssignmentForm()
-    context['form'] = form
+        form = AssignmentForm(instance=userAssignment)
+        context['form'] = form
 
     # render the page with context object
     return render(request, 'assignment.html', context)
@@ -213,14 +213,14 @@ def login_user(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('/')
+            return redirect('app:home')
     form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
 
 def logout_user(request):
     logout(request)
-    return redirect('/')
+    return redirect('app:home')
 
 
 def osustavu(request):
@@ -282,8 +282,8 @@ def quiz(request, id):
             StudentQuiz.objects.filter(
                 id=studQuiz.id).update(points=scoredPoints)
 
-            return redirect('/')
-        return redirect('/')
+            return redirect('app:home')
+        return redirect('app:home')
     # accessing quiz.html first time
     else:
         return render(request, 'quiz.html', {'quizs': quizs, 'questions': questions, 'studentAnswers': studentAnswers, 'quizvisible': quizvisible, 'studentQuizs': studentQuizs})

@@ -74,7 +74,7 @@ INSTALLED_APPS = [
 #     INSTALLED_APPS += ('djangosaml2',)
 
 MIDDLEWARE = [
-    # 'cms.middleware.utils.ApphookReloadMiddleware',
+    'cms.middleware.utils.ApphookReloadMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -83,10 +83,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    # 'cms.middleware.user.CurrentUserMiddleware',
-    # 'cms.middleware.page.CurrentPageMiddleware',
-    # 'cms.middleware.toolbar.ToolbarMiddleware',
-    # 'cms.middleware.language.LanguageCookieMiddleware',
+    'cms.middleware.user.CurrentUserMiddleware',
+    'cms.middleware.page.CurrentPageMiddleware',
+    'cms.middleware.toolbar.ToolbarMiddleware',
+    'cms.middleware.language.LanguageCookieMiddleware',
 ]
 
 ROOT_URLCONF = 'uoop.urls'
@@ -104,7 +104,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # 'sekizai.context_processors.sekizai',
+                'sekizai.context_processors.sekizai',
             ],
         },
     },
@@ -260,9 +260,9 @@ LANGUAGES = [
     ('de', 'German'),
 ]
 
-# CMS_TEMPLATES = [
-#     ('home.html', 'Home page template'),
-# ]
+CMS_TEMPLATES = [
+    ('home.html', 'Home page template'),
+]
 
 THUMBNAIL_HIGH_RESOLUTION = True
 
