@@ -93,6 +93,8 @@ class Assignment(models.Model):
     solutionFile = models.FileField(validators=[FileExtensionValidator(
         ['jar'])], upload_to='assignment_solutions', null=True)
     solution = models.TextField(max_length=10000)
+    test_class = models.CharField(
+        max_length=50, default='JunitTest', null=True)
 
     def __str__(self):
         return self.title
