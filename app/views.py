@@ -13,6 +13,7 @@ from subprocess import PIPE, check_output, Popen
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+import time
 
 mediaPath = os.path.join(BASE_DIR, 'media')
 filePath = 'C:\\Users\\Skerlj\\Desktop\\izprojekt'
@@ -72,6 +73,28 @@ def test(request, id):
     test = Test.objects.get(id=id)
     assignments = Assignment.objects.filter(test=id)
     print(assignments, test)
+   
+    # calculate assignment percentage
+    for assignment in assignments:
+        userAssignment = UserAssignment.objects.filter(
+            assignment=assignment.id, newuser=request.user.id).first()
+        if userAssignment is None:
+            continue
+        testCases = TestCase.objects.filter(assignment=assignment.id)
+        correctCounter = 0
+        for testCase in testCases:
+            if testCase is None:
+                continue
+            userTestCase = UserTestCase.objects.filter(
+                            userassignment=userAssignment, testcase=testCase).first()
+            if userTestCase is None:
+                continue
+            if userTestCase.is_correct:
+                correctCounter += 1
+        
+        if len(testCases) > 0:
+            assignment.percentage = round(correctCounter * 100 / len(testCases))
+            
     return render(request, 'test.html', {'test': test, 'assignments': assignments})
 
 
@@ -128,8 +151,13 @@ def assignment(request, id):
 
             # if run the code for each test case
             for testCase in testCases:
+                beforeTest = time.time()
+                
                 ans = check_output(
                     ['java', '-jar', os.path.join(mediaPath, request.FILES['jar'].name)], input=testCase.input.encode(), timeout=testCase.timeLimit)
+                
+                afterTest = time.time()
+                duration = afterTest - beforeTest
 
                 userTestCase = UserTestCase.objects.filter(
                     userassignment=userAssignment, testcase=testCase).first()
@@ -140,9 +168,14 @@ def assignment(request, id):
                         userassignment=userAssignment, testcase=testCase)
 
                 # If answered correctly test case field isCorrect should be assigned true, by default it is false
-                if(ans == testCase.output.encode()):
+                userTestCase.is_correct = False
+                userTestCase.output_label = "U redu"
+                userTestCase.time = round(duration * 100)
+                if (ans == testCase.output.encode()):
                     userTestCase.is_correct = True
-                else:
+
+                if (duration > testCase.timeLimit / 1000):
+                    userTestCase.output_label = "Prekoračenje vremenskog limita"
                     userTestCase.is_correct = False
 
                 userTestCase.user_output = ans.decode()  # decode because it's byte encoding
@@ -157,8 +190,15 @@ def assignment(request, id):
             return render(request, 'assignment.html', context)
     else:
         # if user didn't sumbmit the form instantiate a new one and pass it to context
-        # TODO: nakon sta se fixa UserAssignment vidjet ako je user vec izvrtio testcaseove za ovaj zadatak i onda samo to displayat
+        # if user has already submitted answers before, display them
         form = AssignmentForm(instance=userAssignment)
+        if(userAssignment is not None):
+            for testCase in testCases:
+                userTestCase = UserTestCase.objects.filter(
+                    userassignment=userAssignment, testcase=testCase).first()
+                # append all test cases
+                context['allTests'].append(userTestCase)
+            context['userAssignment'] = userAssignment
         context['form'] = form
 
     # render the page with context object

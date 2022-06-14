@@ -30,7 +30,9 @@
                 {% for assignment in assignments %}
                     <tr role="row" class="odd">
                         <td class="result">
-                            {% if assignment.percentage == 100 %}
+                            {% if assignment.percentage > 100 %}
+                                <i class="fa-solid fa-magnifying-glass" style="color: #5bc0de;"></i>
+                            {% elif assignment.percentage == 100 %}
                                 <i class="fa-solid fa-check" style="color: green;"></i>
                             {% else %}    
                                 <i class="fa-solid fa-xmark" style="color: red;"></i>
@@ -40,14 +42,15 @@
                             <a href="{% url 'app:assignment' assignment.id %}">{{ assignment.title }}</a>
                         </td>
                         <td class="testresults">
-                            <div class="progress">
-                                <div class="progress-bar bg-success" role="progressbar" aria-valuenow="{{ assignment.percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ assignment.percentage }}%"> <!--iako baca error, svejedno radi kako treba, ako dodas jos '' onda ne prikazuje kako treba-->
-                                    {{ assignment.percentage }}%
+                            {% if assignment.percentage <= 100 %}
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" role="progressbar" aria-valuenow="{{ assignment.percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ assignment.percentage }}%">
+                                        {{ assignment.percentage }}%
+                                    </div>
                                 </div>
-                            </div>
+                            {% endif %}
                         </td>
                         <td class="tags ellipsis" title="izlaz, ulaz">
-                            <!-- <span>{{ assignment.tags.name }}</span> kaze da je none ??-->
                             {% for tag in assignment.tags.all %}
                                 <button type="button" class="btn btn-primary btn-xs">{{ tag.name }}</button>
                             {% endfor %}
