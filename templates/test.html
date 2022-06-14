@@ -30,7 +30,7 @@
                 {% for assignment in assignments %}
                     <tr role="row" class="odd">
                         <td class="result">
-                            {% if assignment.percentage > 100 %}
+                            {% if assignment.percentage is None %}
                                 <i class="fa-solid fa-magnifying-glass" style="color: #5bc0de;"></i>
                             {% elif assignment.percentage == 100 %}
                                 <i class="fa-solid fa-check" style="color: green;"></i>
