@@ -36,19 +36,19 @@ jobs:
     - name: Run Migrations
       run: python manage.py migrate
       env: 
-        DBENGINE: django.db.backends.mysql
-        DBNAME: mysql
-        DBUSER: root
-        DBPASSWORD: zergling
-        DBHOST: 127.0.0.1
-        DBPORT: 3306
+        DB_ENGINE: django.db.backends.mysql
+        DB_NAME: mysql
+        DB_USER: root
+        DB_PASSWORD: zergling
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
     - name: Run Tests
       run: |
         python manage.py test .\app\tests\
       env: 
-        DBENGINE: django.db.backends.mysql
-        DBNAME: mysql
-        DBUSER: root
-        DBPASSWORD: zergling
-        DBHOST: 127.0.0.1
-        DBPORT: 3306
+        DB_ENGINE: django.db.backends.mysql
+        DB_NAME: mysql
+        DB_USER: root
+        DB_PASSWORD: zergling
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
