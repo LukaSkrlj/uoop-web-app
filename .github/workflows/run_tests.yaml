@@ -44,7 +44,7 @@ jobs:
         DB_PORT: 3306
     - name: Run Tests
       run: |
-        python manage.py test app\tests\
+        python manage.py test app/tests/
       env: 
         DB_ENGINE: django.db.backends.mysql
         DB_NAME: mysql
