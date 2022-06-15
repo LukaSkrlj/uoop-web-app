@@ -1,8 +1,8 @@
-name: Meetin reminder
+name: Meeting reminder
 
 on:
   push:
-    branches: [action] #preko crona napravit
+    branches: [actions] #preko crona napravit
 
 
 jobs:
