@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ actions, main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   label:
     types: [created]
 
@@ -12,20 +12,15 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.4.10]
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.8
     - name: Install Dependencies
       run: |
-        python3 -m pip install --upgrade pip
+        # python3 -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
       run: |
