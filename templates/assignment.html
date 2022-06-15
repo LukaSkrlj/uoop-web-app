@@ -17,9 +17,11 @@
             <li class="nav-item">
               <a class="nav-link" id="odgovor-tab" data-toggle="tab" href="#odgovor" role="tab" aria-controls="odgovor" aria-selected="false">Odgovor</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" onClick="hidePopovers()" id="rjesenja-tab" data-toggle="tab" href="#rjesenja" role="tab" aria-controls="rjesenja" aria-selected="false">Rješenja</a>
-            </li>
+            {% if assignment.isSolutionVisible %}
+                <li class="nav-item">
+                <a class="nav-link" onClick="hidePopovers()" id="rjesenja-tab" data-toggle="tab" href="#rjesenja" role="tab" aria-controls="rjesenja" aria-selected="false">Rješenja</a>
+                </li>
+            {% endif %}
         </ul>
         <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" style="margin-left: 1.5%;" id="zadatak" role="tabpanel" aria-labelledby="zadatak-tab"> <!-- bez ovog margin left viri malo a ovi ostali ne, nez zas-->
@@ -116,8 +118,8 @@
                                 {% endif %}
                             </div>
                             <div class="test-case-element"><i class="fa-solid fa-floppy-disk"></i> <b>Memorija:</b> 996kB</div>
-                            <div class="test-case-element"><i class="fa-solid fa-clock"></i> <b>Vrijeme:</b> 1ms</div>
-                            <div class="test-case-element"><i class="fa-solid fa-share"></i> <b>Izlaz:</b> U redu</div>
+                            <div class="test-case-element"><i class="fa-solid fa-clock"></i> <b>Vrijeme:</b> {{ userTestCase.time }} ms</div>
+                            <div class="test-case-element"><i class="fa-solid fa-share"></i> <b>Izlaz:</b> {{ userTestCase.output_label }}</div>
                             <div style="display: flex; justify-content: space-between;">
                                 {% if userTestCase.testcase.hint %}
                                     <div><i onClick="parseMathJax()" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<p>{{ userTestCase.testcase.hint|markdownify }}</p>" class="fa-solid fa-circle-info"></i></div>

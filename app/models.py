@@ -81,7 +81,7 @@ class Assignment(models.Model):
     description = models.TextField(max_length=10000)
     test = models.ForeignKey(
         "Test", on_delete=models.SET_NULL, null=True, blank=True)
-    percentage = models.PositiveSmallIntegerField(default=0)
+    percentage = models.PositiveSmallIntegerField(default=None, blank=True, null=True)
     inputDescription = models.TextField(max_length=10000)
     outputDescription = models.TextField(max_length=10000)
     isSolutionVisible = models.BooleanField(default=False)
