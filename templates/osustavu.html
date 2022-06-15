@@ -1,13 +1,6 @@
 {% extends "base.html" %}
+{% load cms_tags %}
 
 {% block content %}
-
-<div class = "centeredDiv">
-<br>
-<h1 id="o-sustavu">O sustavu</h1>
-<p>Sustav uoop.riteh.hr namijenjen je provođenju nastave, odnosno kao pomoć u savladavanju gradiva iz predmeta Uvod u objektno orijentirano programiranje na Preddiplomskom sveučilišnom studiju računarstva.</p>
-<p>Osnovna funkcija sustava je automatizirana evaluacija programskih rješenja.</p>
-<p>Pristup trenutno imaju samo studenti računarstva Tehničkog fakulteta u Rijeci koji su upisali navedeni predmet.</p>
-<p>Web stranica nastala je kao projekt studenata iz predmeta Programsko inženjerstvo na Preddiplomskom sveučilišnom studiju računarstva. </p>
-
+{% static_placeholder 'placeholder' %}
 {% endblock content %}

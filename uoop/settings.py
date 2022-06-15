@@ -52,20 +52,19 @@ INSTALLED_APPS = [
     'treebeard',
     'sekizai',
     'django_ace',
+    'filer',
     'easy_thumbnails',
     'mptt',
     'djangocms_text_ckeditor',
-    # 'djangocms_link',
-    # 'djangocms_file',
-    # 'djangocms_picture',
-    # 'djangocms_video',
-    # 'djangocms_googlemap',
-    # 'djangocms_snippet',
-    # 'djangocms_style',
+    'djangocms_link',
+    'djangocms_file',
+    'djangocms_picture',
+    'djangocms_video',
+    'djangocms_googlemap',
+    'djangocms_snippet',
+    'djangocms_style',
     'markdownify.apps.MarkdownifyConfig',
 ]
-
-    # # 'filer',
     
 
 # if DEBUG:
@@ -146,7 +145,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'app.NewUser'
 
 # AUTHENTICATION_BACKENDS = (
 #     'djangosaml2.backends.Saml2Backend',
@@ -262,6 +260,7 @@ LANGUAGES = [
 
 CMS_TEMPLATES = [
     ('home.html', 'Home page template'),
+    ('osustavu.html', 'O sustavu')
 ]
 
 THUMBNAIL_HIGH_RESOLUTION = True
@@ -272,3 +271,5 @@ THUMBNAIL_PROCESSORS = (
     'filer.thumbnail_processors.scale_and_crop_with_subject_location',
     'easy_thumbnails.processors.filters'
 )
+
+CMS_TEMPLATE_INHERITANCE = False
