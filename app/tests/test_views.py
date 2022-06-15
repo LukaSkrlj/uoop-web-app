@@ -8,11 +8,12 @@ from django.core.files import File
 from turtle import title
 from MySQLdb import string_literal
 from django.test import Client, TestCase
-from app.models import Assignment, Course, NewUser, Quiz, Snippet, Test, UserAssignment, TestCase as TC
+from app.models import Assignment, Course, Quiz, Snippet, Test, UserAssignment, TestCase as TC
 from django.core.files.uploadedfile import SimpleUploadedFile
 import mock
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 # MOCK JAR FILE
 java_mock = mock.MagicMock(spec=File)
@@ -66,8 +67,8 @@ class ViewsTestCase(CMSTestCase):
         assignment = Assignment.objects.create(title="test", test=test, id=5)
         testCase = TC.objects.create(
             assignment=assignment, input="test", output="test", memoryLimit=10)
-        user = NewUser.objects.create(
-            email='test@test.com', password='test')
+        user = User.objects.create(
+            username='test', password='test')
         userAssignment = UserAssignment.objects.create(
             id=5, assignment=assignment, newuser=user, jar=SimpleUploadedFile(java_mock._extract_mock_name(), b"java"))
         response = self.client.get("http://localhost:8000/app/assignment/5/")
@@ -82,8 +83,8 @@ class ViewsTestCase(CMSTestCase):
             title="test", test=test, id=5)
         testCase = TC.objects.create(
             assignment=assignment, input="test", output="test", memoryLimit=10)
-        user = NewUser.objects.create(
-            email='test@test.com', password='test')
+        user = User.objects.create(
+            username='test', password='test')
         userAssignment = UserAssignment.objects.create(
             id=5, assignment=assignment, newuser=user, jar=SimpleUploadedFile(java_mock._extract_mock_name(), b"java"))
         response = self.client.get("http://localhost:8000/app/assignment/5/")
