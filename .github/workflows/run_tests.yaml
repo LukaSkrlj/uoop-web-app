@@ -12,6 +12,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      DB_NAME=uoop_pi
+      DB_HOST=127.0.0.1
+      DB_PORT=3306
+      DB_USER=root
+      DB_PASSWORD=bolero123
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
