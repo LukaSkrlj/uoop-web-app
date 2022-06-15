@@ -2,7 +2,7 @@ name: Django CI
 
 on:
   push:
-    branches: [ actions, main ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -19,7 +19,7 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: zergling
+          MYSQL_ROOT_PASSWORD: tmp123
           MYSQL_DATABASE: mysql
         ports: ['3306:3306']
 
@@ -31,7 +31,6 @@ jobs:
         python-version: 3.7
     - name: Install Dependencies
       run: |
-        # python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Migrations
       run: python manage.py migrate
@@ -39,7 +38,7 @@ jobs:
         DB_ENGINE: django.db.backends.mysql
         DB_NAME: mysql
         DB_USER: root
-        DB_PASSWORD: zergling
+        DB_PASSWORD: tmp123
         DB_HOST: 127.0.0.1
         DB_PORT: 3306
     - name: Run Tests
@@ -49,6 +48,6 @@ jobs:
         DB_ENGINE: django.db.backends.mysql
         DB_NAME: mysql
         DB_USER: root
-        DB_PASSWORD: zergling
+        DB_PASSWORD: tmp123
         DB_HOST: 127.0.0.1
         DB_PORT: 3306
