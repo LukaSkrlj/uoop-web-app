@@ -6,13 +6,14 @@ from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
 from app.helpers import download_file
 from uoop.settings import BASE_DIR
 from .forms import SnippetForm, AssignmentForm
-from .models import Answer, Assignment, Course, NewUser, Question, Quiz, Snippet, StudentAnswer, StudentQuiz, Test, TestCase, UserAssignment, UserTestCase
+from .models import Answer, Assignment, Course, MyModel, Question, Quiz, Snippet, StudentAnswer, StudentQuiz, Test, TestCase, UserAssignment, UserTestCase
 from django.shortcuts import render, redirect
 from django.core.files import File
 from subprocess import PIPE, check_output, Popen
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 import time
 
 mediaPath = os.path.join(BASE_DIR, 'media')
@@ -264,7 +265,8 @@ def logout_user(request):
 
 
 def osustavu(request):
-    return render(request, 'osustavu.html')
+    my_instance = MyModel.objects.first()
+    return render(request, 'osustavu.html', {'my_instance': my_instance})
 
 
 def automatiziranaprovjera(request):
@@ -279,19 +281,19 @@ def quiz(request, id):
         StudentAnswer.objects.filter(answer__question__quiz=id))
     # disables student from submitting more than one quiz
     quizvisible = 1
-    if(StudentQuiz.objects.filter(quiz=quizs).filter(student=(NewUser.objects.get(email=request.user.get_username()))).exists()):
+    if(StudentQuiz.objects.filter(quiz=quizs).filter(student=(User.objects.get(username=request.user.get_username()))).exists()):
         quizvisible = 0
         studentQuizs = StudentQuiz.objects.filter(quiz=quizs).get(
-            student=(NewUser.objects.get(email=request.user.get_username())))
+            student=(User.objects.get(username=request.user.get_username())))
     else:
         studentQuizs = None
     if request.method == 'POST':  # quiz submitted
-        if(StudentQuiz.objects.filter(quiz=quizs).filter(student=(NewUser.objects.get(email=request.user.get_username()))).exists()):
+        if(StudentQuiz.objects.filter(quiz=quizs).filter(student=(User.objects.get(username=request.user.get_username()))).exists()):
             print("exists")
         else:
             # creating studentQuiz object with available data
             studQuiz = StudentQuiz.objects.create(quiz=Quiz.objects.get(
-                id=id), student=NewUser.objects.get(email=request.user.get_username()))
+                id=id), student=User.objects.get(username=request.user.get_username()))
             scoredPoints = 0
             for question in questions:  # iterating through question objects in quiz
                 # fetching selected radio button value

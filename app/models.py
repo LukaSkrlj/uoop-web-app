@@ -3,9 +3,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.core.validators import FileExtensionValidator
 from django.db import models
-
+from cms.models.fields import PlaceholderField
 from app.constants import SOLUTIONS_FOLDER, TEMPLATES_FOLDER
-
+from django.contrib.auth.models import User
 
 class CustomUserManager(BaseUserManager):
     """
@@ -39,20 +39,20 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class NewUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField('email address', unique=True)
-    first_name = models.CharField(max_length=100)
-    lastName = models.CharField(max_length=100)
-    courses = models.ManyToManyField("Course")
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+# class NewUser(AbstractBaseUser, PermissionsMixin):
+#     email = models.EmailField('email address', unique=True)
+#     first_name = models.CharField(max_length=100)
+#     lastName = models.CharField(max_length=100)
+#     courses = models.ManyToManyField("Course")
+#     is_staff = models.BooleanField(default=False)
+#     is_active = models.BooleanField(default=True)
+#     USERNAME_FIELD = 'email'
+#     REQUIRED_FIELDS = []
 
-    objects = CustomUserManager()
+#     objects = CustomUserManager()
 
-    def __str__(self):
-        return self.email
+#     def __str__(self):
+#         return self.email
 
 
 class Course(models.Model):
@@ -60,7 +60,7 @@ class Course(models.Model):
     shortTitle = models.CharField(max_length=5, unique=True)
     startDate = models.DateTimeField()
     endDate = models.DateTimeField()
-    newusers = models.ManyToManyField(NewUser, blank=True)
+    newusers = models.ManyToManyField(User, blank=True)
 
     def __str__(self):
         return self.title
@@ -126,7 +126,7 @@ class UserAssignment(models.Model):
     assignment = models.ForeignKey(
         "Assignment", on_delete=models.CASCADE, null=True)
     newuser = models.ForeignKey(
-        "NewUser", on_delete=models.CASCADE, null=True
+        User, on_delete=models.CASCADE, null=True
     )
     # Jar file that user uploads/downloads for each assignment
     jar = models.FileField(validators=[FileExtensionValidator(['jar'])])
@@ -169,7 +169,7 @@ class Quiz(models.Model):
     description = models.CharField(max_length=300, null=True)  #info about quiz questions, tips
     startDate = models.DateTimeField() #when thw quiz is opened
     endDate = models.DateTimeField() #when quiz closes
-    students = models.ManyToManyField(NewUser, blank=True) #student who are assigned to quiz
+    students = models.ManyToManyField(User, blank=True) #student who are assigned to quiz
     points = models.FloatField(default = 0)   #points student can make with quiz
 
     def __str__(self):
@@ -198,7 +198,7 @@ class Answer(models.Model):
 
 class StudentQuiz(models.Model): #model that stores students name, name of the quiz and percentage he scored
     quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE, null=True)   
-    student = models.ForeignKey("NewUser", on_delete=models.CASCADE, null=True)
+    student = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     points =  models.FloatField(default = 0)    #points user scored
     percentage = models.FloatField(default = 0)  #percentage of students success in quiz
     def __str__(self):  #naming object in db
@@ -221,6 +221,12 @@ class StudentAnswer(models.Model): #model that stores students answer to a quest
                 return self.studentQuiz.quiz.title + '-' + '?-' + self.studentQuiz.student.email
         return  "unknown"
 
+
+
+class MyModel(models.Model):
+    # your fields
+    my_placeholder = PlaceholderField('placeholder_name')
+    # your methods
 
 #TODO improve student file management after user-assignment relation is added
 # def user_directory_path(instance, filename):
